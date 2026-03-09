@@ -1,2 +1,5 @@
 # doesnt add .vscode/ to commits
 .vscode/
+
+# doesnt add any exe files to commits
+*.exe
