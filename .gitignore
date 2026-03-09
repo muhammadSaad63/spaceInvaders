@@ -1,5 +1,12 @@
-# doesnt add .vscode/ to commits
-.vscode/
+# Git doesn't add the following to commits:
 
-# doesnt add any exe files to commits
-*.exe
+
+# Configuration Files
+.vscode/			# dir
+.vscode/*           # including both 'tasks.json' & 'c_cpp_properties.json'
+
+# Compiled Binaries
+*.exe				# windows mostly
+*.out				# probable in linux
+spaceInvaders		# JIC
+main				# JIC
