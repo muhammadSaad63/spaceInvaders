@@ -1,0 +1,59 @@
+/*
+    tasks.json
+        codeRunner: [alt + r]
+        buildTask:  [alt + shift + r] (ie this)
+*/
+
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build and Run Raylib",
+            "type": "shell",
+
+            "windows": {
+                "command": "C:/msys64/mingw64/bin/g++.exe",
+                "args": [
+                    "-g",
+                    "${file}",
+                    "-o",
+                    "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                    "-lraylib",
+                    "-lopengl32",
+                    "-lgdi32",
+                    "-lwinmm",
+                    "&&",
+                    "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                ],
+                "options": {
+                    "cwd": "${fileDirname}",
+                    "shell": {
+                        "executable": "cmd.exe",
+                        "args": ["/d", "/c"]
+                    },
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
+                }
+            },
+
+            "linux": {
+                "command": "bash",              // forces bash to run the command instead of fish (latter doesnt properly interpret $(...))
+                "args": [
+                    "-c",
+                    "g++ \"${file}\" -o \"${fileDirname}/${fileBasenameNoExtension}\" $(pkg-config --cflags --libs raylib) && \"${fileDirname}/${fileBasenameNoExtension}\""
+                ],
+                "options": {
+                    "cwd": "${fileDirname}"
+                }
+            },
+
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}
