@@ -2,11 +2,13 @@
 
 
 # Configuration Files
-.vscode/			# dir
-.vscode/*           # including both 'tasks.json' & 'c_cpp_properties.json'
+.vscode/			            # dir
+.vscode/*                       # including both 'tasks.json' & 'c_cpp_properties.json'
+.vscode/tasks.json
+.vscode/c_cpp_properties.json
 
 # Compiled Binaries
-*.exe				# windows mostly
-*.out				# probable in linux
-spaceInvaders		# JIC
-main				# JIC
+*.exe				            # windows mostly
+*.out				            # probable in linux
+spaceInvaders		            # JIC
+main				            # JIC
