@@ -35,7 +35,7 @@ enum GameState{                 // an ENUM to indicate the current state of the 
         GAMEOVER,               // when game ends inside PLAYING; shows outcome, score, aliens-defeated, coins earned etc
 
     // windowShouldClose()
-        CLOSEWINDOW             // when user chooses to close the window; plays a meme or similar
+        CLOSEGAME               // when user chooses to close the window; plays a meme or similar
 };
 enum InputMode{                 // an ENUM to indicate the chosen playerInputMode (altered in settings)
     WASD,                       
@@ -43,14 +43,14 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
     MOUSE
 };
 
-class State{                                    // an abstract class to be inheriteed by all gameState subclasses
+class State{                                                        // an abstract class to be inherited by all gameState subclasses
     protected:
         GameState& gameState;
 
     public:
         State(GameState& gameState) : gameState(gameState) {}
 
-        virtual void draw() = 0;
+        virtual void draw()   = 0;
 
         virtual void update() = 0;
 };
@@ -60,6 +60,76 @@ class Menu : public State{
 
     public:
         Menu(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class Play : public State{
+    private:
+        //
+
+    public:
+        Play(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class Shop : public State{
+    private:
+        //
+
+    public:
+        Shop(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class History : public State{
+    private:
+        //
+
+    public:
+        History(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class LeaderBoards : public State{
+    private:
+        //
+
+    public:
+        LeaderBoards(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class Settings : public State{
+    private:
+        //
+
+    public:
+        Settings(GameState& gameState) : State(gameState) {}
 
         void draw(){
 
@@ -110,40 +180,82 @@ class GameOver : public State{
 
         }
 };
+class CloseGame : public State{
+    private:
+        //
+
+    public:
+        CloseGame(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
 class Game{
     private:
         GameState gameState;
 
-        Menu     menu;
-        Playing  playing;
-        Paused   paused;
-        GameOver gameOver;
+        Menu         menu;
+        Play         play;
+        Shop         shop;
+        History      history;
+        LeaderBoards leaderBoards;
+        Settings     settings;
+
+        Playing      playing;
+        Paused       paused;
+        GameOver     gameOver;
+
+        CloseGame    closeGame;
 
 
     public:
-        Game() 
-        : gameState(MENU)
+        Game()                          // overRiding default constructor 
+        : gameState(MENU)               // initializing gameState with MENU
         , menu(gameState)
+        , play(gameState)
+        , shop(gameState) 
+        , history(gameState)
+        , leaderBoards(gameState)
+        , settings(gameState)
         , playing(gameState)
         , paused(gameState)
-        , gameOver(gameState) {}
+        , gameOver(gameState)
+        , closeGame(gameState) 
+        {}
+
 
         void draw(){
             switch(gameState)
             {
-                case MENU:     { menu.draw();     break; }
-                case PLAYING:  { playing.draw();  break; }
-                case PAUSED:   { paused.draw();   break; }
-                case GAMEOVER: { gameOver.draw(); break; }
+                case MENU:         { menu.draw();         break; }
+                case PLAY:         { play.draw();         break; }
+                case SHOP:         { shop.draw();         break; }
+                case HISTORY:      { history.draw();      break; }
+                case LEADERBOARDS: { leaderBoards.draw(); break; }
+                case SETTINGS:     { settings.draw();     break; }
+                case PLAYING:      { playing.draw();      break; }
+                case PAUSED:       { paused.draw();       break; }
+                case GAMEOVER:     { gameOver.draw();     break; }
+                case CLOSEGAME:    { closeGame.draw();    break; }  
             }
         }
         void update(){
             switch(gameState)
             {
-                case MENU:     { menu.update();     break; }
-                case PLAYING:  { playing.update();  break; }
-                case PAUSED:   { paused.update();   break; }
-                case GAMEOVER: { gameOver.update(); break; }
+                case MENU:         { menu.update();         break; }
+                case PLAY:         { play.update();         break; }
+                case SHOP:         { shop.update();         break; }
+                case HISTORY:      { history.update();      break; }
+                case LEADERBOARDS: { leaderBoards.update(); break; }
+                case SETTINGS:     { settings.update();     break; }
+                case PLAYING:      { playing.update();      break; }
+                case PAUSED:       { paused.update();       break; }
+                case GAMEOVER:     { gameOver.update();     break; }
+                case CLOSEGAME:    { closeGame.update();    break; }  
             }
         }
 };
@@ -170,7 +282,7 @@ int main()
         // drawing
         BeginDrawing();
 
-            ClearBackground(BLACK);
+            ClearBackground(BLANK);
             game.draw();
         
         EndDrawing();
