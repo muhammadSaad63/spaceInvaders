@@ -1,9 +1,10 @@
 //                                                             بسم اللہ الرحمان الرحیم  
 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <raylib.h>
-using std::cin, std::cout, std::string;
+using std::cout, std::string, std::vector;
 
 /*
     [Started]
@@ -37,6 +38,10 @@ enum GameState{                 // an ENUM to indicate the current state of the 
 
     // windowShouldClose()
         CLOSEGAME               // when user chooses to close the window; plays a meme or similar
+};
+enum Player{
+    USER,                       // used to refer to the user/player/human
+    ALIEN                       // used to refer to the enemy/computer/pc/alien(s)
 };
 enum InputMode{                 // an ENUM to indicate the chosen playerInputMode (altered in settings)
     WASD,                       // W & A keys
@@ -141,7 +146,41 @@ class Settings : public State{
 };
 
 
+class Laser{
+    private:
+        float posX;
+        float posY;
+        float width;
+        float height;
 
+        int speed;
+        bool active;
+        
+    public:
+        Laser(int posX, int posY){
+            this->posX = posX;
+            this->posY = posY;
+
+            speed = 3;
+            active = true;
+        }
+        void update(Player playerType){
+            switch (playerType)
+            {
+                case USER:  { posY -= speed; break; }               // if the user fired the laser, decrease its posX by speed (ie move it up)
+                case ALIEN: { posY += speed; break; }               // if the aliens fired the laser, increase its posX by speed (ie move it down)
+            }
+        }
+        void draw(){
+            DrawRectangle(posX, posY, width, height, WHITE);
+        }
+        Rectangle getRect(){
+            return Rectangle{posX, posY, width, height};
+        }
+        void deActivate(){
+            active = false;
+        }
+};
 class SpaceShip{
     private:
         Texture spaceShip;
@@ -150,6 +189,8 @@ class SpaceShip{
         float scale;            // the scale by which to shrink the spaceShip texture; default 0.1f
         int bottomOffset;       // the value by which to offset/raise the ship from the bottom of the screen; default 50
         float speed;
+
+        vector<Laser> lasers;
         
         void loadShip(const string& fileName){
             spaceShip = LoadTexture(TextFormat("Assets/Sprites/spaceShips/%s", fileName.c_str()));
@@ -168,7 +209,7 @@ class SpaceShip{
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
             posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
 
-            speed = 0.3;
+            speed = 0.2;
         }
         ~SpaceShip(){
             UnloadTexture(spaceShip);
@@ -238,7 +279,7 @@ class SpaceShip{
             }
         }
         void fire(){
-
+            lasers.push_back(Laser{posX, posY});
         }
         void reset(){
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
