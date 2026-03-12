@@ -14,7 +14,7 @@ using std::cout, std::string, std::vector;
         >
 
     TODO
-        - implement aliens
+        - implement alien, aliens, & playing
         - collisions
         - 
 
@@ -141,7 +141,10 @@ class Settings : public State{
         InputMode movementMode;
 
     public:
-        Settings(GameState& gameState) : State(gameState) {}
+        Settings(GameState& gameState)
+        : State(gameState)
+        , movementMode(WASD) 
+        {}
 
         void draw(){
 
@@ -149,7 +152,7 @@ class Settings : public State{
         void update(){
 
         }
-        InputMode getMovementMode(){
+        InputMode& getMovementMode(){
             return movementMode;
         }
 };
@@ -387,10 +390,13 @@ class Playing : public State{
         SpaceShip spaceShip; 
         Aliens aliens;
 
+        InputMode& movementMode;
+
     public:
-        Playing(GameState& gameState) 
+        Playing(GameState& gameState, InputMode& movementMode) 
         : State(gameState)
         , spaceShip("1.png") 
+        , movementMode(movementMode)
         {}
 
         void init(){
@@ -402,7 +408,7 @@ class Playing : public State{
             // obstacles.draw();
             // motherShip.draw();
         }
-        void update(InputMode& movementMode){
+        void update(){
             spaceShip.update(movementMode);
             aliens.update();
             // obstacles.update();
@@ -481,7 +487,7 @@ class Game{
         , history(gameState)
         , leaderBoards(gameState)
         , settings(gameState)
-        , playing(gameState)
+        , playing(gameState, settings.getMovementMode())
         , paused(gameState)
         , gameOver(gameState)
         , closeGame(gameState) 
@@ -514,7 +520,7 @@ class Game{
                 case HISTORY:      { history.update();                           break; }
                 case LEADERBOARDS: { leaderBoards.update();                      break; }
                 case SETTINGS:     { settings.update();                          break; }
-                case PLAYING:      { playing.update(settings.getMovementMode()); break; }
+                case PLAYING:      { playing.update(); break; }
                 case PAUSED:       { paused.update();                            break; }
                 case GAMEOVER:     { gameOver.update();                          break; }
                 case CLOSEGAME:    { closeGame.update();                         break; }  
@@ -532,7 +538,7 @@ int main()
     SetExitKey(KEY_ESCAPE);
     SetTargetFPS(63);
 
-    Image favicon = LoadImage("Assets/Favicon/11.png");
+    Image favicon = LoadImage("Assets/Favicon/2.png");
     if (favicon.data){
         SetWindowIcon(favicon);
         UnloadImage(favicon);
