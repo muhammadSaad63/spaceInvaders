@@ -307,12 +307,22 @@ class SpaceShip{
             }
 
             // updating lasers
-            for (auto &laser : lasers){
-                if (laser.isActive()){
-                    laser.update(USER);
+            // for (auto &laser : lasers){
+            //     if (laser.isActive()){
+            //         laser.update(USER);
+            //     }
+            //     else{
+            //         lasers.erase(laser);
+            //     }
+            // }
+
+            for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
+                if (it->isActive()){                                          // updating laser if they active
+                    it->update(USER);
+                    ++it;
                 }
-                else{
-                    
+                else{                                                         // removing laser if they inactive
+                    it = lasers.erase(it);                                    // erase returns iterator to next element
                 }
             }
         }
@@ -324,7 +334,7 @@ class SpaceShip{
 
 class Playing : public State{
     private:
-        SpaceShip spaceShip;
+        SpaceShip spaceShip; 
 
     public:
         Playing(GameState& gameState) 
