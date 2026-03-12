@@ -14,8 +14,9 @@ using std::cout, std::string, std::vector;
         >
 
     TODO
+        - implement aliens
+        - collisions
         - 
-        -
 
     [Finished]
         >
@@ -137,6 +138,7 @@ class LeaderBoards : public State{
 class Settings : public State{
     private:
         //
+        InputMode movementMode;
 
     public:
         Settings(GameState& gameState) : State(gameState) {}
@@ -147,8 +149,10 @@ class Settings : public State{
         void update(){
 
         }
+        InputMode getMovementMode(){
+            return movementMode;
+        }
 };
-
 
 class Laser{
     private:
@@ -332,9 +336,56 @@ class SpaceShip{
         }
 };
 
+
+class Alien{
+    private:
+        int posX;
+        int posY;
+        int row;
+        int col;
+        int active;
+        Texture alien;
+        float scale;
+
+    public:
+        Alien() : active(true) {}
+
+        void draw(){
+            if (active){
+                // DrawTexture(texture, posX,);
+
+            }
+        }
+        void update(){
+            //
+        }
+};
+class Aliens{
+    private:
+        vector<vector<Alien>> aliens;               // 2D array of Alien
+
+    public:
+        //
+        void draw(){
+            for (auto& rowOfAliens : aliens){
+                for (auto& alien : rowOfAliens){
+                    alien.draw();
+                }
+            }
+        }
+        void update(){
+            for (auto& rowOfAliens : aliens){
+                for (auto& alien : rowOfAliens){
+                    alien.update();
+                }
+            }
+        }
+};
+
 class Playing : public State{
     private:
         SpaceShip spaceShip; 
+        Aliens aliens;
 
     public:
         Playing(GameState& gameState) 
@@ -347,13 +398,13 @@ class Playing : public State{
         }
         void draw(){
             spaceShip.draw();
-            // aliens.draw();
+            aliens.draw();
             // obstacles.draw();
             // motherShip.draw();
         }
-        void update(){
-            spaceShip.update(WASD);
-            // aliens.update();
+        void update(InputMode& movementMode){
+            spaceShip.update(movementMode);
+            aliens.update();
             // obstacles.update();
             // motherShip.update();
         }
@@ -438,6 +489,8 @@ class Game{
 
 
         void draw(){                                                    // draws based upon the current gameState
+            ClearBackground(BLANK);
+
             switch(gameState)
             {
                 case MENU:         { menu.draw();         break; }
@@ -455,16 +508,16 @@ class Game{
         void update(){                                                  // updates based upon the current gameState
             switch(gameState)
             {
-                case MENU:         { menu.update();         break; }
-                case PLAY:         { play.update();         break; }
-                case SHOP:         { shop.update();         break; }
-                case HISTORY:      { history.update();      break; }
-                case LEADERBOARDS: { leaderBoards.update(); break; }
-                case SETTINGS:     { settings.update();     break; }
-                case PLAYING:      { playing.update();      break; }
-                case PAUSED:       { paused.update();       break; }
-                case GAMEOVER:     { gameOver.update();     break; }
-                case CLOSEGAME:    { closeGame.update();    break; }  
+                case MENU:         { menu.update();                              break; }
+                case PLAY:         { play.update();                              break; }
+                case SHOP:         { shop.update();                              break; }
+                case HISTORY:      { history.update();                           break; }
+                case LEADERBOARDS: { leaderBoards.update();                      break; }
+                case SETTINGS:     { settings.update();                          break; }
+                case PLAYING:      { playing.update(settings.getMovementMode()); break; }
+                case PAUSED:       { paused.update();                            break; }
+                case GAMEOVER:     { gameOver.update();                          break; }
+                case CLOSEGAME:    { closeGame.update();                         break; }  
             }
         }
 };
@@ -487,7 +540,6 @@ int main()
 
     Game game;
 
-    // Texture alien = LoadTexture("Assets/Sprites/Aliens/2.jpg");
     while (!WindowShouldClose()){
         // updating
         game.update();
@@ -495,9 +547,7 @@ int main()
         // drawing
         BeginDrawing();
 
-            ClearBackground(BLANK);
             game.draw();
-            // DrawTexture(alien, 100, 100 , WHITE);
 
         EndDrawing();
     }
