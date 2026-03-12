@@ -1,8 +1,9 @@
 //                                                             بسم اللہ الرحمان الرحیم  
 
 #include <string>
+#include <iostream>
 #include <raylib.h>
-using std::string;
+using std::cin, std::cout, std::string;
 
 /*
     [Started]
@@ -20,21 +21,37 @@ using std::string;
 */
 
 
-enum GameState{
-    MENU,
-    PLAYING,
-    PAUSED,
-    GAMEOVER
+enum GameState{                 // an ENUM to indicate the current state of the game
+    // mainMenu
+        MENU,                   // the mainMenu screen of the game; contains the following 👇
+            PLAY,               // contains options such as playerName, difficulty, spaceShip skin etc
+            SHOP,               // buy diff spaceShip skins, aliens' skins, SFX perhaps
+            HISTORY,            // show gameHistory (using sqlite)
+            LEADERBOARDS,       // display leaderBoards with top10 players (using sqlite)
+            SETTINGS,           // game settings such as fullscreen, SFX volume, playerInputMode, opacity etc (similar to Mr. Pong's)
+
+    // gamePlay
+        PLAYING,                // actual gamePlay state
+        PAUSED,                 // while game is paused inside PLAYING
+        GAMEOVER,               // when game ends inside PLAYING; shows outcome, score, aliens-defeated, coins earned etc
+
+    // windowShouldClose()
+        CLOSEGAME               // when user chooses to close the window; plays a meme or similar
+};
+enum InputMode{                 // an ENUM to indicate the chosen playerInputMode (altered in settings)
+    WASD,                       // W & A keys
+    ARROW,                      // left & right arrowKeys
+    MOUSE                       // Left & Right mouseButtons
 };
 
-class State{                                    // an abstract class to be inheriteed by all gameState subclasses
+class State{                                                        // an abstract class to be inherited by all gameState subclasses
     protected:
         GameState& gameState;
 
     public:
         State(GameState& gameState) : gameState(gameState) {}
 
-        virtual void draw() = 0;
+        virtual void draw()   = 0;
 
         virtual void update() = 0;
 };
@@ -52,12 +69,12 @@ class Menu : public State{
 
         }
 };
-class Playing : public State{
+class Play : public State{
     private:
         //
 
     public:
-        Playing(GameState& gameState) : State(gameState) {}
+        Play(GameState& gameState) : State(gameState) {}
 
         void draw(){
 
@@ -66,6 +83,198 @@ class Playing : public State{
 
         }
 };
+class Shop : public State{
+    private:
+        //
+
+    public:
+        Shop(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class History : public State{
+    private:
+        //
+
+    public:
+        History(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class LeaderBoards : public State{
+    private:
+        //
+
+    public:
+        LeaderBoards(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class Settings : public State{
+    private:
+        //
+
+    public:
+        Settings(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+
+
+
+class SpaceShip{
+    private:
+        Texture spaceShip;
+        float posX;
+        float posY;
+        float scale;            // the scale by which to shrink the spaceShip texture; default 0.1f
+        int bottomOffset;       // the value by which to offset/raise the ship from the bottom of the screen; default 50
+        float speed;
+        
+        void loadShip(const string& fileName){
+            spaceShip = LoadTexture(TextFormat("Assets/Sprites/spaceShips/%s", fileName.c_str()));
+            
+            // returns true if the texture is loaded into memory; alternatively coudlve used "if (spaceShip.id)"
+            cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(spaceShip)? ") has" : ") has NOT") << " loaded properly.\n";
+        }
+
+    public:
+        SpaceShip(const string& fileName){
+            loadShip(fileName);
+
+            scale = 0.1f;
+            bottomOffset = 50;
+
+            posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
+            posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
+
+            speed = 0.3;
+        }
+        ~SpaceShip(){
+            UnloadTexture(spaceShip);
+        }
+
+        void draw(){
+            // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
+            DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
+        }
+        void update(InputMode inputMode){
+            int screenWidth = GetScreenWidth();
+
+            // moving ship
+            switch (inputMode)
+            {
+                case WASD:
+                {
+                    if (IsKeyDown(KEY_A)){
+                        posX -= speed;
+
+                        if (posX <= 0)
+                        { posX = 0; }
+                    }
+                    if (IsKeyDown(KEY_D)){
+                        posX += speed;
+
+                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
+                        { posX = screenWidth - (spaceShip.width * scale); }
+                    }
+
+                    break;
+                }
+                case ARROW:
+                {
+                    if (IsKeyDown(KEY_LEFT)){
+                        posX -= speed;
+
+                        if (posX <= 0)
+                        { posX = 0; }
+                    }
+                    if (IsKeyDown(KEY_RIGHT)){
+                        posX += speed;
+
+                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
+                        { posX = screenWidth - (spaceShip.width * scale); }
+                    }
+
+                    break;
+                }
+                case MOUSE:
+                {
+                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+                        posX -= speed;
+
+                        if (posX <= 0)
+                        { posX = 0; }
+                    }
+                    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
+                        posX += speed;
+
+                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
+                        { posX = screenWidth - (spaceShip.width * scale); }
+                    }
+
+                    break;
+                }
+            }
+        }
+        void fire(){
+
+        }
+        void reset(){
+            posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
+            posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
+        }
+};
+
+class Playing : public State{
+    private:
+        SpaceShip spaceShip;
+
+    public:
+        Playing(GameState& gameState) 
+        : State(gameState)
+        , spaceShip("11.png") 
+        {}
+
+        void init(){
+
+        }
+        void draw(){
+            spaceShip.draw();
+            // aliens.draw();
+            // obstacles.draw();
+            // motherShip.draw();
+        }
+        void update(){
+            spaceShip.update(MOUSE);
+            // aliens.update();
+            // obstacles.update();
+            // motherShip.update();
+        }
+};
+
+
+
 class Paused : public State{
     private:
         //
@@ -94,40 +303,82 @@ class GameOver : public State{
 
         }
 };
+class CloseGame : public State{
+    private:
+        //
+
+    public:
+        CloseGame(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
 class Game{
     private:
         GameState gameState;
 
-        Menu     menu;
-        Playing  playing;
-        Paused   paused;
-        GameOver gameOver;
+        Menu         menu;
+        Play         play;
+        Shop         shop;
+        History      history;
+        LeaderBoards leaderBoards;
+        Settings     settings;
+
+        Playing      playing;
+        Paused       paused;
+        GameOver     gameOver;
+
+        CloseGame    closeGame;
 
 
     public:
-        Game() 
-        : gameState(MENU)
+        Game()                          // overRiding default constructor 
+        : gameState(PLAYING)               // initializing gameState with MENU
         , menu(gameState)
+        , play(gameState)
+        , shop(gameState) 
+        , history(gameState)
+        , leaderBoards(gameState)
+        , settings(gameState)
         , playing(gameState)
         , paused(gameState)
-        , gameOver(gameState) {}
+        , gameOver(gameState)
+        , closeGame(gameState) 
+        {}
 
-        void draw(){
+
+        void draw(){                                                    // draws based upon the current gameState
             switch(gameState)
             {
-                case MENU:     { menu.draw();     break; }
-                case PLAYING:  { playing.draw();  break; }
-                case PAUSED:   { paused.draw();   break; }
-                case GAMEOVER: { gameOver.draw(); break; }
+                case MENU:         { menu.draw();         break; }
+                case PLAY:         { play.draw();         break; }
+                case SHOP:         { shop.draw();         break; }
+                case HISTORY:      { history.draw();      break; }
+                case LEADERBOARDS: { leaderBoards.draw(); break; }
+                case SETTINGS:     { settings.draw();     break; }
+                case PLAYING:      { playing.draw();      break; }
+                case PAUSED:       { paused.draw();       break; }
+                case GAMEOVER:     { gameOver.draw();     break; }
+                case CLOSEGAME:    { closeGame.draw();    break; }  
             }
         }
-        void update(){
+        void update(){                                                  // updates based upon the current gameState
             switch(gameState)
             {
-                case MENU:     { menu.update();     break; }
-                case PLAYING:  { playing.update();  break; }
-                case PAUSED:   { paused.update();   break; }
-                case GAMEOVER: { gameOver.update(); break; }
+                case MENU:         { menu.update();         break; }
+                case PLAY:         { play.update();         break; }
+                case SHOP:         { shop.update();         break; }
+                case HISTORY:      { history.update();      break; }
+                case LEADERBOARDS: { leaderBoards.update(); break; }
+                case SETTINGS:     { settings.update();     break; }
+                case PLAYING:      { playing.update();      break; }
+                case PAUSED:       { paused.update();       break; }
+                case GAMEOVER:     { gameOver.update();     break; }
+                case CLOSEGAME:    { closeGame.update();    break; }  
             }
         }
 };
@@ -145,9 +396,18 @@ int main()
         UnloadImage(favicon);
     }
 
+    Game game;
+
     while (!WindowShouldClose()){
+        // updating
+        game.update();
+
+        // drawing
         BeginDrawing();
-            ClearBackground(BLACK);
+
+            ClearBackground(BLANK);
+            game.draw();
+        
         EndDrawing();
     }
 
