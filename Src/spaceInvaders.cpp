@@ -175,7 +175,7 @@ class SpaceShip{
         }
 
         void draw(){
-            // DrawTexture(spaceShip, posX, posY, WHITE);                               // doesnt allow scaling
+            // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
             DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
         }
         void update(InputMode inputMode){
@@ -220,13 +220,13 @@ class SpaceShip{
                 }
                 case MOUSE:
                 {
-                    if (IsKeyDown(MOUSE_BUTTON_LEFT)){
+                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
                         posX -= speed;
 
                         if (posX <= 0)
                         { posX = 0; }
                     }
-                    if (IsKeyDown(MOUSE_BUTTON_RIGHT)){
+                    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
                         posX += speed;
 
                         if ((posX + (spaceShip.width * scale)) >= screenWidth)
@@ -240,34 +240,38 @@ class SpaceShip{
         void fire(){
 
         }
+        void reset(){
+            posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
+            posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
+        }
 };
-/*
+
 class Playing : public State{
     private:
         SpaceShip spaceShip;
 
     public:
-        Playing(GameState& gameState) : State(gameState)
-        {
-        }
+        Playing(GameState& gameState) 
+        : State(gameState)
+        , spaceShip("11.png") 
+        {}
 
         void init(){
-            DrawTexture(spaceShip, )
+
         }
         void draw(){
             spaceShip.draw();
-            aliens.draw();
-            obstacles.draw();
-            motherShip.draw();
+            // aliens.draw();
+            // obstacles.draw();
+            // motherShip.draw();
         }
         void update(){
-            spaceShip.update();
-            aliens.update();
-            obstacles.update();
-            motherShip.update();
+            spaceShip.update(MOUSE);
+            // aliens.update();
+            // obstacles.update();
+            // motherShip.update();
         }
 };
-*/
 
 
 
@@ -324,7 +328,7 @@ class Game{
         LeaderBoards leaderBoards;
         Settings     settings;
 
-        // Playing      playing;
+        Playing      playing;
         Paused       paused;
         GameOver     gameOver;
 
@@ -333,14 +337,14 @@ class Game{
 
     public:
         Game()                          // overRiding default constructor 
-        : gameState(MENU)               // initializing gameState with MENU
+        : gameState(PLAYING)               // initializing gameState with MENU
         , menu(gameState)
         , play(gameState)
         , shop(gameState) 
         , history(gameState)
         , leaderBoards(gameState)
         , settings(gameState)
-        // , playing(gameState)
+        , playing(gameState)
         , paused(gameState)
         , gameOver(gameState)
         , closeGame(gameState) 
@@ -356,7 +360,7 @@ class Game{
                 case HISTORY:      { history.draw();      break; }
                 case LEADERBOARDS: { leaderBoards.draw(); break; }
                 case SETTINGS:     { settings.draw();     break; }
-                // case PLAYING:      { playing.draw();      break; }
+                case PLAYING:      { playing.draw();      break; }
                 case PAUSED:       { paused.draw();       break; }
                 case GAMEOVER:     { gameOver.draw();     break; }
                 case CLOSEGAME:    { closeGame.draw();    break; }  
@@ -371,7 +375,7 @@ class Game{
                 case HISTORY:      { history.update();      break; }
                 case LEADERBOARDS: { leaderBoards.update(); break; }
                 case SETTINGS:     { settings.update();     break; }
-                // case PLAYING:      { playing.update();      break; }
+                case PLAYING:      { playing.update();      break; }
                 case PAUSED:       { paused.update();       break; }
                 case GAMEOVER:     { gameOver.update();     break; }
                 case CLOSEGAME:    { closeGame.update();    break; }  
@@ -393,20 +397,16 @@ int main()
     }
 
     Game game;
-    SpaceShip spaceShip("11.png");
 
     while (!WindowShouldClose()){
         // updating
         game.update();
-        spaceShip.update(WASD);
 
         // drawing
         BeginDrawing();
 
             ClearBackground(BLANK);
             game.draw();
-
-            spaceShip.draw();
         
         EndDrawing();
     }
