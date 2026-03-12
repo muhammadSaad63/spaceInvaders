@@ -165,24 +165,37 @@ class Laser{
             this->posX = posX;
             this->posY = posY;
 
-            speed = 3;
+            width = 5;
+            height = 25;
+            speed = 9;
             active = true;
         }
         void update(Player playerType){
             switch (playerType)
             {
-                case USER:  { posY -= speed; break; }               // if the user fired the laser, decrease its posX by speed (ie move it up)
-                case ALIEN: { posY += speed; break; }               // if the aliens fired the laser, increase its posX by speed (ie move it down)
+                case USER:                                         
+                    posY -= speed;                                  // if the user fired the laser, decrease its posX by speed (ie move it up)
+                    if (posY <= 0){
+                        active = false;
+                        cout << "[GAME] Laser deactivated!\n";
+                    }
+                    break;     
+                case ALIEN: 
+                    posY += speed;                                  // if the aliens fired the laser, increase its posX by speed (ie move it down)
+                    if ((posY + height) >= GetScreenHeight()){
+                        active = false;
+                    }
+                    break;    
             }
         }
-        void draw(){
+        void draw(){    
             DrawRectangle(posX, posY, width, height, WHITE);
         }
         Rectangle getRect(){
             return Rectangle{posX, posY, width, height};
         }
-        void deActivate(){
-            active = false;
+        bool isActive(){
+            return active;
         }
 };
 class SpaceShip{
@@ -213,7 +226,7 @@ class SpaceShip{
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
             posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
 
-            speed = 0.2;
+            speed = 5;
         }
         ~SpaceShip(){
             UnloadTexture(spaceShip);
@@ -224,7 +237,9 @@ class SpaceShip{
             DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
 
             for (auto &laser : lasers){
-                laser.draw();
+                if (laser.isActive()){
+                    laser.draw(); 
+                }
             }
         }
         void update(InputMode inputMode){
@@ -287,14 +302,18 @@ class SpaceShip{
             }
 
             // firing lasers
-            switch (inputMode)
-            if (IsKeyPressed()){
-                lasers.push_back(Laser{posX + (spaceShip.width * scale), posY});
+            if (IsKeyPressed(KEY_SPACE)){
+                lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
             }
 
             // updating lasers
             for (auto &laser : lasers){
-                laser.update(USER);
+                if (laser.isActive()){
+                    laser.update(USER);
+                }
+                else{
+                    
+                }
             }
         }
         void reset(){
@@ -323,7 +342,7 @@ class Playing : public State{
             // motherShip.draw();
         }
         void update(){
-            spaceShip.update(MOUSE);
+            spaceShip.update(WASD);
             // aliens.update();
             // obstacles.update();
             // motherShip.update();
@@ -448,6 +467,7 @@ int main()
     InitWindow(1080, 720, "Space Invaders 👾");
     SetWindowOpacity(0.9);
     SetExitKey(KEY_ESCAPE);
+    SetTargetFPS(63);
 
     Image favicon = LoadImage("Assets/Favicon/11.png");
     if (favicon.data){
