@@ -339,7 +339,7 @@ class Playing : public State{
     public:
         Playing(GameState& gameState) 
         : State(gameState)
-        , spaceShip("11.png") 
+        , spaceShip("1.png") 
         {}
 
         void init(){
@@ -487,6 +487,7 @@ int main()
 
     Game game;
 
+    // Texture alien = LoadTexture("Assets/Sprites/Aliens/2.jpg");
     while (!WindowShouldClose()){
         // updating
         game.update();
@@ -496,9 +497,11 @@ int main()
 
             ClearBackground(BLANK);
             game.draw();
-        
+            // DrawTexture(alien, 100, 100 , WHITE);
+
         EndDrawing();
     }
 
+    // UnloadTexture(alien);
     CloseWindow();
 }
