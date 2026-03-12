@@ -21,6 +21,7 @@ using std::cout, std::string, std::vector;
         >
 */
 
+// Enums -----
 
 enum GameState{                 // an ENUM to indicate the current state of the game
     // mainMenu
@@ -48,6 +49,9 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
     ARROW,                      // left & right arrowKeys
     MOUSE                       // Left & Right mouseButtons
 };
+
+
+// Classes -----
 
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
     protected:
@@ -218,6 +222,10 @@ class SpaceShip{
         void draw(){
             // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
             DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
+
+            for (auto &laser : lasers){
+                laser.draw();
+            }
         }
         void update(InputMode inputMode){
             int screenWidth = GetScreenWidth();
@@ -277,9 +285,17 @@ class SpaceShip{
                     break;
                 }
             }
-        }
-        void fire(){
-            lasers.push_back(Laser{posX, posY});
+
+            // firing lasers
+            switch (inputMode)
+            if (IsKeyPressed()){
+                lasers.push_back(Laser{posX + (spaceShip.width * scale), posY});
+            }
+
+            // updating lasers
+            for (auto &laser : lasers){
+                laser.update(USER);
+            }
         }
         void reset(){
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
@@ -424,6 +440,8 @@ class Game{
         }
 };
 
+
+// Main ---
 
 int main()
 {
