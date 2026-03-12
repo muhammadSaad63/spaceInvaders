@@ -5,21 +5,20 @@
 using std::string;
 
 /*
-    -- Feb 25:
-    Started bi-idhni-Allahi Taala
+    [Started]
+        >
+
+    [Abstract]
+        >
 
     TODO
         - 
         -
-meowmeow
-dsa
-dsa
 
-    -- Feb 25: 
-    Finished للہ الحمد کلہ :D
+    [Finished]
+        >
 */
 
-// this is to be a simple game; just for the sake of it; say 500ish loc or less; will serve as intermediary to my main tetris
 
 enum GameState{
     MENU,
@@ -153,4 +152,4 @@ int main()
     }
 
     CloseWindow();
-} 
+}
