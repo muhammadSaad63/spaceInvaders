@@ -184,7 +184,7 @@ class Laser{
                     posY -= speed;                                  // if the user fired the laser, decrease its posX by speed (ie move it up)
                     if (posY <= 0){
                         deActivate();
-                        cout << "[GAME] Laser deactivated!\n";
+                        // cout << "[GAME] Laser deactivated!\n";
                     }
                     break;     
                 case ALIEN: 
@@ -409,7 +409,7 @@ class MotherShip{
 
     public:
         MotherShip() 
-        : lastSpawned(GetTime())                                        // time when the ship last spawned; initialized with the getTime()
+        : lastSpawned(0)                                                // time when the ship last spawned; initialized with the 0/getTime()
         , spawnDuration(15)                                             // will appear for a duration of 15s
         , currentlySpawned(false)                                       // is the motherShip currently spawned            
         , hits(0)                                                       // number of hits currently sustained by the motherShip
@@ -432,12 +432,14 @@ class MotherShip{
                 DrawText(TextFormat("%d", maxPossibleHits - hits), position.x + (motherShip.width * scale)/2 - 5, position.y, 20 , GOLD);
             }
         }
-        void update(vector<Laser>& lasers){
+        void update(vector<Laser>& lasers, int& score){
             if (currentlySpawned){
                 // despawning if it has spawned for >= spawnDuration time
                 if (GetTime() >= (lastSpawned + spawnDuration)){            
                     currentlySpawned = false;
                     randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+                    lastSpawned = GetTime();
+                    cout << "[Game] Despawning motherShip (time over)\n";
                     // playsound...
                     return;
                 }
@@ -451,6 +453,9 @@ class MotherShip{
                         if (hits >= maxPossibleHits){
                             currentlySpawned = false;
                             randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+                            lastSpawned = GetTime();
+                            score += scoreBoost;
+                            cout << "[Game] motherShip Destructed\n";
                             // playsound
                             return;
                         }
@@ -475,18 +480,19 @@ class MotherShip{
             }
 
             else{
-                // if (GetTime() >= (lastSpawned + spawnDuration + randomSpawnPause)){            // despawning if it has spawned for >= spawnDuration time
-
+                if (GetTime() >= (lastSpawned + randomSpawnPause)){                          // despawning if it has spawned for >= spawnDuration time
                     currentlySpawned = true;
                     hits = 0;
                     lastSpawned = GetTime(); 
 
-                    spawnFromLeft = (bool)GetRandomValue(0, 1);                               // true if 1 generated, false if not
+                    spawnFromLeft = (bool)GetRandomValue(0, 1);                                              // true if 1 generated, false if not
                     position.x = ((spawnFromLeft)? 0 : (GetScreenWidth() - (motherShip.width * scale)));
                     
-                    if (speed < 0){ speed *= -1; }                                                      // effectively abs(speed)
+                    if (speed < 0){ speed *= -1; }                                                           // effectively abs(speed)
+                    
+                    cout << "[Game] Spawning motherShip\n";
                     // playsound...
-                // }
+                }
             }
         }
         Rectangle motherShipRect(){
@@ -500,13 +506,15 @@ class Playing : public State{
         Aliens         aliens;
         MotherShip     motherShip;
 
+        int            score;
         InputMode&     movementMode;        // for storing reference of playerInputMode from settings
         vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
 
     public:
         Playing(GameState& gameState, InputMode& movementMode) 
         : State(gameState)
-        , spaceShip("1.png") 
+        , spaceShip("1.png")
+        , score(0) 
         , movementMode(movementMode)
         , lasers(spaceShip.getLasers())
         {}
@@ -516,15 +524,19 @@ class Playing : public State{
         }
         void draw(){
             spaceShip.draw();
-            aliens.draw();
+            // aliens.draw();
             motherShip.draw();
             // obstacles.draw();
         }
         void update(){
             spaceShip.update(movementMode);
-            aliens.update();
-            motherShip.update(lasers);
+            // aliens.update();
+            motherShip.update(lasers, score);
             // obstacles.update();
+
+            if (IsKeyPressed(KEY_P)){
+                gameState = PAUSED;
+            }
         }
 };
 
@@ -538,10 +550,14 @@ class Paused : public State{
         Paused(GameState& gameState) : State(gameState) {}
 
         void draw(){
-
+            DrawText("Game Paused", GetScreenWidth()/2 - MeasureText("Game Paused", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
+            // DrawText("Press P to Unpause", GetScreenWidth() - MeasureText("Press P to Unpause", 23), GetScreenHeight() - 23, 23, GOLD);
+            DrawText("Press P to Unpause", 5, GetScreenHeight() - 23 - 5, 23, GOLD);
         }
         void update(){
-
+            if (IsKeyPressed(KEY_P)){
+                gameState = PLAYING;
+            }
         }
 };
 class GameOver : public State{
