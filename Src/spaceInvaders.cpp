@@ -340,7 +340,7 @@ class SpaceShip{
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
             posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
         }
-        vector<Laser> getLasers(){
+        vector<Laser>& getLasers(){
             return lasers;
         }
 };
@@ -460,17 +460,19 @@ class MotherShip{
 
 class Playing : public State{
     private:
-        SpaceShip  spaceShip; 
-        Aliens     aliens;
-        MotherShip motherShip;
+        SpaceShip      spaceShip; 
+        Aliens         aliens;
+        MotherShip     motherShip;
 
-        InputMode& movementMode;
+        InputMode&     movementMode;        // for storing reference of playerInputMode from settings
+        vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
 
     public:
         Playing(GameState& gameState, InputMode& movementMode) 
         : State(gameState)
         , spaceShip("1.png") 
         , movementMode(movementMode)
+        , lasers(spaceShip.getLasers())
         {}
 
         void init(){
@@ -485,7 +487,7 @@ class Playing : public State{
         void update(){
             spaceShip.update(movementMode);
             aliens.update();
-            motherShip.update(spaceShip.)
+            motherShip.update(lasers);
             // obstacles.update();
         }
 };
