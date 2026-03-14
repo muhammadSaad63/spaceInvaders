@@ -396,13 +396,15 @@ class MotherShip{
         Texture motherShip;
         int     lastSpawned;
         int     spawnDuration;
-        int     currentlySpawned;
+        bool    currentlySpawned;
         int     hits;
         int     maxPossibleHits;
         int     scoreBoost;
         Vector2 position;           // using instead of posX, posY
+        int     speed;              // speed by which to update position.x
         float   scale;
         int     randomSpawnPause;   // duration after which to spawn the mothership
+        bool    spawnFromLeft;      // will be randomly decided;
 
 
     public:
@@ -417,8 +419,13 @@ class MotherShip{
         , position({0.0f, 100})
         , scale(0.3f)
         , randomSpawnPause(30)                                          // 30s
+        , speed(3)
+        , spawnFromLeft(true)
         {}
-
+        ~MotherShip(){
+            if (IsTextureValid(motherShip))                             // this check is redundant tho...
+            { UnloadTexture(motherShip);  }
+        }
         void draw(){
             if (currentlySpawned){
                 DrawTextureEx(motherShip, position, 0.0f, scale, WHITE);
@@ -426,29 +433,56 @@ class MotherShip{
         }
         void update(vector<Laser>& lasers){
             if (currentlySpawned){
-                if (GetTime() >= (lastSpawned + spawnDuration)){            // despawning if it has spawned for >= spawnDuration time
+                // despawning if it has spawned for >= spawnDuration time
+                if (GetTime() >= (lastSpawned + spawnDuration)){            
                     currentlySpawned = false;
                     randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
                     // playsound...
                     return;
                 }
+
+                // checking for hits
                 for (auto& laser : lasers){
-                    if (CheckCollisionRecs(laser.getRect(), motherShipRect())){
+                    if (laser.isActive() && CheckCollisionRecs(laser.getRect(), motherShipRect())){
                         laser.deActivate();
                         hits++;
+
+                        if (hits >= maxPossibleHits){
+                            currentlySpawned = false;
+                            randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+                            // playsound
+                            return;
+                        }
                     }
                 }
-                if (hits >= maxPossibleHits){
-                    currentlySpawned = false;
-                    randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
-                    // playsound
+
+                // updating position
+                if (spawnFromLeft){
+                    position.x += speed;
+
+                    if ((position.x + motherShip.width) >= GetScreenWidth()){
+                        speed *= -1;
+                    }
+                }
+                else{
+                    position.x -= speed;
+
+                    if (position.x <= 0){
+                        speed *= -1;
+                    }
                 }
             }
+
             else{
                 if (GetTime() >= (lastSpawned + spawnDuration + randomSpawnPause)){            // despawning if it has spawned for >= spawnDuration time
                     currentlySpawned = true;
                     hits = 0;
                     lastSpawned = GetTime(); 
+
+                    spawnFromLeft = (bool)GetRandomValue(0, 1);                               // true if 1 generated, false if not
+                    position.x = ((spawnFromLeft)? 0 : (GetScreenWidth() - motherShip.width));
+                    
+                    if (speed < 0){ speed *= -1; }                                                      // effectively abs(speed)
                     // playsound...
                 }
             }
