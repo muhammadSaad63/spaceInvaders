@@ -8,7 +8,7 @@ using std::cout, std::string, std::vector;
 
 /*
     [Started]
-        >
+        > Mar 9th, 2026
 
     [Abstract]
         >
@@ -183,14 +183,14 @@ class Laser{
                 case USER:                                         
                     posY -= speed;                                  // if the user fired the laser, decrease its posX by speed (ie move it up)
                     if (posY <= 0){
-                        active = false;
+                        deActivate();
                         cout << "[GAME] Laser deactivated!\n";
                     }
                     break;     
                 case ALIEN: 
                     posY += speed;                                  // if the aliens fired the laser, increase its posX by speed (ie move it down)
                     if ((posY + height) >= GetScreenHeight()){
-                        active = false;
+                        deActivate();
                     }
                     break;    
             }
@@ -203,6 +203,9 @@ class Laser{
         }
         bool isActive(){
             return active;
+        }
+        void deActivate(){
+            active = false;
         }
 };
 class SpaceShip{
@@ -337,6 +340,9 @@ class SpaceShip{
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
             posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
         }
+        vector<Laser> getLasers(){
+            return lasers;
+        }
 };
 
 
@@ -360,7 +366,7 @@ class Alien{
             }
         }
         void update(){
-            //
+            // 
         }
 };
 class Aliens{
@@ -385,10 +391,78 @@ class Aliens{
         }
 };
 
+class MotherShip{
+    private:
+        Texture motherShip;
+        int     lastSpawned;
+        int     spawnDuration;
+        int     currentlySpawned;
+        int     hits;
+        int     maxPossibleHits;
+        int     scoreBoost;
+        Vector2 position;           // using instead of posX, posY
+        float   scale;
+        int     randomSpawnPause;   // duration after which to spawn the mothership
+
+
+    public:
+        MotherShip() 
+        : lastSpawned(GetTime())                                        // time when the ship last spawned; initialized with the getTime()
+        , spawnDuration(15)                                             // will appear for a duration of 15s
+        , currentlySpawned(false)                                       // is the motherShip currently spawned            
+        , hits(0)                                                       // number of hits currently sustained by the motherShip
+        , maxPossibleHits(5)                                            // max number of hits to defeat/destruct the motherShip
+        , scoreBoost(1000)                                              // 1000 extra points on destruction
+        , motherShip(LoadTexture("Assets/Sprites/motherShip/1.png"))
+        , position({0.0f, 100})
+        , scale(0.3f)
+        , randomSpawnPause(30)                                          // 30s
+        {}
+
+        void draw(){
+            if (currentlySpawned){
+                DrawTextureEx(motherShip, position, 0.0f, scale, WHITE);
+            }
+        }
+        void update(vector<Laser>& lasers){
+            if (currentlySpawned){
+                if (GetTime() >= (lastSpawned + spawnDuration)){            // despawning if it has spawned for >= spawnDuration time
+                    currentlySpawned = false;
+                    randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+                    // playsound...
+                    return;
+                }
+                for (auto& laser : lasers){
+                    if (CheckCollisionRecs(laser.getRect(), motherShipRect())){
+                        laser.deActivate();
+                        hits++;
+                    }
+                }
+                if (hits >= maxPossibleHits){
+                    currentlySpawned = false;
+                    randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+                    // playsound
+                }
+            }
+            else{
+                if (GetTime() >= (lastSpawned + spawnDuration + randomSpawnPause)){            // despawning if it has spawned for >= spawnDuration time
+                    currentlySpawned = true;
+                    hits = 0;
+                    lastSpawned = GetTime(); 
+                    // playsound...
+                }
+            }
+        }
+        Rectangle motherShipRect(){
+            return Rectangle{position.x, position.y, (float)(motherShip.width * scale), (float)(motherShip.height * scale)};
+        }
+};
+
 class Playing : public State{
     private:
-        SpaceShip spaceShip; 
-        Aliens aliens;
+        SpaceShip  spaceShip; 
+        Aliens     aliens;
+        MotherShip motherShip;
 
         InputMode& movementMode;
 
@@ -405,14 +479,14 @@ class Playing : public State{
         void draw(){
             spaceShip.draw();
             aliens.draw();
+            motherShip.draw();
             // obstacles.draw();
-            // motherShip.draw();
         }
         void update(){
             spaceShip.update(movementMode);
             aliens.update();
+            motherShip.update(spaceShip.)
             // obstacles.update();
-            // motherShip.update();
         }
 };
 
@@ -514,16 +588,16 @@ class Game{
         void update(){                                                  // updates based upon the current gameState
             switch(gameState)
             {
-                case MENU:         { menu.update();                              break; }
-                case PLAY:         { play.update();                              break; }
-                case SHOP:         { shop.update();                              break; }
-                case HISTORY:      { history.update();                           break; }
-                case LEADERBOARDS: { leaderBoards.update();                      break; }
-                case SETTINGS:     { settings.update();                          break; }
-                case PLAYING:      { playing.update(); break; }
-                case PAUSED:       { paused.update();                            break; }
-                case GAMEOVER:     { gameOver.update();                          break; }
-                case CLOSEGAME:    { closeGame.update();                         break; }  
+                case MENU:         { menu.update();         break; }
+                case PLAY:         { play.update();         break; }
+                case SHOP:         { shop.update();         break; }
+                case HISTORY:      { history.update();      break; }
+                case LEADERBOARDS: { leaderBoards.update(); break; }
+                case SETTINGS:     { settings.update();     break; }
+                case PLAYING:      { playing.update();      break; }
+                case PAUSED:       { paused.update();       break; }
+                case GAMEOVER:     { gameOver.update();     break; }
+                case CLOSEGAME:    { closeGame.update();    break; }  
             }
         }
 };
@@ -558,6 +632,5 @@ int main()
         EndDrawing();
     }
 
-    // UnloadTexture(alien);
     CloseWindow();
 }
