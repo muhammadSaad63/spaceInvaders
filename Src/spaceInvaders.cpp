@@ -413,13 +413,13 @@ class MotherShip{
         , spawnDuration(15)                                             // will appear for a duration of 15s
         , currentlySpawned(false)                                       // is the motherShip currently spawned            
         , hits(0)                                                       // number of hits currently sustained by the motherShip
-        , maxPossibleHits(5)                                            // max number of hits to defeat/destruct the motherShip
+        , maxPossibleHits(7)                                            // max number of hits to defeat/destruct the motherShip
         , scoreBoost(1000)                                              // 1000 extra points on destruction
-        , motherShip(LoadTexture("Assets/Sprites/motherShip/1.png"))
-        , position({0.0f, 100})
-        , scale(0.3f)
+        , motherShip(LoadTexture("Assets/Sprites/motherShips/1.png"))
+        , position({0.0f, 50})
+        , scale(0.15f)
         , randomSpawnPause(30)                                          // 30s
-        , speed(3)
+        , speed(2)
         , spawnFromLeft(true)
         {}
         ~MotherShip(){
@@ -429,6 +429,7 @@ class MotherShip{
         void draw(){
             if (currentlySpawned){
                 DrawTextureEx(motherShip, position, 0.0f, scale, WHITE);
+                DrawText(TextFormat("%d", maxPossibleHits - hits), position.x + (motherShip.width * scale)/2 - 5, position.y, 20 , GOLD);
             }
         }
         void update(vector<Laser>& lasers){
@@ -460,7 +461,7 @@ class MotherShip{
                 if (spawnFromLeft){
                     position.x += speed;
 
-                    if ((position.x + motherShip.width) >= GetScreenWidth()){
+                    if ((position.x + motherShip.width * scale) >= GetScreenWidth()){
                         speed *= -1;
                     }
                 }
@@ -474,17 +475,18 @@ class MotherShip{
             }
 
             else{
-                if (GetTime() >= (lastSpawned + spawnDuration + randomSpawnPause)){            // despawning if it has spawned for >= spawnDuration time
+                // if (GetTime() >= (lastSpawned + spawnDuration + randomSpawnPause)){            // despawning if it has spawned for >= spawnDuration time
+
                     currentlySpawned = true;
                     hits = 0;
                     lastSpawned = GetTime(); 
 
                     spawnFromLeft = (bool)GetRandomValue(0, 1);                               // true if 1 generated, false if not
-                    position.x = ((spawnFromLeft)? 0 : (GetScreenWidth() - motherShip.width));
+                    position.x = ((spawnFromLeft)? 0 : (GetScreenWidth() - (motherShip.width * scale)));
                     
                     if (speed < 0){ speed *= -1; }                                                      // effectively abs(speed)
                     // playsound...
-                }
+                // }
             }
         }
         Rectangle motherShipRect(){
