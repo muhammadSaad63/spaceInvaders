@@ -537,6 +537,9 @@ class Playing : public State{
             if (IsKeyPressed(KEY_P)){
                 gameState = PAUSED;
             }
+            if (WindowShouldClose()){
+                gameState = CLOSEGAME;
+            }
         }
 };
 
@@ -558,6 +561,9 @@ class Paused : public State{
             if (IsKeyPressed(KEY_P)){
                 gameState = PLAYING;
             }
+            if (WindowShouldClose()){
+                gameState = CLOSEGAME;
+            }
         }
 };
 class GameOver : public State{
@@ -571,7 +577,11 @@ class GameOver : public State{
 
         }
         void update(){
+            //
 
+            if (WindowShouldClose()){
+                gameState = CLOSEGAME;
+            }
         }
 };
 class CloseGame : public State{
@@ -581,16 +591,18 @@ class CloseGame : public State{
     public:
         CloseGame(GameState& gameState) : State(gameState) {}
 
+        // not working
         void draw(){
-
+            ClearBackground(BLANK);
+            DrawText("closing", 50, 50, 50, GOLD);
         }
         void update(){
-
+            WaitTime(3);
         }
 };
 class Game{
     private:
-        GameState gameState;
+        GameState    gameState;
 
         Menu         menu;
         Play         play;
@@ -621,6 +633,17 @@ class Game{
         , closeGame(gameState) 
         {}
 
+        void init(){
+            SetWindowOpacity(0.9);
+            SetExitKey(KEY_ESCAPE);
+            SetTargetFPS(63);
+
+            Image favicon = LoadImage("Assets/Favicon/2.png");
+            if (favicon.data){
+                SetWindowIcon(favicon);
+                UnloadImage(favicon);
+            }
+        }
 
         void draw(){                                                    // draws based upon the current gameState
             ClearBackground(BLANK);
@@ -661,18 +684,10 @@ class Game{
 
 int main()
 {
-    InitWindow(1080, 720, "Space Invaders 👾");
-    SetWindowOpacity(0.9);
-    SetExitKey(KEY_ESCAPE);
-    SetTargetFPS(63);
-
-    Image favicon = LoadImage("Assets/Favicon/2.png");
-    if (favicon.data){
-        SetWindowIcon(favicon);
-        UnloadImage(favicon);
-    }
-
+    InitWindow(1080, 720, "Space Invaders 👾");                 // must have this before Game game or else errors due to no openGL context
+    
     Game game;
+    game.init();
 
     while (!WindowShouldClose()){
         // updating
