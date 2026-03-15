@@ -1,14 +1,11 @@
-# Git doesn't add the following to commits:
-
-
 # Configuration Files
-.vscode/			            # dir
-.vscode/*                       # including both 'tasks.json' & 'c_cpp_properties.json'
-.vscode/tasks.json
-.vscode/c_cpp_properties.json
+.vscode/
 
 # Compiled Binaries
-*.exe				            # windows mostly
-*.out				            # probable in linux
-spaceInvaders		            # JIC
-main				            # JIC
+*.exe
+*.out
+spaceInvaders
+main
+
+# CMake Cache and More Binaries
+build/
