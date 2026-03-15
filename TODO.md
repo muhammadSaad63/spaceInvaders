@@ -14,4 +14,5 @@ chats
            ab meri puri commit history chali gayi: 21 in main vs 31ish in saad...
     [saad] btw, hamaray paas koi teesra banda nhi teh kia?
            dunno y kuch yaad arha hai
-    [    ]
+    [saad] cant we put .bat, .sh, and cmake.txt in a sep dir? main page mai ho kar 
+           they cluttering it
