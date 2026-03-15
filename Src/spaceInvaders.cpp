@@ -823,7 +823,7 @@ class Game{
             BeginDrawing();
                 ClearBackground(BLANK);
                 DrawText("Plz don't leave meeeee :(", GetScreenWidth()/2 - MeasureText("Plz don't leave meeeee :(", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
-                DrawText("Made by Saad, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
+                DrawText("Made by Ebbi, Saad, & Umair, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
             EndDrawing();
             WaitTime(2.5);
             UnloadSound(windowCloseSFX);
