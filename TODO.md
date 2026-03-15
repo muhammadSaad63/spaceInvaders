@@ -1,12 +1,17 @@
-### Todo
+### TODO
+---
 
-Saad
-- Merge your branch, I've been careful to not edit spaceInvaders.cpp to avoid merge conflicts of any kind
-- Delete Releases folder
+todo
+  >  get rid of todo lists in .cpp file
+  >  break down .cpp into seperate .cpp files
+  >  
 
-Ebrahim
-- Rename Src/ to src/ and update it in CMakeLists.txt, build.sh and build.bat
-
-General
-- Get rid of the todo list in the .cpp file
-- Break down spaceInvaders.cpp into separate *.cpp files for classes and other functionality
+chats
+    [ebbi] Rename Src/ to src/ and update it in CMakeLists.txt, build.sh and build.bat
+    [saad] dont 👆 
+    [saad] kia zaroorat parhi thi aapko meray merge say pehlay merge karnay ki?!
+           karna teh hi toh apni merge saad say banatay, main say nhi...
+           ab meri puri commit history chali gayi: 21 in main vs 31ish in saad...
+    [saad] btw, hamaray paas koi teesra banda nhi teh kia?
+           dunno y kuch yaad arha hai
+    [    ]
