@@ -1,25 +1,28 @@
 //                                                             بسم اللہ الرحمان الرحیم  
 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <raylib.h>
-using std::cin, std::cout, std::string;
+using std::cout, std::string, std::vector;
 
 /*
     [Started]
-        >
+        > Mar 9th, 2026
 
     [Abstract]
         >
 
     TODO
+        - implement alien, aliens, & playing
+        - collisions
         - 
-        -
 
     [Finished]
         >
 */
 
+// Enums -----
 
 enum GameState{                 // an ENUM to indicate the current state of the game
     // mainMenu
@@ -38,11 +41,18 @@ enum GameState{                 // an ENUM to indicate the current state of the 
     // windowShouldClose()
         CLOSEGAME               // when user chooses to close the window; plays a meme or similar
 };
+enum Player{
+    USER,                       // used to refer to the user/player/human
+    ALIEN                       // used to refer to the enemy/computer/pc/alien(s)
+};
 enum InputMode{                 // an ENUM to indicate the chosen playerInputMode (altered in settings)
     WASD,                       // W & A keys
     ARROW,                      // left & right arrowKeys
     MOUSE                       // Left & Right mouseButtons
 };
+
+
+// Classes -----
 
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
     protected:
@@ -128,9 +138,13 @@ class LeaderBoards : public State{
 class Settings : public State{
     private:
         //
+        InputMode movementMode;
 
     public:
-        Settings(GameState& gameState) : State(gameState) {}
+        Settings(GameState& gameState)
+        : State(gameState)
+        , movementMode(WASD) 
+        {}
 
         void draw(){
 
@@ -138,10 +152,62 @@ class Settings : public State{
         void update(){
 
         }
+        InputMode& getMovementMode(){
+            return movementMode;
+        }
 };
 
+class Laser{
+    private:
+        float posX;
+        float posY;
+        float width;
+        float height;
 
+        int speed;
+        bool active;
+        
+    public:
+        Laser(int posX, int posY){
+            this->posX = posX;
+            this->posY = posY;
 
+            width = 5;
+            height = 25;
+            speed = 9;
+            active = true;
+        }
+        void update(Player playerType){
+            switch (playerType)
+            {
+                case USER:                                         
+                    posY -= speed;                                  // if the user fired the laser, decrease its posX by speed (ie move it up)
+                    if (posY <= 0){
+                        deActivate();
+                        // cout << "[GAME] Laser deactivated!\n";
+                    }
+                    break;     
+                case ALIEN: 
+                    posY += speed;                                  // if the aliens fired the laser, increase its posX by speed (ie move it down)
+                    if ((posY + height) >= GetScreenHeight()){
+                        deActivate();
+                    }
+                    break;    
+            }
+        }
+        void draw(){    
+            DrawRectangle(posX, posY, width, height, WHITE);
+        }
+        Rectangle getRect(){
+            return Rectangle{posX, posY, width, height};
+        }
+        bool isActive(){
+            return active;
+        }
+        void deActivate(){
+            active = false;
+        }
+};
 class SpaceShip{
     private:
         Texture spaceShip;
@@ -150,6 +216,8 @@ class SpaceShip{
         float scale;            // the scale by which to shrink the spaceShip texture; default 0.1f
         int bottomOffset;       // the value by which to offset/raise the ship from the bottom of the screen; default 50
         float speed;
+
+        vector<Laser> lasers;
         
         void loadShip(const string& fileName){
             spaceShip = LoadTexture(TextFormat("Assets/Sprites/spaceShips/%s", fileName.c_str()));
@@ -168,7 +236,7 @@ class SpaceShip{
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
             posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
 
-            speed = 0.3;
+            speed = 5;
         }
         ~SpaceShip(){
             UnloadTexture(spaceShip);
@@ -177,6 +245,12 @@ class SpaceShip{
         void draw(){
             // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
             DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
+
+            for (auto &laser : lasers){
+                if (laser.isActive()){
+                    laser.draw(); 
+                }
+            }
         }
         void update(InputMode inputMode){
             int screenWidth = GetScreenWidth();
@@ -236,24 +310,213 @@ class SpaceShip{
                     break;
                 }
             }
-        }
-        void fire(){
 
+            // firing lasers
+            if (IsKeyPressed(KEY_SPACE)){
+                lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
+            }
+
+            // updating lasers
+            // for (auto &laser : lasers){
+            //     if (laser.isActive()){
+            //         laser.update(USER);
+            //     }
+            //     else{
+            //         lasers.erase(laser);
+            //     }
+            // }
+
+            for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
+                if (it->isActive()){                                          // updating laser if they active
+                    it->update(USER);
+                    ++it;
+                }
+                else{                                                         // removing laser if they inactive
+                    it = lasers.erase(it);                                    // erase returns iterator to next element
+                }
+            }
         }
         void reset(){
             posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
             posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
         }
+        vector<Laser>& getLasers(){
+            return lasers;
+        }
+};
+
+
+class Alien{
+    private:
+        int posX;
+        int posY;
+        int row;
+        int col;
+        int active;
+        Texture alien;
+        float scale;
+
+    public:
+        Alien() : active(true) {}
+
+        void draw(){
+            if (active){
+                // DrawTexture(texture, posX,);
+
+            }
+        }
+        void update(){
+            // 
+        }
+};
+class Aliens{
+    private:
+        vector<vector<Alien>> aliens;               // 2D array of Alien
+
+    public:
+        //
+        void draw(){
+            for (auto& rowOfAliens : aliens){
+                for (auto& alien : rowOfAliens){
+                    alien.draw();
+                }
+            }
+        }
+        void update(){
+            for (auto& rowOfAliens : aliens){
+                for (auto& alien : rowOfAliens){
+                    alien.update();
+                }
+            }
+        }
+};
+
+class MotherShip{
+    private:
+        Texture motherShip;
+        int     lastSpawned;
+        int     spawnDuration;
+        bool    currentlySpawned;
+        int     hits;
+        int     maxPossibleHits;
+        int     scoreBoost;
+        Vector2 position;           // using instead of posX, posY
+        int     speed;              // speed by which to update position.x
+        float   scale;
+        int     randomSpawnPause;   // duration after which to spawn the mothership
+        bool    spawnFromLeft;      // will be randomly decided;
+
+
+    public:
+        MotherShip() 
+        : lastSpawned(0)                                                // time when the ship last spawned; initialized with the 0/getTime()
+        , spawnDuration(15)                                             // will appear for a duration of 15s
+        , currentlySpawned(false)                                       // is the motherShip currently spawned            
+        , hits(0)                                                       // number of hits currently sustained by the motherShip
+        , maxPossibleHits(7)                                            // max number of hits to defeat/destruct the motherShip
+        , scoreBoost(1000)                                              // 1000 extra points on destruction
+        , motherShip(LoadTexture("Assets/Sprites/motherShips/1.png"))
+        , position({0.0f, 50})
+        , scale(0.15f)
+        , randomSpawnPause(30)                                          // 30s
+        , speed(2)
+        , spawnFromLeft(true)
+        {}
+        ~MotherShip(){
+            if (IsTextureValid(motherShip))                             // this check is redundant tho...
+            { UnloadTexture(motherShip);  }
+        }
+        void draw(){
+            if (currentlySpawned){
+                DrawTextureEx(motherShip, position, 0.0f, scale, WHITE);
+                DrawText(TextFormat("%d", maxPossibleHits - hits), position.x + (motherShip.width * scale)/2 - 5, position.y, 20 , GOLD);
+            }
+        }
+        void update(vector<Laser>& lasers, int& score){
+            if (currentlySpawned){
+                // despawning if it has spawned for >= spawnDuration time
+                if (GetTime() >= (lastSpawned + spawnDuration)){            
+                    currentlySpawned = false;
+                    randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+                    lastSpawned = GetTime();
+                    cout << "[Game] Despawning motherShip (time over)\n";
+                    // playsound...
+                    return;
+                }
+
+                // checking for hits
+                for (auto& laser : lasers){
+                    if (laser.isActive() && CheckCollisionRecs(laser.getRect(), motherShipRect())){
+                        laser.deActivate();
+                        hits++;
+
+                        if (hits >= maxPossibleHits){
+                            currentlySpawned = false;
+                            randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+                            lastSpawned = GetTime();
+                            score += scoreBoost;
+                            cout << "[Game] motherShip Destructed\n";
+                            // playsound
+                            return;
+                        }
+                    }
+                }
+
+                // updating position
+                if (spawnFromLeft){
+                    position.x += speed;
+
+                    if ((position.x + motherShip.width * scale) >= GetScreenWidth()){
+                        speed *= -1;
+                    }
+                }
+                else{
+                    position.x -= speed;
+
+                    if (position.x <= 0){
+                        speed *= -1;
+                    }
+                }
+            }
+
+            else{
+                if (GetTime() >= (lastSpawned + randomSpawnPause)){                          // despawning if it has spawned for >= spawnDuration time
+                    currentlySpawned = true;
+                    hits = 0;
+                    lastSpawned = GetTime(); 
+
+                    spawnFromLeft = (bool)GetRandomValue(0, 1);                                              // true if 1 generated, false if not
+                    position.x = ((spawnFromLeft)? 0 : (GetScreenWidth() - (motherShip.width * scale)));
+                    
+                    if (speed < 0){ speed *= -1; }                                                           // effectively abs(speed)
+                    
+                    cout << "[Game] Spawning motherShip\n";
+                    // playsound...
+                }
+            }
+        }
+        Rectangle motherShipRect(){
+            return Rectangle{position.x, position.y, (float)(motherShip.width * scale), (float)(motherShip.height * scale)};
+        }
 };
 
 class Playing : public State{
     private:
-        SpaceShip spaceShip;
+        SpaceShip      spaceShip; 
+        Aliens         aliens;
+        MotherShip     motherShip;
+
+        int            score;
+        InputMode&     movementMode;        // for storing reference of playerInputMode from settings
+        vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
 
     public:
-        Playing(GameState& gameState) 
+        Playing(GameState& gameState, InputMode& movementMode) 
         : State(gameState)
-        , spaceShip("11.png") 
+        , spaceShip("1.png")
+        , score(0) 
+        , movementMode(movementMode)
+        , lasers(spaceShip.getLasers())
         {}
 
         void init(){
@@ -262,14 +525,21 @@ class Playing : public State{
         void draw(){
             spaceShip.draw();
             // aliens.draw();
+            motherShip.draw();
             // obstacles.draw();
-            // motherShip.draw();
         }
         void update(){
-            spaceShip.update(MOUSE);
+            spaceShip.update(movementMode);
             // aliens.update();
+            motherShip.update(lasers, score);
             // obstacles.update();
-            // motherShip.update();
+
+            if (IsKeyPressed(KEY_P)){
+                gameState = PAUSED;
+            }
+            if (WindowShouldClose()){
+                gameState = CLOSEGAME;
+            }
         }
 };
 
@@ -283,10 +553,17 @@ class Paused : public State{
         Paused(GameState& gameState) : State(gameState) {}
 
         void draw(){
-
+            DrawText("Game Paused", GetScreenWidth()/2 - MeasureText("Game Paused", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
+            // DrawText("Press P to Unpause", GetScreenWidth() - MeasureText("Press P to Unpause", 23), GetScreenHeight() - 23, 23, GOLD);
+            DrawText("Press P to Unpause", 5, GetScreenHeight() - 23 - 5, 23, GOLD);
         }
         void update(){
-
+            if (IsKeyPressed(KEY_P)){
+                gameState = PLAYING;
+            }
+            if (WindowShouldClose()){
+                gameState = CLOSEGAME;
+            }
         }
 };
 class GameOver : public State{
@@ -300,7 +577,11 @@ class GameOver : public State{
 
         }
         void update(){
+            //
 
+            if (WindowShouldClose()){
+                gameState = CLOSEGAME;
+            }
         }
 };
 class CloseGame : public State{
@@ -310,16 +591,18 @@ class CloseGame : public State{
     public:
         CloseGame(GameState& gameState) : State(gameState) {}
 
+        // not working
         void draw(){
-
+            ClearBackground(BLANK);
+            DrawText("closing", 50, 50, 50, GOLD);
         }
         void update(){
-
+            WaitTime(3);
         }
 };
 class Game{
     private:
-        GameState gameState;
+        GameState    gameState;
 
         Menu         menu;
         Play         play;
@@ -344,14 +627,27 @@ class Game{
         , history(gameState)
         , leaderBoards(gameState)
         , settings(gameState)
-        , playing(gameState)
+        , playing(gameState, settings.getMovementMode())
         , paused(gameState)
         , gameOver(gameState)
         , closeGame(gameState) 
         {}
 
+        void init(){
+            SetWindowOpacity(0.9);
+            SetExitKey(KEY_ESCAPE);
+            SetTargetFPS(63);
+
+            Image favicon = LoadImage("Assets/Favicon/2.png");
+            if (favicon.data){
+                SetWindowIcon(favicon);
+                UnloadImage(favicon);
+            }
+        }
 
         void draw(){                                                    // draws based upon the current gameState
+            ClearBackground(BLANK);
+
             switch(gameState)
             {
                 case MENU:         { menu.draw();         break; }
@@ -384,19 +680,14 @@ class Game{
 };
 
 
+// Main ---
+
 int main()
 {
-    InitWindow(1080, 720, "Space Invaders 👾");
-    SetWindowOpacity(0.9);
-    SetExitKey(KEY_ESCAPE);
-
-    Image favicon = LoadImage("Assets/Favicon/11.png");
-    if (favicon.data){
-        SetWindowIcon(favicon);
-        UnloadImage(favicon);
-    }
-
+    InitWindow(1080, 720, "Space Invaders 👾");                 // must have this before Game game or else errors due to no openGL context
+    
     Game game;
+    game.init();
 
     while (!WindowShouldClose()){
         // updating
@@ -405,9 +696,8 @@ int main()
         // drawing
         BeginDrawing();
 
-            ClearBackground(BLANK);
             game.draw();
-        
+
         EndDrawing();
     }
 
