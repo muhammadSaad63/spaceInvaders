@@ -140,7 +140,7 @@ class Settings : public State{
 
     private:
         bool         fullScreen      {false};         // setwindowstate(FLAG_BORDERLESS_WINDOWED_MODE); ClearWindowState(); SetWindowSize();
-        int          frameRate       {63};
+        int          frameRate       {60};            // again, why 63.
         float        windowOpacity   {0.9f};
         float        masterVolume    {0.5};
         InputMode    playerInputMode {WASD};
@@ -773,7 +773,7 @@ class Game{
         void init(){
             SetWindowOpacity(0.9);
             SetExitKey(KEY_ESCAPE);
-            SetTargetFPS(63);
+            SetTargetFPS(60); // why would you set it to 63 what is wrong with you
             InitAudioDevice();
 
             Image favicon = LoadImage("Assets/Favicon/2.png");
