@@ -137,19 +137,20 @@ class LeaderBoards : public State{
 };
 class Settings : public State{
     // copied from my Mr.Pong game
-    private:
-        bool       fullScreen      {false};         // setwindowstate(FLAG_BORDERLESS_WINDOWED_MODE); ClearWindowState(); SetWindowSize();
-        int        frameRate       {63};
-        float      windowOpacity   {0.9f};
-        float      masterVolume    {0.5};
-        InputMode  playerInputMode {WASD};
 
-        const int    posX     {23};
-        int          posY     {63};
-        const int    textSize {35};
-        const int    offSet   {100};             // gap between text/heading and option/toggler
-        const Color  color    {GOLD};
-        const string texts[5] {"   > FullScreen     ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
+    private:
+        bool         fullScreen      {false};         // setwindowstate(FLAG_BORDERLESS_WINDOWED_MODE); ClearWindowState(); SetWindowSize();
+        int          frameRate       {63};
+        float        windowOpacity   {0.9f};
+        float        masterVolume    {0.5};
+        InputMode    playerInputMode {WASD};
+
+        const int    posX            {23};
+        int          posY            {63};
+        const int    textSize        {35};
+        const int    offSet          {100};             // gap between text/heading and option/toggler
+        const Color  color           {GOLD};
+        const string texts[5]        {"   > FullScreen     ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
 
         Sound settingModifySFX;
 
@@ -627,11 +628,11 @@ class Playing : public State{
         vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
 
     public:
-        Playing(GameState& gameState, InputMode& movementMode) 
+        Playing(GameState& gameState, Settings& settings) 
         : State(gameState)
         , spaceShip("1.png")
         , score(0) 
-        , movementMode(movementMode)
+        , movementMode(settings.getMovementMode())
         , lasers(spaceShip.getLasers())
         {}
 
@@ -663,22 +664,42 @@ class Playing : public State{
 
 class Paused : public State{
     private:
-        //
+        Playing& playing;
+        int      textSize {83};
+        Sound    gameResumedSFX;
+        Sound    gameStoppedSFX;
 
     public:
-        Paused(GameState& gameState) : State(gameState) {}
+        Paused(GameState& gameState, Playing& playing) 
+        : State(gameState)
+        , playing(playing) 
+        {
+            gameResumedSFX = LoadSound("Assets/SFX/gameResumed.mp3");
+            gameStoppedSFX = LoadSound("Assets/SFX/gameStopped.mp3");
+        }
+        ~Paused(){
+            UnloadSound(gameResumedSFX);
+            UnloadSound(gameStoppedSFX);
+        }
 
         void draw(){
-            DrawText("Game Paused", GetScreenWidth()/2 - MeasureText("Game Paused", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
-            // DrawText("Press P to Unpause", GetScreenWidth() - MeasureText("Press P to Unpause", 23), GetScreenHeight() - 23, 23, GOLD);
-            DrawText("Press P to Unpause", 5, GetScreenHeight() - 23 - 5, 23, GOLD);
+            // DrawText("GamePlay Paused.\n- Press \"p\" to resume.\n- Press \"x\" to finish.", GetScreenWidth() / 2 - MeasureText("GamePlay Paused.\n- Press \"p\" to resume.\n- Press \"x\" to finish.", textSize) / 2, GetScreenHeight() /2 - 3*textSize/2, textSize, GOLD);        // thats long....;  100 here is the fontsize
+            DrawText("GamePlay Paused.", GetScreenWidth() / 2 - MeasureText("GamePlay Paused.", textSize) / 2, GetScreenHeight()/2 - textSize/2 - 50, textSize, GOLD);        // thats long....;  100 here is the fontsize
+            DrawText("- Press \"p\" to resume.\n- Press \"x\" to finish.", GetScreenWidth() / 2 - MeasureText("- Press \"p\" to resume.\n- Press \"x\" to finish.", textSize/1.5) / 2, GetScreenHeight()/2 - textSize/2 - 50 + textSize + 30, textSize/1.5, GOLD);
         }
         void update(){
             if (IsKeyPressed(KEY_P)){
+                PlaySound(gameResumedSFX);
+
                 gameState = PLAYING;
+                WaitTime(1);
             }
-            if (WindowShouldClose()){
-                gameState = CLOSEGAME;
+            if (IsKeyPressed(KEY_X)){
+                PlaySound(gameStoppedSFX);
+                
+                gameState = MENU;
+                // playing.resetAll();
+                WaitTime(1);
             }
         }
 };
@@ -736,15 +757,15 @@ class Game{
 
     public:
         Game()                          // overRiding default constructor 
-        : gameState(MENU)               // initializing gameState with MENU
+        : gameState(PLAYING)               // initializing gameState with MENU
         , menu(gameState)
         , play(gameState)
         , shop(gameState) 
         , history(gameState)
         , leaderBoards(gameState)
         , settings(gameState)
-        , playing(gameState, settings.getMovementMode())
-        , paused(gameState)
+        , playing(gameState, settings)
+        , paused(gameState, playing)
         , gameOver(gameState)
         , closeGame(gameState) 
         {}
@@ -753,6 +774,7 @@ class Game{
             SetWindowOpacity(0.9);
             SetExitKey(KEY_ESCAPE);
             SetTargetFPS(63);
+            InitAudioDevice();
 
             Image favicon = LoadImage("Assets/Favicon/2.png");
             if (favicon.data){
@@ -793,6 +815,22 @@ class Game{
                 case CLOSEGAME:    { closeGame.update();    break; }  
             }
         }
+
+        // using this instead of ~Game()
+        void close(){
+            Sound windowCloseSFX = LoadSound("Assets/SFX/windowClose.mp3");
+            PlaySound(windowCloseSFX);          // :D
+            BeginDrawing();
+                ClearBackground(BLANK);
+                DrawText("Plz don't leave meeeee :(", GetScreenWidth()/2 - MeasureText("Plz don't leave meeeee :(", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
+                DrawText("Made by Saad, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
+            EndDrawing();
+            WaitTime(2.5);
+            UnloadSound(windowCloseSFX);
+            
+            CloseAudioDevice();
+            CloseWindow();
+        }
 };
 
 
@@ -800,6 +838,7 @@ class Game{
 
 int main()
 {
+    // init
     InitWindow(1080, 720, "Space Invaders 👾");                 // must have this before Game game or else errors due to no openGL context
     
     Game game;
@@ -817,5 +856,6 @@ int main()
         EndDrawing();
     }
 
-    CloseWindow();
+    // uninit
+    game.close();
 }
