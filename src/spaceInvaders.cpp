@@ -65,37 +65,43 @@ class State{                                                        // an abstra
 
         virtual void update() = 0;
 };
+class MenuIcon{
+    private:
+        //
+    
+    public:
+        //
+};
 class Menu : public State{
+    /*
+        instead of 3d, make 2d. use 2d spaceship sprite and fire it at menu icons.
+
+        icons:
+            - Play
+            - shop
+            - history
+            - leaderboards
+            - settings
+
+        see todo.md
+    */
+
     private:
         InputMode& movementMode;             // for input mode
-        Model spaceShip;     TODO   // put it here or make a seperate class for it?
 
     public:
         Menu(GameState& gameState, Settings& settings) 
         : State(gameState)
-        , movementMode(settings.getMovementMode()) 
-        {
-            loadSpaceShip("blackout.dae");
+        , movementMode(settings.getMovementMode()){
         }
         ~Menu(){
-            UnloadModel(spaceShip);
         }
 
         void draw(){
-            ClearBackground(BLANK);
-            BeginMode3D(camera);
 
-                DrawModel(spaceShip, (Vector3){ 0, 0, 0 }, 1.0f, WHITE);
-
-                DrawGrid(10, 1.0f);
-            EndMode3D();
         }
         void update(){
             
-        }
-        void loadSpaceShip(const string& fileName){
-            spaceShip = LoadModel(TextFormat("Assets/Sprites/3D/spaceShips/%s", fileName.c_str()));
-            cout << "[GAME] 3D Model {" << fileName << "} has " << ((IsModelValid(spaceShip))? "Successfully" : "NOT" )<< "loaded.\n";
         }
 };
 class Play : public State{
@@ -777,7 +783,7 @@ class Game{
     public:
         Game()                          // overRiding default constructor 
         : gameState(MENU)               // initializing gameState with MENU
-        , menu(gameState)
+        , menu(gameState, settings)
         , play(gameState)
         , shop(gameState) 
         , history(gameState)
