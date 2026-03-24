@@ -67,16 +67,35 @@ class State{                                                        // an abstra
 };
 class Menu : public State{
     private:
-        //
+        InputMode& movementMode;             // for input mode
+        Model spaceShip;     TODO   // put it here or make a seperate class for it?
 
     public:
-        Menu(GameState& gameState) : State(gameState) {}
+        Menu(GameState& gameState, Settings& settings) 
+        : State(gameState)
+        , movementMode(settings.getMovementMode()) 
+        {
+            loadSpaceShip("blackout.dae");
+        }
+        ~Menu(){
+            UnloadModel(spaceShip);
+        }
 
         void draw(){
+            ClearBackground(BLANK);
+            BeginMode3D(camera);
 
+                DrawModel(spaceShip, (Vector3){ 0, 0, 0 }, 1.0f, WHITE);
+
+                DrawGrid(10, 1.0f);
+            EndMode3D();
         }
         void update(){
-
+            
+        }
+        void loadSpaceShip(const string& fileName){
+            spaceShip = LoadModel(TextFormat("Assets/Sprites/3D/spaceShips/%s", fileName.c_str()));
+            cout << "[GAME] 3D Model {" << fileName << "} has " << ((IsModelValid(spaceShip))? "Successfully" : "NOT" )<< "loaded.\n";
         }
 };
 class Play : public State{
@@ -757,7 +776,7 @@ class Game{
 
     public:
         Game()                          // overRiding default constructor 
-        : gameState(PLAYING)               // initializing gameState with MENU
+        : gameState(MENU)               // initializing gameState with MENU
         , menu(gameState)
         , play(gameState)
         , shop(gameState) 
