@@ -1,3 +1,3 @@
-# Space Invaders
+# Space Invaders 👾
 OOP Lab Project
 ---
