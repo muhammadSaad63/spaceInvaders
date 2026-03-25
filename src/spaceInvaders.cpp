@@ -935,8 +935,9 @@ class BackGround{
 
 class Game{
     private:
-        GameState    gameState;
-        BackGround   backGround;
+        GameState        gameState;
+        BackGround       backGround;
+        SQLite::Database db;
 
         Settings     settings;
         Menu         menu;
@@ -951,10 +952,10 @@ class Game{
 
         CloseGame    closeGame;
 
-
     public:
         Game()                          // overRiding default constructor 
-        : gameState(MENU)               // initializing gameState with MENU
+        : db("Assets/gameData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+        , gameState(MENU)               // initializing gameState with MENU
         , menu(gameState, settings)
         , play(gameState)
         , shop(gameState) 
@@ -978,7 +979,14 @@ class Game{
                 SetWindowIcon(favicon);
                 UnloadImage(favicon);
             }
-            SQLite::Database db("example.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+            
+            db.exec(
+                "CREATE TABLE IF NOT EXISTS users ("
+                    "id INTEGER PRIMARY KEY,"
+                    "name TEXT," 
+                    "age INTEGER"
+                ")"
+            );
         }
 
         void draw(){                                                    // draws based upon the current gameState
