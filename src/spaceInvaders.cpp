@@ -1,5 +1,6 @@
 //                                                             بسم اللہ الرحمان الرحیم  
 
+#include <cmath>               // for sine, PI
 #include <string>
 #include <vector>
 #include <iostream>
@@ -484,15 +485,59 @@ class Grid{
                 DrawLine(0, y, screenWidth, y, gridColor);
         }
 };
+struct Star{
+    float centreX;              // x pos of its circular centre
+    float centreY;              // y pos of its centre
+    float radius;               // its radius
+    float twinkleSpeed;         // the rate at which the star will blink
+    float twinkleOffset;        // a random value for offsetting its twinkle/blinking
+    float alpha;                // its transparency; for twinkling
+};
 class Stars{
+    /*
+        the heart of this class is the random/offsetted pulsing/twinkling of each star based upon the sine function
+    */
+
     private:
-        //
+        const int    screenWidth;
+        const int    screenHeight;
+        const int    numStars;              // the total count of the stars on the screen
+        const int    baseAlpha;             // the min possible alpha of any star
+        vector<Star> stars;                 // a vector array
+
+        void generateStars(){
+            for (auto star {0}; star < numStars; star++){
+                stars.push_back( 
+                    Star{
+                        (float) GetRandomValue(0, screenWidth),         // centreX
+                        (float) GetRandomValue(0, screenHeight),        // centreY
+                        (float) GetRandomValue(1, 4) * 0.5f,            // radius; 0.5f since func cant have float arguments
+                        (float) GetRandomValue(1, 5),                   // twinkleSPeed
+                        (float) GetRandomValue(1, 10),                  // twinkleOffset
+                        (float) 0.4f                                    // alpha
+                    }
+                );
+            }
+        }
     
     public:
-        //  
-        
-        void draw(){
+        Stars() 
+        : screenWidth(GetScreenWidth())
+        , screenHeight(GetScreenHeight())
+        , numStars(123)
+        , baseAlpha(0.2f)
+        {
+            stars.reserve(numStars);             // reserving spaces for 123 stars beforehand
+            generateStars();
+        } 
 
+        void draw(){
+            double currTime = GetTime();
+
+            for (auto star : stars){
+                // DrawCircle(star.centreX, star.centreY, star.radius, WHITE);
+                DrawCircleV({star.centreX, star.centreY}, star.radius, ColorAlpha(WHITE, star.alpha));
+            }
         }
 };
 
