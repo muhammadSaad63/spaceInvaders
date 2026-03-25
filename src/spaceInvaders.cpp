@@ -65,43 +65,263 @@ class State{                                                        // an abstra
 
         virtual void update() = 0;
 };
-class MenuIcon{
+
+class Laser{
     private:
-        //
-    
+        float posX;
+        float posY;
+        float width;
+        float height;
+
+        int speed;
+        bool active;
+        
     public:
-        //
+        Laser(int posX, int posY){
+            this->posX = posX;
+            this->posY = posY;
+
+            width = 5;
+            height = 25;
+            speed = 9;
+            active = true;
+        }
+        void update(Player playerType){
+            switch (playerType)
+            {
+                case USER:                                         
+                    posY -= speed;                                  // if the user fired the laser, decrease its posX by speed (ie move it up)
+                    if (posY <= 0){
+                        deActivate();
+                        // cout << "[GAME] Laser deactivated!\n";
+                    }
+                    break;     
+                case ALIEN: 
+                    posY += speed;                                  // if the aliens fired the laser, increase its posX by speed (ie move it down)
+                    if ((posY + height) >= GetScreenHeight()){
+                        deActivate();
+                    }
+                    break;    
+            }
+        }
+        void draw(){    
+            DrawRectangle(posX, posY, width, height, ORANGE);
+        }
+        Rectangle getRect(){
+            return Rectangle{posX, posY, width, height};
+        }
+        bool isActive(){
+            return active;
+        }
+        void deActivate(){
+            active = false;
+        }
 };
-class Menu : public State{
-    /*
-        instead of 3d, make 2d. use 2d spaceship sprite and fire it at menu icons.
-
-        icons:
-            - Play
-            - shop
-            - history
-            - leaderboards
-            - settings
-
-        see todo.md
-    */
-
+class SpaceShip{
     private:
+        Texture spaceShip;
+        float posX;
+        float posY;
+        float scale;            // the scale by which to shrink the spaceShip texture; default 0.1f
+        int bottomOffset;       // the value by which to offset/raise the ship from the bottom of the screen; default 50
+        float speed;
+
+        vector<Laser> lasers;
+        
+        void loadShip(const string& fileName){
+            spaceShip = LoadTexture(TextFormat("Assets/Sprites/2D/spaceShips/%s", fileName.c_str()));
+            
+            // returns true if the texture is loaded into memory; alternatively coudlve used "if (spaceShip.id)"
+            cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(spaceShip)? ") has" : ") has NOT") << " loaded properly.\n";
+        }
+
+    public:
+        SpaceShip(const string& fileName){
+            loadShip(fileName);
+
+            scale = 0.1f;
+            bottomOffset = 50;
+
+            posX = (GetScreenWidth() / 2 - (spaceShip.width  * scale) / 2);
+            posY = (GetScreenHeight()    - (spaceShip.height * scale) - bottomOffset); 
+
+            speed = 5;
+        }
+        ~SpaceShip(){
+            UnloadTexture(spaceShip);
+        }
+
+        void draw(){
+            // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
+            DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
+
+            for (auto &laser : lasers){
+                if (laser.isActive()){
+                    laser.draw(); 
+                }
+            }
+        }
+        void update(InputMode inputMode){
+            int screenWidth = GetScreenWidth();
+
+            // moving ship
+            switch (inputMode)
+            {
+                case WASD:
+                {
+                    if (IsKeyDown(KEY_A)){
+                        posX -= speed;
+
+                        if (posX <= 0)
+                        { posX = 0; }
+                    }
+                    if (IsKeyDown(KEY_D)){
+                        posX += speed;
+
+                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
+                        { posX = screenWidth - (spaceShip.width * scale); }
+                    }
+
+                    break;
+                }
+                case ARROW:
+                {
+                    if (IsKeyDown(KEY_LEFT)){
+                        posX -= speed;
+
+                        if (posX <= 0)
+                        { posX = 0; }
+                    }
+                    if (IsKeyDown(KEY_RIGHT)){
+                        posX += speed;
+
+                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
+                        { posX = screenWidth - (spaceShip.width * scale); }
+                    }
+
+                    break;
+                }
+                case MOUSE:
+                {
+                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+                        posX -= speed;
+
+                        if (posX <= 0)
+                        { posX = 0; }
+                    }
+                    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
+                        posX += speed;
+
+                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
+                        { posX = screenWidth - (spaceShip.width * scale); }
+                    }
+
+                    break;
+                }
+            }
+
+            // firing lasers
+            if (IsKeyPressed(KEY_SPACE)){
+                lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
+            }
+
+            for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
+                if (it->isActive()){                                          // updating laser if they active
+                    it->update(USER);
+                    ++it;
+                }
+                else{                                                         // removing laser if they inactive
+                    it = lasers.erase(it);                                    // erase returns iterator to next element
+                }
+            }
+        }
+        void reset(){
+            posX = (GetScreenWidth() / 2 - (spaceShip.width  * scale) / 2);
+            posY = (GetScreenHeight()    - (spaceShip.height * scale) - bottomOffset); 
+        }
+        vector<Laser>& getLasers(){
+            return lasers;
+        }
+};
+
+struct MenuIcon{
+    Rectangle rect;
+    string    text;
+    GameState gameState;
+};
+class MenuIcons{
+    private:
+        MenuIcon  icons[5];
+        bool      selected;
+        int       selectedTime;
+        int       selectedDelay;                    // in sec
+        GameState selectedState;
+
+    public:
+        MenuIcons() : selectedDelay(2) {
+            icons[0] = MenuIcon{390, 50,  300, 120, "Play",         PLAY        },      // Play
+            icons[1] = MenuIcon{180, 180, 200, 100, "LeaderBoards", LEADERBOARDS},      // LeaderBoards
+            icons[2] = MenuIcon{700, 180, 200, 100, "Shop",         SHOP        },      // Shop
+            icons[3] = MenuIcon{50,  320, 180, 100, "History",      HISTORY     },      // History
+            icons[4] = MenuIcon{850, 320, 180, 100, "Settings",     SETTINGS    }       // Settings
+        }
+
+        void draw(){
+            // for (auto& icon : icons){
+            //     DrawRectangleGradientH()
+            // }
+        }
+        void update(SpaceShip& spaceShip){
+            vector<Laser>& lasers = spaceShip.getLasers();
+
+            // if an icon was previously successfuly selected
+            if (selected){
+                if ((selectedTime + selectedDelay) >= GetTime()){
+                    lasers.clear();
+                    spaceShip.reset();
+
+
+                }
+            }
+            else{        
+                // checking for any successful selections/collisions
+                for (auto& icon : icons){
+                    for (auto& laser : lasers){
+                        if (CheckCollisionRecs(icon.rect, laser.getRect())){
+                            laser.deActivate();
+                            
+                            selected = true;
+                            selectedTime = GetTime();
+                            selectedState = icon.gameState;
+
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+};
+
+class Menu : public State{
+    private:
+        MenuIcons  icons;
+        SpaceShip  spaceShip;
         InputMode& movementMode;             // for input mode
 
     public:
         Menu(GameState& gameState, Settings& settings) 
         : State(gameState)
-        , movementMode(settings.getMovementMode()){
-        }
-        ~Menu(){
-        }
+        , spaceShip("1.png")
+        , movementMode(settings.getMovementMode())
+        {}
 
         void draw(){
-
+            spaceShip.draw();
+            icons.draw();
         }
         void update(){
-            
+            spaceShip.update(movementMode);
+            gameState = icons.update(spaceShip);
         }
 };
 class Play : public State{
@@ -299,194 +519,7 @@ class Settings : public State{
 
 };
 
-class Laser{
-    private:
-        float posX;
-        float posY;
-        float width;
-        float height;
-
-        int speed;
-        bool active;
-        
-    public:
-        Laser(int posX, int posY){
-            this->posX = posX;
-            this->posY = posY;
-
-            width = 5;
-            height = 25;
-            speed = 9;
-            active = true;
-        }
-        void update(Player playerType){
-            switch (playerType)
-            {
-                case USER:                                         
-                    posY -= speed;                                  // if the user fired the laser, decrease its posX by speed (ie move it up)
-                    if (posY <= 0){
-                        deActivate();
-                        // cout << "[GAME] Laser deactivated!\n";
-                    }
-                    break;     
-                case ALIEN: 
-                    posY += speed;                                  // if the aliens fired the laser, increase its posX by speed (ie move it down)
-                    if ((posY + height) >= GetScreenHeight()){
-                        deActivate();
-                    }
-                    break;    
-            }
-        }
-        void draw(){    
-            DrawRectangle(posX, posY, width, height, WHITE);
-        }
-        Rectangle getRect(){
-            return Rectangle{posX, posY, width, height};
-        }
-        bool isActive(){
-            return active;
-        }
-        void deActivate(){
-            active = false;
-        }
-};
-class SpaceShip{
-    private:
-        Texture spaceShip;
-        float posX;
-        float posY;
-        float scale;            // the scale by which to shrink the spaceShip texture; default 0.1f
-        int bottomOffset;       // the value by which to offset/raise the ship from the bottom of the screen; default 50
-        float speed;
-
-        vector<Laser> lasers;
-        
-        void loadShip(const string& fileName){
-            spaceShip = LoadTexture(TextFormat("Assets/Sprites/2D/spaceShips/%s", fileName.c_str()));
-            
-            // returns true if the texture is loaded into memory; alternatively coudlve used "if (spaceShip.id)"
-            cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(spaceShip)? ") has" : ") has NOT") << " loaded properly.\n";
-        }
-
-    public:
-        SpaceShip(const string& fileName){
-            loadShip(fileName);
-
-            scale = 0.1f;
-            bottomOffset = 50;
-
-            posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
-            posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
-
-            speed = 5;
-        }
-        ~SpaceShip(){
-            UnloadTexture(spaceShip);
-        }
-
-        void draw(){
-            // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
-            DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
-
-            for (auto &laser : lasers){
-                if (laser.isActive()){
-                    laser.draw(); 
-                }
-            }
-        }
-        void update(InputMode inputMode){
-            int screenWidth = GetScreenWidth();
-
-            // moving ship
-            switch (inputMode)
-            {
-                case WASD:
-                {
-                    if (IsKeyDown(KEY_A)){
-                        posX -= speed;
-
-                        if (posX <= 0)
-                        { posX = 0; }
-                    }
-                    if (IsKeyDown(KEY_D)){
-                        posX += speed;
-
-                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
-                        { posX = screenWidth - (spaceShip.width * scale); }
-                    }
-
-                    break;
-                }
-                case ARROW:
-                {
-                    if (IsKeyDown(KEY_LEFT)){
-                        posX -= speed;
-
-                        if (posX <= 0)
-                        { posX = 0; }
-                    }
-                    if (IsKeyDown(KEY_RIGHT)){
-                        posX += speed;
-
-                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
-                        { posX = screenWidth - (spaceShip.width * scale); }
-                    }
-
-                    break;
-                }
-                case MOUSE:
-                {
-                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-                        posX -= speed;
-
-                        if (posX <= 0)
-                        { posX = 0; }
-                    }
-                    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-                        posX += speed;
-
-                        if ((posX + (spaceShip.width * scale)) >= screenWidth)
-                        { posX = screenWidth - (spaceShip.width * scale); }
-                    }
-
-                    break;
-                }
-            }
-
-            // firing lasers
-            if (IsKeyPressed(KEY_SPACE)){
-                lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
-            }
-
-            // updating lasers
-            // for (auto &laser : lasers){
-            //     if (laser.isActive()){
-            //         laser.update(USER);
-            //     }
-            //     else{
-            //         lasers.erase(laser);
-            //     }
-            // }
-
-            for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
-                if (it->isActive()){                                          // updating laser if they active
-                    it->update(USER);
-                    ++it;
-                }
-                else{                                                         // removing laser if they inactive
-                    it = lasers.erase(it);                                    // erase returns iterator to next element
-                }
-            }
-        }
-        void reset(){
-            posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
-            posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
-        }
-        vector<Laser>& getLasers(){
-            return lasers;
-        }
-};
-
+// movedd spaceship and laser to top
 
 class Alien{
     private:
