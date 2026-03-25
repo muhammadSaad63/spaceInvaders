@@ -13,3 +13,8 @@ build/
 #temp 
 temp.cpp
 temp
+
+toAddLater/     # putting the cmake stuff here fn since they disturbing me :>
+build.bat
+build.sh
+CMakeLists.txt
