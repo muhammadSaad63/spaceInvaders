@@ -512,9 +512,9 @@ class Stars{
                     Star{
                         (float) GetRandomValue(0, screenWidth),         // centreX
                         (float) GetRandomValue(0, screenHeight),        // centreY
-                        (float) GetRandomValue(1, 4) * 0.5f,            // radius; 0.5f since func cant have float arguments
-                        (float) GetRandomValue(1, 5),                   // twinkleSPeed
-                        (float) GetRandomValue(1, 10),                  // twinkleOffset
+                        (float) GetRandomValue(1, 5) * 0.5f,            // radius; 0.5f since func cant have float arguments
+                        (float) GetRandomValue(1, 10),                  // twinkleSPeed
+                        (float) GetRandomValue(0, (2*PI)*100) / 100,    // twinkleOffset; just in case; 0 to 628(2pi * 100 ie) which is the max period of a sin wave
                         (float) 0.4f                                    // alpha
                     }
                 );
@@ -525,7 +525,7 @@ class Stars{
         Stars() 
         : screenWidth(GetScreenWidth())
         , screenHeight(GetScreenHeight())
-        , numStars(123)
+        , numStars(163)
         , baseAlpha(0.2f)
         , maxAlpha(1.0f)
         {
@@ -533,11 +533,12 @@ class Stars{
             generateStars();
         } 
 
+        // i think this first time that update() is before draw()... :>
         void update(){
-            double currTime = GetTime();
+            double currTime = GetTime();            // taking this as the "x" or "theta" here since its constantly changing/increasing
             for (auto& star : stars){
-                // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));            // sin orig returns -1 to 1; offsetting by +1f to make its range 
-                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed)/2)));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
+                // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));                         // credits to claude
+                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))/2));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
             }
         }
         void draw(){
