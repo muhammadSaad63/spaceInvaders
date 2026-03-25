@@ -503,6 +503,7 @@ class Stars{
         const int    screenHeight;
         const int    numStars;              // the total count of the stars on the screen
         const int    baseAlpha;             // the min possible alpha of any star
+        const int    maxAlpha;              // the max poss alpha value of a star (<= 1.0f)
         vector<Star> stars;                 // a vector array
 
         void generateStars(){
@@ -526,17 +527,23 @@ class Stars{
         , screenHeight(GetScreenHeight())
         , numStars(123)
         , baseAlpha(0.2f)
+        , maxAlpha(1.0f)
         {
             stars.reserve(numStars);             // reserving spaces for 123 stars beforehand
             generateStars();
         } 
 
-        void draw(){
+        void update(){
             double currTime = GetTime();
-
+            for (auto& star : stars){
+                // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));            // sin orig returns -1 to 1; offsetting by +1f to make its range 
+                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed)/2)));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
+            }
+        }
+        void draw(){
             for (auto star : stars){
                 // DrawCircle(star.centreX, star.centreY, star.radius, WHITE);
-                DrawCircleV({star.centreX, star.centreY}, star.radius, ColorAlpha(WHITE, star.alpha));
+                DrawCircleV({star.centreX, star.centreY}, star.radius, ColorAlpha(WHITE, star.alpha));                  // color alpha to change WHITE's alpha/transparency
             }
         }
 };
@@ -563,6 +570,7 @@ class Menu : public State{
             icons.draw();
         }
         void update(){
+            stars.update();
             spaceShip.update(movementMode);
             gameState = icons.update(spaceShip);
         }
