@@ -538,9 +538,6 @@ class LeaderBoards : public State{
         }
 };
 
-
-// movedd spaceship and laser to top
-
 class Alien{
     private:
         int posX;
@@ -585,7 +582,6 @@ class Aliens{
             }
         }
 };
-
 class MotherShip{
     private:
         Texture motherShip;
@@ -738,8 +734,6 @@ class Playing : public State{
         }
 };
 
-
-
 class Paused : public State{
     private:
         Playing& playing;
@@ -815,6 +809,7 @@ class CloseGame : public State{
         }
 };
 
+// backGround
 class Grid{
     private:
         const int   cellSize;
