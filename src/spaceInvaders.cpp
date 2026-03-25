@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <raylib.h>
+// #include <SQLiteCpp/SQLiteCpp.h>
 using std::cout, std::string, std::vector;
 
 /*
@@ -16,7 +17,7 @@ using std::cout, std::string, std::vector;
 
     TODO
         - circular comets for buttons
-        - add grids/stars to all 
+        - spaceship in settings as well
         - implement alien, aliens, & playing
         - collisions
         - 
@@ -141,20 +142,20 @@ class Settings : public State{
 
             // fullscreen
             posY += (offSet + ((fullScreen)? 63 : 0));
-            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
-            {
-                fullScreen = !fullScreen;
-                if (fullScreen){
-                    // SetWindowState(FLAG_FULLSCREEN_MODE);
-                    SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE); // op :D
-                }
-                else{
-                    ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
-                    SetWindowSize(1080, 720);
-                }
+            // if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
+            // {
+            //     fullScreen = !fullScreen;
+            //     if (fullScreen){
+            //         // SetWindowState(FLAG_FULLSCREEN_MODE);
+            //         SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE); // op :D
+            //     }
+            //     else{
+            //         ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            //         SetWindowSize(1080, 720);
+            //     }
 
-                PlaySound(settingModifySFX);
-            }
+            //     PlaySound(settingModifySFX);
+            // }
 
             // framerate
             posY += offSet;
