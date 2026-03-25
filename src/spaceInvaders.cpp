@@ -57,113 +57,6 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
 
 // Classes -----
 
-class Grid{
-    private:
-        const int   cellSize;
-        const int   screenWidth;
-        const int   screenHeight;
-        const Color gridColor;
-        const Color backgroundColor;
-
-    public:
-        Grid() 
-        : cellSize(40)
-        , screenWidth(GetScreenWidth())
-        , screenHeight(GetScreenHeight())
-        , gridColor(ColorAlpha(Color{0, 200, 255, 255}, 0.15f))        // light bluish color with a transparency/alpha of .15
-        , backgroundColor(Color{5, 5, 20, 255})                        // dark bluish/black bg 
-        {}
-
-        void draw(){
-            ClearBackground(backgroundColor);
-
-            // vertical lines
-            for (auto x {0}; x < screenWidth; x += cellSize)
-                DrawLine(x, 0, x, screenHeight, gridColor);
-
-            // horizontal lines  
-            for (auto y {0}; y < screenHeight; y += cellSize)
-                DrawLine(0, y, screenWidth, y, gridColor);
-        }
-};
-struct Star{
-    float centreX;              // x pos of its circular centre
-    float centreY;              // y pos of its centre
-    float radius;               // its radius
-    float twinkleSpeed;         // the rate at which the star will blink
-    float twinkleOffset;        // a random value for offsetting its twinkle/blinking
-    float alpha;                // its transparency; for twinkling
-};
-class Stars{
-    /*
-        the heart of this class is the random/offsetted pulsing/twinkling of each star based upon the sine function
-    */
-
-    private:
-        const int    screenWidth;
-        const int    screenHeight;
-        const int    numStars;              // the total count of the stars on the screen
-        const float  baseAlpha;             // the min possible alpha of any star
-        const float  maxAlpha;              // the max poss alpha value of a star (<= 1.0f)
-        vector<Star> stars;                 // a vector array
-
-        void generateStars(){
-            for (auto star {0}; star < numStars; star++){
-                stars.push_back( 
-                    Star{
-                        (float) GetRandomValue(0, screenWidth),         // centreX
-                        (float) GetRandomValue(0, screenHeight),        // centreY
-                        (float) GetRandomValue(1, 5) * 0.5f,            // radius; 0.5f since func cant have float arguments
-                        (float) GetRandomValue(1, 10),                  // twinkleSPeed
-                        (float) GetRandomValue(0, (2*PI)*100) / 100,    // twinkleOffset; just in case; 0 to 628(2pi * 100 ie) which is the max period of a sin wave
-                        (float) 0.4f                                    // alpha
-                    }
-                );
-            }
-        }
-    
-    public:
-        Stars() 
-        : screenWidth(GetScreenWidth())
-        , screenHeight(GetScreenHeight())
-        , numStars(163)
-        , baseAlpha(0.2f)
-        , maxAlpha(1.0f)
-        {
-            stars.reserve(numStars);             // reserving spaces for 123 stars beforehand
-            generateStars();
-        } 
-
-        // i think this first time that update() is before draw()... :>
-        void update(){
-            double currTime = GetTime();            // taking this as the "x" or "theta" here since its constantly changing/increasing
-            for (auto& star : stars){
-                // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));                         // credits to claude
-                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))/2));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
-            }
-        }
-        void draw(){
-            for (auto star : stars){
-                // DrawCircle(star.centreX, star.centreY, star.radius, WHITE);
-                DrawCircleV({star.centreX, star.centreY}, star.radius, ColorAlpha(WHITE, star.alpha));                  // color alpha to change WHITE's alpha/transparency
-            }
-        }
-};
-class BackGround{
-    private:
-        Grid  grid;                     // background with grid
-        Stars stars;                    // a collection of stars which twinkle randomly
-
-    public:
-        void draw(){
-            grid.draw();
-            stars.draw();
-        }
-        void update(){
-            stars.update();
-        }
-};
-
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
     protected:
         GameState&  gameState;
@@ -921,6 +814,114 @@ class CloseGame : public State{
             WaitTime(3);
         }
 };
+
+class Grid{
+    private:
+        const int   cellSize;
+        const int   screenWidth;
+        const int   screenHeight;
+        const Color gridColor;
+        const Color backgroundColor;
+
+    public:
+        Grid() 
+        : cellSize(40)
+        , screenWidth(GetScreenWidth())
+        , screenHeight(GetScreenHeight())
+        , gridColor(ColorAlpha(Color{0, 200, 255, 255}, 0.15f))        // light bluish color with a transparency/alpha of .15
+        , backgroundColor(Color{5, 5, 20, 255})                        // dark bluish/black bg 
+        {}
+
+        void draw(){
+            ClearBackground(backgroundColor);
+
+            // vertical lines
+            for (auto x {0}; x < screenWidth; x += cellSize)
+                DrawLine(x, 0, x, screenHeight, gridColor);
+
+            // horizontal lines  
+            for (auto y {0}; y < screenHeight; y += cellSize)
+                DrawLine(0, y, screenWidth, y, gridColor);
+        }
+};
+struct Star{
+    float centreX;              // x pos of its circular centre
+    float centreY;              // y pos of its centre
+    float radius;               // its radius
+    float twinkleSpeed;         // the rate at which the star will blink
+    float twinkleOffset;        // a random value for offsetting its twinkle/blinking
+    float alpha;                // its transparency; for twinkling
+};
+class Stars{
+    /*
+        the heart of this class is the random/offsetted pulsing/twinkling of each star based upon the sine function
+    */
+
+    private:
+        const int    screenWidth;
+        const int    screenHeight;
+        const int    numStars;              // the total count of the stars on the screen
+        const float  baseAlpha;             // the min possible alpha of any star
+        const float  maxAlpha;              // the max poss alpha value of a star (<= 1.0f)
+        vector<Star> stars;                 // a vector array
+
+        void generateStars(){
+            for (auto star {0}; star < numStars; star++){
+                stars.push_back( 
+                    Star{
+                        (float) GetRandomValue(0, screenWidth),         // centreX
+                        (float) GetRandomValue(0, screenHeight),        // centreY
+                        (float) GetRandomValue(1, 5) * 0.5f,            // radius; 0.5f since func cant have float arguments
+                        (float) GetRandomValue(1, 10),                  // twinkleSPeed
+                        (float) GetRandomValue(0, (2*PI)*100) / 100,    // twinkleOffset; just in case; 0 to 628(2pi * 100 ie) which is the max period of a sin wave
+                        (float) 0.4f                                    // alpha
+                    }
+                );
+            }
+        }
+    
+    public:
+        Stars() 
+        : screenWidth(GetScreenWidth())
+        , screenHeight(GetScreenHeight())
+        , numStars(163)
+        , baseAlpha(0.2f)
+        , maxAlpha(1.0f)
+        {
+            stars.reserve(numStars);             // reserving spaces for 123 stars beforehand
+            generateStars();
+        } 
+
+        // i think this first time that update() is before draw()... :>
+        void update(){
+            double currTime = GetTime();            // taking this as the "x" or "theta" here since its constantly changing/increasing
+            for (auto& star : stars){
+                // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));                         // credits to claude
+                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))/2));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
+            }
+        }
+        void draw(){
+            for (auto star : stars){
+                // DrawCircle(star.centreX, star.centreY, star.radius, WHITE);
+                DrawCircleV({star.centreX, star.centreY}, star.radius, ColorAlpha(WHITE, star.alpha));                  // color alpha to change WHITE's alpha/transparency
+            }
+        }
+};
+class BackGround{
+    private:
+        Grid  grid;                     // background with grid
+        Stars stars;                    // a collection of stars which twinkle randomly
+
+    public:
+        void draw(){
+            grid.draw();
+            stars.draw();
+        }
+        void update(){
+            stars.update();
+        }
+};
+
 class Game{
     private:
         GameState    gameState;
