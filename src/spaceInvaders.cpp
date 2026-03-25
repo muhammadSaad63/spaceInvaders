@@ -167,16 +167,11 @@ class BackGround{
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
     protected:
         GameState&  gameState;
-        BackGround& backGround;
 
     public:
-        State(GameState& gameState, BackGround& backGround) 
-        : gameState(gameState) 
-        , backGround(backGround)
-        {}
+        State(GameState& gameState) : gameState(gameState) {}
 
         virtual void draw()   = 0;
-
         virtual void update() = 0;
 };
 class Settings : public State{
@@ -199,7 +194,7 @@ class Settings : public State{
         Sound settingModifySFX;
 
     public:
-        Settings(GameState& gameState, BackGround& backGround) : State(gameState, backGround) 
+        Settings(GameState& gameState) : State(gameState) 
         {
             settingModifySFX = LoadSound("Assets/SFX/settingModify.mp3");
         }
@@ -208,8 +203,6 @@ class Settings : public State{
         }
 
         void draw(){
-            backGround.draw();
-
             posY = 23;
 
             // header
@@ -247,8 +240,6 @@ class Settings : public State{
         }
 
         void update(){
-            backGround.update();
-    
             if (IsKeyPressed(KEY_ENTER)){
                 gameState = MENU;
             }
@@ -582,19 +573,17 @@ class Menu : public State{
         InputMode& movementMode;             // for input mode
 
     public:
-        Menu(GameState& gameState, BackGround& backGround, Settings& settings) 
-        : State(gameState, backGround)
+        Menu(GameState& gameState, Settings& settings) 
+        : State(gameState)
         , spaceShip("1.png")
         , movementMode(settings.getMovementMode())
         {}
 
         void draw(){
-            backGround.draw();
             spaceShip.draw();
             icons.draw();
         }
         void update(){
-            backGround.update();
             spaceShip.update(movementMode);
             gameState = icons.update(spaceShip);
         }
@@ -604,7 +593,7 @@ class Play : public State{
         //
 
     public:
-        Play(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
+        Play(GameState& gameState) : State(gameState) {}
 
         void draw(){
 
@@ -618,7 +607,7 @@ class Shop : public State{
         //
 
     public:
-        Shop(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
+        Shop(GameState& gameState) : State(gameState) {}
 
         void draw(){
 
@@ -632,7 +621,7 @@ class History : public State{
         //
 
     public:
-        History(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
+        History(GameState& gameState) : State(gameState) {}
 
         void draw(){
 
@@ -646,7 +635,7 @@ class LeaderBoards : public State{
         //
 
     public:
-        LeaderBoards(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
+        LeaderBoards(GameState& gameState) : State(gameState) {}
 
         void draw(){
 
@@ -824,8 +813,8 @@ class Playing : public State{
         vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
 
     public:
-        Playing(GameState& gameState, BackGround& backGround, Settings& settings) 
-        : State(gameState, backGround)
+        Playing(GameState& gameState, Settings& settings) 
+        : State(gameState)
         , spaceShip("1.png")
         , score(0) 
         , movementMode(settings.getMovementMode())
@@ -866,8 +855,8 @@ class Paused : public State{
         Sound    gameStoppedSFX;
 
     public:
-        Paused(GameState& gameState, BackGround& backGround, Playing& playing) 
-        : State(gameState, backGround)
+        Paused(GameState& gameState, Playing& playing) 
+        : State(gameState)
         , playing(playing) 
         {
             gameResumedSFX = LoadSound("Assets/SFX/gameResumed.mp3");
@@ -904,7 +893,7 @@ class GameOver : public State{
         //
 
     public:
-        GameOver(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
+        GameOver(GameState& gameState) : State(gameState) {}
 
         void draw(){
 
@@ -922,11 +911,10 @@ class CloseGame : public State{
         //
 
     public:
-        CloseGame(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
+        CloseGame(GameState& gameState) : State(gameState) {}
 
         // not working
         void draw(){
-            ClearBackground(BLANK);
             DrawText("closing", 50, 50, 50, GOLD);
         }
         void update(){
@@ -955,16 +943,16 @@ class Game{
     public:
         Game()                          // overRiding default constructor 
         : gameState(MENU)               // initializing gameState with MENU
-        , menu(gameState, backGround, settings)
-        , play(gameState, backGround)
-        , shop(gameState, backGround) 
-        , history(gameState, backGround)
-        , leaderBoards(gameState, backGround)
-        , settings(gameState, backGround)
-        , playing(gameState, backGround, settings)
-        , paused(gameState, backGround, playing)
-        , gameOver(gameState, backGround)
-        , closeGame(gameState, backGround) 
+        , menu(gameState, settings)
+        , play(gameState)
+        , shop(gameState) 
+        , history(gameState)
+        , leaderBoards(gameState)
+        , settings(gameState)
+        , playing(gameState, settings)
+        , paused(gameState, playing)
+        , gameOver(gameState)
+        , closeGame(gameState) 
         {}
 
         void init(){
@@ -981,7 +969,7 @@ class Game{
         }
 
         void draw(){                                                    // draws based upon the current gameState
-            ClearBackground(BLANK);
+            backGround.draw();
 
             switch(gameState)
             {
@@ -997,7 +985,10 @@ class Game{
                 case CLOSEGAME:    { closeGame.draw();    break; }  
             }
         }
-        void update(){                                                  // updates based upon the current gameState
+        void update(){     
+            backGround.update();
+            
+            // updates based upon the current gameState
             switch(gameState)
             {
                 case MENU:         { menu.update();         break; }
