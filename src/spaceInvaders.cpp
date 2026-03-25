@@ -150,7 +150,7 @@ class Settings : public State{
                 }
                 else{
                     ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
-                    SetWindowSize(1300, 700);
+                    SetWindowSize(1080, 720);
                 }
 
                 PlaySound(settingModifySFX);
@@ -204,7 +204,9 @@ class Settings : public State{
         InputMode& getMovementMode(){
             return playerInputMode;
         }
-
+        bool isFullScreen(){
+            return fullScreen;
+        }
 };
 
 class Laser{
@@ -815,6 +817,11 @@ class Grid{
         const int   cellSize;
         const int   screenWidth;
         const int   screenHeight;
+
+        int         fullScreenWidth;
+        int         fullScreenHeight;
+        bool        fullScreened;                       // holds true if the game was ever fullscreened
+        
         const Color gridColor;
         const Color backgroundColor;
 
@@ -823,20 +830,28 @@ class Grid{
         : cellSize(40)
         , screenWidth(GetScreenWidth())
         , screenHeight(GetScreenHeight())
+        , fullScreened(false)
         , gridColor(ColorAlpha(Color{0, 200, 255, 255}, 0.15f))        // light bluish color with a transparency/alpha of .15
         , backgroundColor(Color{5, 5, 20, 255})                        // dark bluish/black bg 
         {}
 
-        void draw(){
+        void draw(const bool fullScreen){
             ClearBackground(backgroundColor);
 
+            if (fullScreen && !fullScreened){
+                fullScreenWidth  = GetScreenWidth();
+                fullScreenHeight = GetScreenHeight();
+
+                fullScreened = true;
+            }
+    
             // vertical lines
-            for (auto x {0}; x < screenWidth; x += cellSize)
-                DrawLine(x, 0, x, screenHeight, gridColor);
+            for (auto x {0}; x < ((fullScreen)? fullScreenWidth : screenWidth); x += cellSize)
+                DrawLine(x, 0, x, ((fullScreen)? fullScreenHeight : screenHeight), gridColor);
 
             // horizontal lines  
-            for (auto y {0}; y < screenHeight; y += cellSize)
-                DrawLine(0, y, screenWidth, y, gridColor);
+            for (auto y {0}; y < ((fullScreen)? fullScreenHeight : screenHeight); y += cellSize)
+                DrawLine(0, y, ((fullScreen)? fullScreenWidth : screenWidth), y, gridColor);
         }
 };
 struct Star{
@@ -908,8 +923,8 @@ class BackGround{
         Stars stars;                    // a collection of stars which twinkle randomly
 
     public:
-        void draw(){
-            grid.draw();
+        void draw(const bool fullScreen){
+            grid.draw(fullScreen);
             stars.draw();
         }
         void update(){
@@ -922,12 +937,12 @@ class Game{
         GameState    gameState;
         BackGround   backGround;
 
+        Settings     settings;
         Menu         menu;
         Play         play;
         Shop         shop;
         History      history;
         LeaderBoards leaderBoards;
-        Settings     settings;
 
         Playing      playing;
         Paused       paused;
@@ -965,7 +980,7 @@ class Game{
         }
 
         void draw(){                                                    // draws based upon the current gameState
-            backGround.draw();
+            backGround.draw(settings.isFullScreen());
 
             switch(gameState)
             {
