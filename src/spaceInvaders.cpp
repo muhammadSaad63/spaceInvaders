@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <raylib.h>
-// #include <SQLiteCpp/SQLiteCpp.h>
+#include <SQLiteCpp/SQLiteCpp.h>
 using std::cout, std::string, std::vector;
 
 /*
