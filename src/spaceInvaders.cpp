@@ -161,7 +161,18 @@ class Settings : public State{
             posY += offSet;
             if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[1].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("123", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 123 is the max width of poss values
             {
-                frameRate = ((frameRate == 23)? 40 : (frameRate == 40)? 63 : (frameRate == 63)? 123 : 23);          // y these values? simple: me like em :)
+
+                switch (frameRate) {
+                    case 15: frameRate = 30; break;
+                    case 30: frameRate = 45; break;
+                    case 45: frameRate = 60; break;
+                    case 60: frameRate = 15; break;
+                    default: frameRate = 60; break;
+                }
+
+                // what is this code...
+                // dear God
+                // frameRate = ((frameRate == 20)? 40 : (frameRate == 40)? 60 : (frameRate == 60)? 120 : 20);          // y these values? simple: me like em :)
                 
                 SetTargetFPS(frameRate);
                 PlaySound(settingModifySFX);
@@ -701,6 +712,7 @@ class Playing : public State{
         MotherShip     motherShip;
 
         int            score;
+        int            enemiesDefeated;
         InputMode&     movementMode;        // for storing reference of playerInputMode from settings
         vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
 
@@ -899,7 +911,7 @@ class Stars{
         , baseAlpha(0.2f)
         , maxAlpha(1.0f)
         {
-            stars.reserve(numStars);             // reserving spaces for 123 stars beforehand
+            stars.reserve(numStars);             // reserving spaces for 163 stars beforehand
             generateStars();
         } 
 
@@ -918,7 +930,7 @@ class Stars{
             }
         }
 };
-class BackGround{
+class Background {
     private:
         Grid  grid;                     // background with grid
         Stars stars;                    // a collection of stars which twinkle randomly
@@ -936,7 +948,7 @@ class BackGround{
 class Game{
     private:
         GameState        gameState;
-        BackGround       backGround;
+        Background       backGround;
         SQLite::Database db;
 
         Settings     settings;
