@@ -978,6 +978,7 @@ class Game{
                 SetWindowIcon(favicon);
                 UnloadImage(favicon);
             }
+            SQLite::Database db("example.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
         }
 
         void draw(){                                                    // draws based upon the current gameState
