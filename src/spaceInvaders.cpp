@@ -103,8 +103,8 @@ class Stars{
         const int    screenWidth;
         const int    screenHeight;
         const int    numStars;              // the total count of the stars on the screen
-        const int    baseAlpha;             // the min possible alpha of any star
-        const int    maxAlpha;              // the max poss alpha value of a star (<= 1.0f)
+        const float  baseAlpha;             // the min possible alpha of any star
+        const float  maxAlpha;              // the max poss alpha value of a star (<= 1.0f)
         vector<Star> stars;                 // a vector array
 
         void generateStars(){
@@ -149,14 +149,31 @@ class Stars{
             }
         }
 };
-class State{                                                        // an abstract class to be inherited by all gameState subclasses
-    protected:
-        GameState& gameState;
-        Grid       grid;                     // background with grid
-        Stars      stars;                    // a collection of stars which twinkle randomly
+class BackGround{
+    private:
+        Grid  grid;                     // background with grid
+        Stars stars;                    // a collection of stars which twinkle randomly
 
     public:
-        State(GameState& gameState) : gameState(gameState) {}
+        void draw(){
+            grid.draw();
+            stars.draw();
+        }
+        void update(){
+            stars.update();
+        }
+};
+
+class State{                                                        // an abstract class to be inherited by all gameState subclasses
+    protected:
+        GameState&  gameState;
+        BackGround& backGround;
+
+    public:
+        State(GameState& gameState, BackGround& backGround) 
+        : gameState(gameState) 
+        , backGround(backGround)
+        {}
 
         virtual void draw()   = 0;
 
@@ -182,7 +199,8 @@ class Settings : public State{
         Sound settingModifySFX;
 
     public:
-        Settings(GameState& gameState) : State(gameState) {
+        Settings(GameState& gameState, BackGround& backGround) : State(gameState, backGround) 
+        {
             settingModifySFX = LoadSound("Assets/SFX/settingModify.mp3");
         }
         ~Settings(){
@@ -190,8 +208,7 @@ class Settings : public State{
         }
 
         void draw(){
-            grid.draw();
-            stars.draw();
+            backGround.draw();
 
             posY = 23;
 
@@ -230,7 +247,7 @@ class Settings : public State{
         }
 
         void update(){
-            stars.update();
+            backGround.update();
     
             if (IsKeyPressed(KEY_ENTER)){
                 gameState = MENU;
@@ -494,12 +511,13 @@ class MenuIcons{
     private:
         MenuIcon  icons[5];
         bool      selected;
-        int       selectedTime;
+        double      selectedTime;
         double    selectedDelay;                    // in sec
         GameState selectedState;
 
     public:
-        MenuIcons() : selectedDelay(1.5) {
+        MenuIcons() : selected(false), selectedDelay(1.5) 
+        {
             icons[0] = MenuIcon{Rectangle{390, 50,  300, 120}, "Play",         75, PLAY        };      // Play
             icons[1] = MenuIcon{Rectangle{180, 180, 200, 80 }, "LeaderBoards", 25, LEADERBOARDS};      // LeaderBoards
             icons[2] = MenuIcon{Rectangle{700, 180, 200, 80 }, "Shop",         25, SHOP        };      // Shop
@@ -564,20 +582,19 @@ class Menu : public State{
         InputMode& movementMode;             // for input mode
 
     public:
-        Menu(GameState& gameState, Settings& settings) 
-        : State(gameState)
+        Menu(GameState& gameState, BackGround& backGround, Settings& settings) 
+        : State(gameState, backGround)
         , spaceShip("1.png")
         , movementMode(settings.getMovementMode())
         {}
 
         void draw(){
-            grid.draw();
-            stars.draw();
+            backGround.draw();
             spaceShip.draw();
             icons.draw();
         }
         void update(){
-            stars.update();
+            backGround.update();
             spaceShip.update(movementMode);
             gameState = icons.update(spaceShip);
         }
@@ -587,7 +604,7 @@ class Play : public State{
         //
 
     public:
-        Play(GameState& gameState) : State(gameState) {}
+        Play(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
 
         void draw(){
 
@@ -601,7 +618,7 @@ class Shop : public State{
         //
 
     public:
-        Shop(GameState& gameState) : State(gameState) {}
+        Shop(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
 
         void draw(){
 
@@ -615,7 +632,7 @@ class History : public State{
         //
 
     public:
-        History(GameState& gameState) : State(gameState) {}
+        History(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
 
         void draw(){
 
@@ -629,7 +646,7 @@ class LeaderBoards : public State{
         //
 
     public:
-        LeaderBoards(GameState& gameState) : State(gameState) {}
+        LeaderBoards(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
 
         void draw(){
 
@@ -807,8 +824,8 @@ class Playing : public State{
         vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
 
     public:
-        Playing(GameState& gameState, Settings& settings) 
-        : State(gameState)
+        Playing(GameState& gameState, BackGround& backGround, Settings& settings) 
+        : State(gameState, backGround)
         , spaceShip("1.png")
         , score(0) 
         , movementMode(settings.getMovementMode())
@@ -849,8 +866,8 @@ class Paused : public State{
         Sound    gameStoppedSFX;
 
     public:
-        Paused(GameState& gameState, Playing& playing) 
-        : State(gameState)
+        Paused(GameState& gameState, BackGround& backGround, Playing& playing) 
+        : State(gameState, backGround)
         , playing(playing) 
         {
             gameResumedSFX = LoadSound("Assets/SFX/gameResumed.mp3");
@@ -887,7 +904,7 @@ class GameOver : public State{
         //
 
     public:
-        GameOver(GameState& gameState) : State(gameState) {}
+        GameOver(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
 
         void draw(){
 
@@ -905,7 +922,7 @@ class CloseGame : public State{
         //
 
     public:
-        CloseGame(GameState& gameState) : State(gameState) {}
+        CloseGame(GameState& gameState, BackGround& backGround) : State(gameState, backGround) {}
 
         // not working
         void draw(){
@@ -919,6 +936,7 @@ class CloseGame : public State{
 class Game{
     private:
         GameState    gameState;
+        BackGround   backGround;
 
         Menu         menu;
         Play         play;
@@ -937,16 +955,16 @@ class Game{
     public:
         Game()                          // overRiding default constructor 
         : gameState(MENU)               // initializing gameState with MENU
-        , menu(gameState, settings)
-        , play(gameState)
-        , shop(gameState) 
-        , history(gameState)
-        , leaderBoards(gameState)
-        , settings(gameState)
-        , playing(gameState, settings)
-        , paused(gameState, playing)
-        , gameOver(gameState)
-        , closeGame(gameState) 
+        , menu(gameState, backGround, settings)
+        , play(gameState, backGround)
+        , shop(gameState, backGround) 
+        , history(gameState, backGround)
+        , leaderBoards(gameState, backGround)
+        , settings(gameState, backGround)
+        , playing(gameState, backGround, settings)
+        , paused(gameState, backGround, playing)
+        , gameOver(gameState, backGround)
+        , closeGame(gameState, backGround) 
         {}
 
         void init(){
