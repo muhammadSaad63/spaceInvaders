@@ -1,9 +1,11 @@
 //                                                             بسم اللہ الرحمان الرحیم  
 
+#include <cmath>               // for sine, PI
 #include <string>
 #include <vector>
 #include <iostream>
 #include <raylib.h>
+#include <SQLiteCpp/SQLiteCpp.h>
 using std::cout, std::string, std::vector;
 
 /*
@@ -14,6 +16,8 @@ using std::cout, std::string, std::vector;
         >
 
     TODO
+        - circular comets for buttons
+        - spaceship in settings as well
         - implement alien, aliens, & playing
         - collisions
         - 
@@ -56,84 +60,13 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
 
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
     protected:
-        GameState& gameState;
+        GameState&  gameState;
 
     public:
         State(GameState& gameState) : gameState(gameState) {}
 
         virtual void draw()   = 0;
-
         virtual void update() = 0;
-};
-class Menu : public State{
-    private:
-        //
-
-    public:
-        Menu(GameState& gameState) : State(gameState) {}
-
-        void draw(){
-
-        }
-        void update(){
-
-        }
-};
-class Play : public State{
-    private:
-        //
-
-    public:
-        Play(GameState& gameState) : State(gameState) {}
-
-        void draw(){
-
-        }
-        void update(){
-
-        }
-};
-class Shop : public State{
-    private:
-        //
-
-    public:
-        Shop(GameState& gameState) : State(gameState) {}
-
-        void draw(){
-
-        }
-        void update(){
-
-        }
-};
-class History : public State{
-    private:
-        //
-
-    public:
-        History(GameState& gameState) : State(gameState) {}
-
-        void draw(){
-
-        }
-        void update(){
-
-        }
-};
-class LeaderBoards : public State{
-    private:
-        //
-
-    public:
-        LeaderBoards(GameState& gameState) : State(gameState) {}
-
-        void draw(){
-
-        }
-        void update(){
-
-        }
 };
 class Settings : public State{
     // copied from my Mr.Pong game
@@ -155,7 +88,8 @@ class Settings : public State{
         Sound settingModifySFX;
 
     public:
-        Settings(GameState& gameState) : State(gameState) {
+        Settings(GameState& gameState) : State(gameState) 
+        {
             settingModifySFX = LoadSound("Assets/SFX/settingModify.mp3");
         }
         ~Settings(){
@@ -208,20 +142,20 @@ class Settings : public State{
 
             // fullscreen
             posY += (offSet + ((fullScreen)? 63 : 0));
-            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
-            {
-                fullScreen = !fullScreen;
-                if (fullScreen){
-                    // SetWindowState(FLAG_FULLSCREEN_MODE);
-                    SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE); // op :D
-                }
-                else{
-                    ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
-                    SetWindowSize(1300, 700);
-                }
+            // if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
+            // {
+            //     fullScreen = !fullScreen;
+            //     if (fullScreen){
+            //         // SetWindowState(FLAG_FULLSCREEN_MODE);
+            //         SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE); // op :D
+            //     }
+            //     else{
+            //         ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+            //         SetWindowSize(1080, 720);
+            //     }
 
-                PlaySound(settingModifySFX);
-            }
+            //     PlaySound(settingModifySFX);
+            // }
 
             // framerate
             posY += offSet;
@@ -271,7 +205,9 @@ class Settings : public State{
         InputMode& getMovementMode(){
             return playerInputMode;
         }
-
+        bool isFullScreen(){
+            return fullScreen;
+        }
 };
 
 class Laser{
@@ -313,7 +249,7 @@ class Laser{
             }
         }
         void draw(){    
-            DrawRectangle(posX, posY, width, height, WHITE);
+            DrawRectangle(posX, posY, width, height, ORANGE);
         }
         Rectangle getRect(){
             return Rectangle{posX, posY, width, height};
@@ -350,8 +286,8 @@ class SpaceShip{
             scale = 0.1f;
             bottomOffset = 50;
 
-            posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
-            posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
+            posX = (GetScreenWidth() / 2 - (spaceShip.width  * scale) / 2);
+            posY = (GetScreenHeight()    - (spaceShip.height * scale) - bottomOffset); 
 
             speed = 5;
         }
@@ -433,16 +369,6 @@ class SpaceShip{
                 lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
             }
 
-            // updating lasers
-            // for (auto &laser : lasers){
-            //     if (laser.isActive()){
-            //         laser.update(USER);
-            //     }
-            //     else{
-            //         lasers.erase(laser);
-            //     }
-            // }
-
             for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
                 if (it->isActive()){                                          // updating laser if they active
                     it->update(USER);
@@ -454,14 +380,166 @@ class SpaceShip{
             }
         }
         void reset(){
-            posX = (GetScreenWidth() / 2 - (spaceShip.width * scale) / 2);
-            posY = (GetScreenHeight() - (spaceShip.height * scale) - bottomOffset); 
+            posX = (GetScreenWidth() / 2 - (spaceShip.width  * scale) / 2);
+            posY = (GetScreenHeight()    - (spaceShip.height * scale) - bottomOffset); 
         }
         vector<Laser>& getLasers(){
             return lasers;
         }
 };
 
+struct MenuIcon{
+    Rectangle rect;
+    string    text;
+    int       textSize;
+    GameState gameState;
+};
+class MenuIcons{
+    private:
+        MenuIcon  icons[5];
+        bool      selected;
+        double      selectedTime;
+        double    selectedDelay;                    // in sec
+        GameState selectedState;
+
+    public:
+        MenuIcons() : selected(false), selectedDelay(1.5) 
+        {
+            icons[0] = MenuIcon{Rectangle{390, 50,  300, 120}, "Play",         75, PLAY        };      // Play
+            icons[1] = MenuIcon{Rectangle{180, 180, 200, 80 }, "LeaderBoards", 25, LEADERBOARDS};      // LeaderBoards
+            icons[2] = MenuIcon{Rectangle{700, 180, 200, 80 }, "Shop",         25, SHOP        };      // Shop
+            icons[3] = MenuIcon{Rectangle{50,  280, 150, 60 }, "History",      20, HISTORY     };      // History
+            icons[4] = MenuIcon{Rectangle{880, 280, 150, 60 }, "Settings",     20, SETTINGS    };      // Settings
+        };
+
+        void draw(){
+            for (auto& icon : icons){
+                DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, GOLD, RED);
+                
+                // a light black rectangular overlay over button
+                DrawRectangle(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(BLACK, 0.1f));
+                
+                // centre text inside rect
+                int   textWidth = MeasureText(icon.text.c_str(), icon.textSize);
+                float textX     = icon.rect.x + (icon.rect.width  - textWidth) / 2;
+                float textY     = icon.rect.y + (icon.rect.height - icon.textSize ) / 2;
+                DrawText(icon.text.c_str(), textX, textY, icon.textSize, WHITE);
+                
+                if (selected && (icon.gameState == selectedState)) 
+                DrawRectangleRoundedLinesEx(icon.rect, 0.1f, 10, 5, WHITE);
+            }
+        }
+        GameState update(SpaceShip& spaceShip){
+            vector<Laser>& lasers = spaceShip.getLasers();
+
+            // if an icon was previously successfuly selected
+            if (selected){
+                if ((selectedTime + selectedDelay) <= GetTime()){
+                    lasers.clear();
+                    spaceShip.reset();
+                    selected = false;
+
+                    return selectedState;
+                }
+            }
+            else{        
+                // checking for any successful selections/collisions
+                for (auto& icon : icons){
+                    for (auto& laser : lasers){
+                        if (CheckCollisionRecs(icon.rect, laser.getRect())){
+                            laser.deActivate();
+                            
+                            selected = true;
+                            selectedTime = GetTime();
+                            selectedState = icon.gameState;
+
+                            return MENU;
+                        }
+                    }
+                }
+            }
+            return MENU;
+        }
+};
+
+class Menu : public State{
+    private:
+        MenuIcons  icons;                    // a group of 5 icons/button
+        SpaceShip  spaceShip;                // the spaceShip at the bottom
+        InputMode& movementMode;             // for input mode
+
+    public:
+        Menu(GameState& gameState, Settings& settings) 
+        : State(gameState)
+        , spaceShip("1.png")
+        , movementMode(settings.getMovementMode())
+        {}
+
+        void draw(){
+            spaceShip.draw();
+            icons.draw();
+        }
+        void update(){
+            spaceShip.update(movementMode);
+            gameState = icons.update(spaceShip);
+        }
+};
+class Play : public State{
+    private:
+        //
+
+    public:
+        Play(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class Shop : public State{
+    private:
+        //
+
+    public:
+        Shop(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class History : public State{
+    private:
+        //
+
+    public:
+        History(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
+class LeaderBoards : public State{
+    private:
+        //
+
+    public:
+        LeaderBoards(GameState& gameState) : State(gameState) {}
+
+        void draw(){
+
+        }
+        void update(){
+
+        }
+};
 
 class Alien{
     private:
@@ -507,7 +585,6 @@ class Aliens{
             }
         }
 };
-
 class MotherShip{
     private:
         Texture motherShip;
@@ -660,8 +737,6 @@ class Playing : public State{
         }
 };
 
-
-
 class Paused : public State{
     private:
         Playing& playing;
@@ -730,23 +805,146 @@ class CloseGame : public State{
 
         // not working
         void draw(){
-            ClearBackground(BLANK);
             DrawText("closing", 50, 50, 50, GOLD);
         }
         void update(){
             WaitTime(3);
         }
 };
+
+// backGround
+class Grid{
+    private:
+        const int   cellSize;
+        const int   screenWidth;
+        const int   screenHeight;
+
+        int         fullScreenWidth;
+        int         fullScreenHeight;
+        bool        fullScreened;                       // holds true if the game was ever fullscreened
+        
+        const Color gridColor;
+        const Color backgroundColor;
+
+    public:
+        Grid() 
+        : cellSize(40)
+        , screenWidth(GetScreenWidth())
+        , screenHeight(GetScreenHeight())
+        , fullScreened(false)
+        , gridColor(ColorAlpha(Color{0, 200, 255, 255}, 0.15f))        // light bluish color with a transparency/alpha of .15
+        , backgroundColor(Color{5, 5, 20, 255})                        // dark bluish/black bg 
+        {}
+
+        void draw(const bool fullScreen){
+            ClearBackground(backgroundColor);
+
+            if (fullScreen && !fullScreened){
+                fullScreenWidth  = GetScreenWidth();
+                fullScreenHeight = GetScreenHeight();
+
+                fullScreened = true;
+            }
+    
+            // vertical lines
+            for (auto x {0}; x < ((fullScreen)? fullScreenWidth : screenWidth); x += cellSize)
+                DrawLine(x, 0, x, ((fullScreen)? fullScreenHeight : screenHeight), gridColor);
+
+            // horizontal lines  
+            for (auto y {0}; y < ((fullScreen)? fullScreenHeight : screenHeight); y += cellSize)
+                DrawLine(0, y, ((fullScreen)? fullScreenWidth : screenWidth), y, gridColor);
+        }
+};
+struct Star{
+    float centreX;              // x pos of its circular centre
+    float centreY;              // y pos of its centre
+    float radius;               // its radius
+    float twinkleSpeed;         // the rate at which the star will blink
+    float twinkleOffset;        // a random value for offsetting its twinkle/blinking
+    float alpha;                // its transparency; for twinkling
+};
+class Stars{
+    /*
+        the heart of this class is the random/offsetted pulsing/twinkling of each star based upon the sine function
+    */
+
+    private:
+        const int    screenWidth;
+        const int    screenHeight;
+        const int    numStars;              // the total count of the stars on the screen
+        const float  baseAlpha;             // the min possible alpha of any star
+        const float  maxAlpha;              // the max poss alpha value of a star (<= 1.0f)
+        vector<Star> stars;                 // a vector array
+
+        void generateStars(){
+            for (auto star {0}; star < numStars; star++){
+                stars.push_back( 
+                    Star{
+                        (float) GetRandomValue(0, screenWidth),         // centreX
+                        (float) GetRandomValue(0, screenHeight),        // centreY
+                        (float) GetRandomValue(1, 5) * 0.5f,            // radius; 0.5f since func cant have float arguments
+                        (float) GetRandomValue(1, 10),                  // twinkleSPeed
+                        (float) GetRandomValue(0, (2*PI)*100) / 100,    // twinkleOffset; just in case; 0 to 628(2pi * 100 ie) which is the max period of a sin wave
+                        (float) 0.4f                                    // alpha
+                    }
+                );
+            }
+        }
+    
+    public:
+        Stars() 
+        : screenWidth(GetScreenWidth())
+        , screenHeight(GetScreenHeight())
+        , numStars(163)
+        , baseAlpha(0.2f)
+        , maxAlpha(1.0f)
+        {
+            stars.reserve(numStars);             // reserving spaces for 123 stars beforehand
+            generateStars();
+        } 
+
+        // i think this first time that update() is before draw()... :>
+        void update(){
+            double currTime = GetTime();            // taking this as the "x" or "theta" here since its constantly changing/increasing
+            for (auto& star : stars){
+                // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));                         // credits to claude
+                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))/2));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
+            }
+        }
+        void draw(){
+            for (auto star : stars){
+                // DrawCircle(star.centreX, star.centreY, star.radius, WHITE);
+                DrawCircleV({star.centreX, star.centreY}, star.radius, ColorAlpha(WHITE, star.alpha));                  // color alpha to change WHITE's alpha/transparency
+            }
+        }
+};
+class BackGround{
+    private:
+        Grid  grid;                     // background with grid
+        Stars stars;                    // a collection of stars which twinkle randomly
+
+    public:
+        void draw(const bool fullScreen){
+            grid.draw(fullScreen);
+            stars.draw();
+        }
+        void update(){
+            stars.update();
+        }
+};
+
 class Game{
     private:
-        GameState    gameState;
+        GameState        gameState;
+        BackGround       backGround;
+        SQLite::Database db;
 
+        Settings     settings;
         Menu         menu;
         Play         play;
         Shop         shop;
         History      history;
         LeaderBoards leaderBoards;
-        Settings     settings;
 
         Playing      playing;
         Paused       paused;
@@ -754,11 +952,11 @@ class Game{
 
         CloseGame    closeGame;
 
-
     public:
         Game()                          // overRiding default constructor 
-        : gameState(PLAYING)               // initializing gameState with MENU
-        , menu(gameState)
+        : db("Assets/gameData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+        , gameState(MENU)               // initializing gameState with MENU
+        , menu(gameState, settings)
         , play(gameState)
         , shop(gameState) 
         , history(gameState)
@@ -776,15 +974,23 @@ class Game{
             SetTargetFPS(60); // why would you set it to 63 what is wrong with you
             InitAudioDevice();
 
-            Image favicon = LoadImage("Assets/Favicon/2.png");
+            Image favicon = LoadImage("Assets/Favicon/1.png");
             if (favicon.data){
                 SetWindowIcon(favicon);
                 UnloadImage(favicon);
             }
+            
+            db.exec(
+                "CREATE TABLE IF NOT EXISTS users ("
+                    "id INTEGER PRIMARY KEY,"
+                    "name TEXT," 
+                    "age INTEGER"
+                ")"
+            );
         }
 
         void draw(){                                                    // draws based upon the current gameState
-            ClearBackground(BLANK);
+            backGround.draw(settings.isFullScreen());
 
             switch(gameState)
             {
@@ -800,7 +1006,10 @@ class Game{
                 case CLOSEGAME:    { closeGame.draw();    break; }  
             }
         }
-        void update(){                                                  // updates based upon the current gameState
+        void update(){     
+            backGround.update();
+            
+            // updates based upon the current gameState
             switch(gameState)
             {
                 case MENU:         { menu.update();         break; }
@@ -823,7 +1032,7 @@ class Game{
             BeginDrawing();
                 ClearBackground(BLANK);
                 DrawText("Plz don't leave meeeee :(", GetScreenWidth()/2 - MeasureText("Plz don't leave meeeee :(", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
-                DrawText("Made by Saad, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
+                DrawText("Made by Ebbi, Saad, & Umair, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
             EndDrawing();
             WaitTime(2.5);
             UnloadSound(windowCloseSFX);
