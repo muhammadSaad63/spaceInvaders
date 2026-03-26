@@ -157,15 +157,22 @@ class DataBase{
         }
         
         // fetching/reading data
-        vector<GameData> getHistory(const int maxEntries){
+        vector<GameData> getHistory(int numEntries){
             vector<GameData> history;
-            history.reserve(maxEntries);
+
+            SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
+            query.exec();
+            int maxEntries = query.getColumn(0).getInt();
+
+            numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+
+            history.reserve(numEntries);
 
             //
 
             return history;
         }
-        vector<GameData> getLeaderBoards(const int maxEntries){
+        vector<GameData> getLeaderBoards(const int numEntries){
             vector<GameData> leaderBoards;
             leaderBoards.reserve(maxEntries);
 
