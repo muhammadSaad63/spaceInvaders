@@ -83,12 +83,12 @@ struct GameData{
     int    timeEnded;
     int    timePlayed;
 };
-class Storage{
+class   DataBase{
     protected:
         SQLite::Database db;
 
     public:
-        Storage()
+        DataBase()
         : db("Assets/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
         {
             // to store players' data
@@ -1105,7 +1105,7 @@ class Game{
     private:
         GameState    gameState;
         Background   backGround;
-        Storage      storageItems;
+        DataBase     dataBase;
 
         Settings     settings;
         Menu         menu;
