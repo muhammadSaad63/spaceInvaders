@@ -144,7 +144,7 @@ class DataBase{
             query.bind(2, gameData.score);
             query.bind(3, gameData.enemiesDefeated);
             query.bind(4, gameData.waveReached);
-            query.bind(5, CURRENT_TIMESTAMP);   
+            query.bind(5, 2);   
             query.bind(6, gameData.timePlayed);             
 
             query.exec();                               // executing the query
