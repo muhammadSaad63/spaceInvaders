@@ -83,7 +83,7 @@ class DataBase{
 
     public:
         DataBase()
-        : db("Assets/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+        : db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
         {
             // creating table 'players' to store players' data
             db.exec(
@@ -274,7 +274,7 @@ class Settings : public State{
     public:
         Settings(GameState& gameState) : State(gameState) 
         {
-            settingModifySFX = LoadSound("Assets/SFX/settingModify.mp3");
+            settingModifySFX = LoadSound("assets/sounds/sfx/settingModify.mp3");
         }
         ~Settings(){
             UnloadSound(settingModifySFX);
@@ -484,7 +484,7 @@ class SpaceShip{
         vector<Laser> lasers;
         
         void loadShip(const string& fileName){
-            spaceShip = LoadTexture(TextFormat("Assets/Sprites/spaceShips/%s", fileName.c_str()));
+            spaceShip = LoadTexture(TextFormat("assets/graphics/player/spaceShips/%s", fileName.c_str()));
             
             // returns true if the texture is loaded into memory; alternatively coudlve used "if (spaceShip.id)"
             cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(spaceShip)? ") has" : ") has NOT") << " loaded properly.\n";
@@ -831,7 +831,7 @@ class MotherShip{
         , hits(0)                                                       // number of hits currently sustained by the motherShip
         , maxPossibleHits(7)                                            // max number of hits to defeat/destruct the motherShip
         , scoreBoost(1000)                                              // 1000 extra points on destruction
-        , motherShip(LoadTexture("Assets/Sprites/motherShips/1.png"))
+        , motherShip(LoadTexture("assets/graphics/enemies/motherShips/1.png"))
         , position({0.0f, 50})
         , scale(0.15f)
         , randomSpawnPause(30)                                          // 30s
@@ -973,8 +973,8 @@ class Paused : public State{
         : State(gameState)
         , playing(playing) 
         {
-            gameResumedSFX = LoadSound("Assets/SFX/gameResumed.mp3");
-            gameStoppedSFX = LoadSound("Assets/SFX/gameStopped.mp3");
+            gameResumedSFX = LoadSound("assets/sounds/sfx/gameResumed.mp3");
+            gameStoppedSFX = LoadSound("assets/sounds/sfx/gameStopped.mp3");
         }
         ~Paused(){
             UnloadSound(gameResumedSFX);
@@ -1222,7 +1222,7 @@ class Game{
             SetTargetFPS(60); // why would you set it to 63 what is wrong with you
             InitAudioDevice();
 
-            Image favicon = LoadImage("Assets/Favicon/1.png");
+            Image favicon = LoadImage("assets/graphics/ui/favicons/1.png");
             if (favicon.data){
                 SetWindowIcon(favicon);
                 UnloadImage(favicon);
@@ -1271,7 +1271,7 @@ class Game{
             double currTime     {GetTime()};
             double waitDuration {2.5};                  // in sec
             
-            Sound windowCloseSFX = LoadSound("Assets/SFX/windowClose.mp3");
+            Sound windowCloseSFX = LoadSound("assets/sounds/sfx/windowClose.mp3");
             PlaySound(windowCloseSFX);          // :D
             
             while ((currTime + waitDuration) >= GetTime()){
