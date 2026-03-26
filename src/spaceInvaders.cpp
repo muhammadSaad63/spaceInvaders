@@ -60,15 +60,15 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
 
 // Classes -----
 
-struct LeadeboardItems {
-    int gameID;
-    int timePlayed; // will change these to proper datetime objects later
-    int timeEnded; // same here
-    int date;     // oo cool comment ladder
-    string name;
-    int score;  // consider making long long as im a gigachad gamer
-    int enemiesDefeated;
-};
+struct LeadeboardItems {};
+//     int gameID;
+//     int timePlayed; // will change these to proper datetime objects later
+//     int timeEnded; // same here
+//     int date;     // oo cool comment ladder
+//     string name;
+//     int score;  // consider making long long as im a gigachad gamer
+//     int enemiesDefeated;
+// };
 struct GameData{
     int playerID;
 
@@ -116,6 +116,7 @@ class Storage {
             );
         }
 
+        // writing/adding data
         void addPlayer(string& playerName){
             // uppercasing playerName
             for (auto& c : playerName){
@@ -142,6 +143,14 @@ class Storage {
             query.exec();                               // executing the query
         }
         
+        // displaying/reading data
+        void displayHistory(){
+
+        }
+        void displayLeaderBoards(){
+
+        }
+
         void addLeaderboardEntry(const LeadeboardItems& llItems) {
             
         }
