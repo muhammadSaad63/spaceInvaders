@@ -5,7 +5,7 @@
 *.exe
 *.out
 spaceInvaders
-main
+spaceInvaders.exe
 
 # CMake Cache and More Binaries
 build/
@@ -22,7 +22,6 @@ temp.cpp
 temp
 GEMINI.md
 
-# toAddLater/     # putting the cmake stuff here fn since they disturbing me :>
-# build.bat       # aap distaab hogaye? acha saeen
-# build.sh
-# CMakeLists.txt
+# database
+gameData.db
+*.db
