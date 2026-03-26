@@ -70,16 +70,20 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
 //     int enemiesDefeated;
 // };
 struct GameData{
+    int gameID;
+
     int playerID;
+    int playerName;
 
     int score;
     int enemiesDefeated;
     int waveReached;
 
-    int timeEnded;
-    int timePlayed;
+    string timeStarted;
+    int    timeEnded;
+    int    timePlayed;
 };
-class Storage {
+class Storage{
     protected:
         SQLite::Database db;
 
@@ -143,12 +147,22 @@ class Storage {
             query.exec();                               // executing the query
         }
         
-        // displaying/reading data
-        void displayHistory(){
+        // fetching/reading data
+        vector<GameData>& getHistory(const int maxEntries){
+            vector<GameData> history;
+            history.reserve(maxEntries);
 
+            //
+
+            return history;
         }
-        void displayLeaderBoards(){
+        vector<GameData>& getLeaderBoards(const int maxEntries){
+            vector<GameData> leaderBoards;
+            leaderBoards.reserve(maxEntries);
 
+            //
+
+            return leaderBoards;
         }
 
         // void addLeaderboardEntry(const LeadeboardItems& llItems) {
@@ -1089,9 +1103,9 @@ class Background {
 
 class Game{
     private:
-        GameState        gameState;
-        Background       backGround;
-        Storage          storageItems;
+        GameState    gameState;
+        Background   backGround;
+        Storage      storageItems;
 
         Settings     settings;
         Menu         menu;
