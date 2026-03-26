@@ -162,7 +162,7 @@ class DataBase{
 
             {                                                                       // y? dil cheh rha teh :>
                 SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
-                query.exec();
+                query.executeStep();
 
                 int maxEntries = query.getColumn(0).getInt();
                 numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
@@ -200,7 +200,7 @@ class DataBase{
 
             {                                                                       // y? dil cheh rha teh :>
                 SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
-                query.exec();
+                query.executeStep();
                 int maxEntries = query.getColumn(0).getInt();
 
                 numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
@@ -209,7 +209,13 @@ class DataBase{
             }
 
             {
-                SQLite::Statement query(db, "SELECT (*) FROM games ORDER BY gameID DESC LIMIT (?)");
+                SQLite::Statement query(db, 
+                                            "SELECT playerID, MAX(score)"
+                                            "FROM games"
+                                            "GROUP BY playerID"
+                                            "ORDER BY Max(score) DESC"
+                                            "LIMIT (?)"
+                                        );
                 query.bind(1, numEntries);
 
                 while (query.executeStep())
