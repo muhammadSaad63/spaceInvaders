@@ -21,6 +21,7 @@ cmake_install.cmake
 temp.cpp
 temp
 GEMINI.md
+TODO.md
 
 # database
 gameData.db
