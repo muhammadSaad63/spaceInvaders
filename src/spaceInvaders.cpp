@@ -2,9 +2,11 @@
 
 #include <cmath>               // for sine, PI
 #include <string>
+#include <cctype>               // for isalpha, islower
 #include <vector>
 #include <iostream>
 #include <raylib.h>
+#include <stdlib.h>             // for toupper
 #include <SQLiteCpp/SQLiteCpp.h>
 using std::cout, std::string, std::vector;
 
@@ -104,8 +106,18 @@ class Storage {
             );
         }
 
-        void addPlayer(const string& playerName){
-            SQLite::Statement query(db, "INSERT INTO players (playerName) VALUES (?)");
+        void addPlayer(string& playerName){
+            // uppercasing playerName
+            for (auto& c : playerName){
+                if (std::isalpha(c) && std::islower(c)){
+                    c = std::toupper(c);
+                }
+            }  
+
+            SQLite::Statement query(db, "INSERT INTO players (playerName) VALUES (?)");         // will only insert if the name does not already exist in players (due to defined schema)
+
+            query.bind(playerName);             // binding playerName to ?
+            query.exec();                       // executing the query
         }
         void addLeaderboardEntry(const LeadeboardItems& llItems) {
             
@@ -1010,7 +1022,7 @@ class Stars{
             
             for (auto& star : stars){
                 // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));                         // credits to claude
-                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))/2));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
+                star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + std::sin(currTime * star.twinkleSpeed + star.twinkleOffset))/2));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
 
                 // Move stars downwards
                 star.centreY += star.descentSpeed;
