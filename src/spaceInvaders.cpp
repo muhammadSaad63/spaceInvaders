@@ -22,7 +22,7 @@ using std::cout, std::string, std::vector;
         - spaceship in settings as well
         - implement alien, aliens, & playing
         - collisions
-        - 
+        - perhaps make DataBase a static class
 
     [Finished]
         >
@@ -70,17 +70,17 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
 //     int enemiesDefeated;
 // };
 struct GameData{
-    int gameID;
+    int    gameID;
 
-    int playerID;
-    int playerName;
+    int    playerID;
+    string playerName;
 
-    int score;
-    int enemiesDefeated;
-    int waveReached;
+    int    score;
+    int    enemiesDefeated;
+    int    waveReached;
 
     string timeStarted;
-    int    timeEnded;
+    string timeEnded;
     int    timePlayed;
 };
 class DataBase{
@@ -160,23 +160,57 @@ class DataBase{
         vector<GameData> getHistory(int numEntries){
             vector<GameData> history;
 
-            SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
-            query.exec();
-            int maxEntries = query.getColumn(0).getInt();
-
-            numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+            {                                                                       // y? dil cheh rha teh :>
+                SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
+                query.exec();
+                int maxEntries = query.getColumn(0).getInt();
+                numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+            }
 
             history.reserve(numEntries);
 
-            //
+            {
+                SQLite::Statement query(db, "SELECT (*) FROM games ORDER BY gameID DESC LIMIT (?)");
+                query.bind(1, numEntries);
+
+                while (query.executeStep())
+                {
+                    history.push_back(
+                        GameData{ 
+                            query.getColumn(0).getInt(),            // gameID
+                            query.getColumn(1).getInt(),            // playerID
+                            "{--playerName--}",                     // playerName
+                            query.getColumn(2).getInt(),            // score
+                            query.getColumn(3).getInt(),            // enemiesDefeated
+                            query.getColumn(4).getInt(),            // waveReached
+                            query.getColumn(5).getString(),         // timeStarted
+                            query.getColumn(6).getString(),         // timeEnded
+                            query.getColumn(7).getInt(),            // timePlayed
+                        }
+                    );
+                }
+            }
 
             return history;
         }
-        vector<GameData> getLeaderBoards(const int numEntries){
+        vector<GameData> getLeaderBoards(int numEntries){
             vector<GameData> leaderBoards;
-            leaderBoards.reserve(maxEntries);
 
-            //
+            {                                                                       // y? dil cheh rha teh :>
+                SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
+                query.exec();
+                int maxEntries = query.getColumn(0).getInt();
+                numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+            }
+
+            leaderBoards.reserve(numEntries);
+
+            {
+                SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
+                query.exec();
+                int maxEntries = query.getColumn(0).getInt();
+                numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+            }
 
             return leaderBoards;
         }
