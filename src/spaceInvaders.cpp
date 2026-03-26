@@ -11,18 +11,12 @@
 using std::cout, std::string, std::vector;
 
 /*
-    [Started]
-        > Mar 9th, 2026
-
     [Abstract]
         >
 
-    TODO
-        - circular comets for buttons
-        - spaceship in settings as well
-        - implement alien, aliens, & playing
-        - collisions
-        - perhaps make DataBase a static class
+
+    [Started]
+        > Mar 9th, 2026
 
     [Finished]
         >
@@ -150,7 +144,7 @@ class DataBase{
             query.bind(2, gameData.score);
             query.bind(3, gameData.enemiesDefeated);
             query.bind(4, gameData.waveReached);
-            query.bind(5, gameData.timeEnded);
+            query.bind(5, CURRENT_TIMESTAMP);   
             query.bind(6, gameData.timePlayed);             
 
             query.exec();                               // executing the query
@@ -172,7 +166,13 @@ class DataBase{
 
 
             {
-                SQLite::Statement query(db, "SELECT (*) FROM games ORDER BY gameID DESC LIMIT (?)");
+                SQLite::Statement query(db, 
+                                            "SELECT g.gameID, g.playerID, p.playerName, g.score, g.enemiesDefeated,"
+                                            "g.waveReached, g.timeStarted, g.timeEnded, g.timePlayed "
+                                            "FROM games AS g"
+                                            "JOIN players AS p ON g.playerID = p.playerID"
+                                            "ORDER BY g.gameID DESC LIMIT (?)"
+                                        );
                 query.bind(1, numEntries);
 
                 while (query.executeStep())
@@ -181,13 +181,13 @@ class DataBase{
                         GameData{ 
                             query.getColumn(0).getInt(),            // gameID
                             query.getColumn(1).getInt(),            // playerID
-                            "{--playerName--}",                     // playerName
-                            query.getColumn(2).getInt(),            // score
-                            query.getColumn(3).getInt(),            // enemiesDefeated
-                            query.getColumn(4).getInt(),            // waveReached
-                            query.getColumn(5).getString(),         // timeStarted
-                            query.getColumn(6).getString(),         // timeEnded
-                            query.getColumn(7).getInt(),            // timePlayed
+                            query.getColumn(2).getString(),         // playerName
+                            query.getColumn(3).getInt(),            // score
+                            query.getColumn(4).getInt(),            // enemiesDefeated
+                            query.getColumn(5).getInt(),            // waveReached
+                            query.getColumn(6).getString(),         // timeStarted
+                            query.getColumn(7).getString(),         // timeEnded
+                            query.getColumn(8).getInt(),            // timePlayed
                         }
                     );
                 }
@@ -210,8 +210,9 @@ class DataBase{
 
             {
                 SQLite::Statement query(db, 
-                                            "SELECT playerID, MAX(score)"
+                                            "SELECT games.playerID, players.playerName, MAX(games.score)"
                                             "FROM games"
+                                            "JOIN players ON games.playerID = players.playerID"
                                             "GROUP BY playerID"
                                             "ORDER BY Max(score) DESC"
                                             "LIMIT (?)"
@@ -222,15 +223,15 @@ class DataBase{
                 {
                     leaderBoards.push_back(
                         GameData{ 
-                            query.getColumn(0).getInt(),            // gameID
-                            query.getColumn(1).getInt(),            // playerID
-                            "{--playerName--}",                     // playerName
+                            -1,                                     // gameID
+                            query.getColumn(0).getInt(),            // playerID
+                            query.getColumn(1).getString(),         // playerName
                             query.getColumn(2).getInt(),            // score
-                            query.getColumn(3).getInt(),            // enemiesDefeated
-                            query.getColumn(4).getInt(),            // waveReached
-                            query.getColumn(5).getString(),         // timeStarted
-                            query.getColumn(6).getString(),         // timeEnded
-                            query.getColumn(7).getInt(),            // timePlayed
+                            -1,                                     // enemiesDefeated
+                            -1,                                     // waveReached
+                            "N/A",                                  // timeStarted
+                            "N/A",                                  // timeEnded
+                            -1,                                     // timePlayed
                         }
                     );
                 }
@@ -615,7 +616,7 @@ class MenuIcons{
     public:
         MenuIcons() : selected(false), selectedDelay(1.5) 
         {
-            icons[0] = MenuIcon{Rectangle{390, 50,  300, 120}, "Play",         75, PLAY        };      // Play
+            icons[0] = MenuIcon{Rectangle{390, 50,  300, 120}, "Play",         75, PLAYING     };      // Play
             icons[1] = MenuIcon{Rectangle{180, 180, 200, 80 }, "LeaderBoards", 25, LEADERBOARDS};      // LeaderBoards
             icons[2] = MenuIcon{Rectangle{700, 180, 200, 80 }, "Shop",         25, SHOP        };      // Shop
             icons[3] = MenuIcon{Rectangle{50,  280, 150, 60 }, "History",      20, HISTORY     };      // History
