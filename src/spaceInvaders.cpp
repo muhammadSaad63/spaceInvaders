@@ -69,13 +69,23 @@ struct LeadeboardItems {
     int score;  // consider making long long as im a gigachad gamer
     int enemiesDefeated;
 };
+struct GameData{
+    int playerID;
+
+    int score;
+    int enemiesDefeated;
+    int waveReached;
+
+    int timeEnded;
+    int timePlayed;
+};
 class Storage {
     protected:
         SQLite::Database db;
 
     public:
         Storage()
-        : db("Assets/gameData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+        : db("Assets/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
         {
             // to store players' data
             db.exec(
@@ -116,17 +126,27 @@ class Storage {
 
             SQLite::Statement query(db, "INSERT INTO players (playerName) VALUES (?)");         // will only insert if the name does not already exist in players (due to defined schema)
 
-            query.bind(playerName);             // binding playerName to ?
-            query.exec();                       // executing the query
+            query.bind(1, playerName);             // binding playerName to (the 1st & only) ?
+            query.exec();                          // executing the query
         }
+        void addGame(GameData& gameData){
+            SQLite::Statement query(db, "INSERT INTO games (playerID, score, enemiesDefeated, waveReached, timeEnded, timePlayed) VALUES (?, ?, ?, ?, ?, ?)");         
+
+            // binding data from gameData to their respective ?
+            query.bind(1, gameData.playerID);
+            query.bind(2, gameData.score);
+            query.bind(3, gameData.enemiesDefeated);
+            query.bind(4, gameData.waveReached);
+            query.bind(5, gameData.timeEnded);
+            query.bind(6, gameData.timePlayed);             
+            query.exec();                               // executing the query
+        }
+        
         void addLeaderboardEntry(const LeadeboardItems& llItems) {
             
         }
-
         void setClient() {} // later
-
         auto getClient() {} // also for later idk i dont feel it rn
-
 };
 
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
