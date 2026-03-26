@@ -83,7 +83,7 @@ struct GameData{
     int    timeEnded;
     int    timePlayed;
 };
-class   DataBase{
+class DataBase{
     protected:
         SQLite::Database db;
 
@@ -656,10 +656,14 @@ class Shop : public State{
 };
 class History : public State{
     private:
-        //
+        DataBase& dataBase;
+        // GameData& gameData;
 
     public:
-        History(GameState& gameState) : State(gameState) {}
+        History(GameState& gameState, DataBase& dataBase) 
+        : State(gameState)
+        , dataBase(dataBase)
+        {}
 
         void draw(){
 
@@ -670,10 +674,14 @@ class History : public State{
 };
 class LeaderBoards : public State{
     private:
-        //
+        DataBase& dataBase;
+        // GameData& gameData;
 
     public:
-        LeaderBoards(GameState& gameState) : State(gameState) {}
+        LeaderBoards(GameState& gameState, DataBase& dataBase) 
+        : State(gameState)
+        , dataBase(dataBase)
+        {}
 
         void draw(){
 
@@ -927,10 +935,14 @@ class Paused : public State{
 };
 class GameOver : public State{
     private:
-        //
+        DataBase& dataBase;
+        // GameData& gameData;
 
     public:
-        GameOver(GameState& gameState) : State(gameState) {}
+        GameOver(GameState& gameState, DataBase& dataBase) 
+        : State(gameState)
+        , dataBase(dataBase)
+        {}
 
         void draw(){
 
@@ -1127,11 +1139,11 @@ class Game{
         , menu(gameState, settings)
         , play(gameState)
         , shop(gameState) 
-        , history(gameState)
-        , leaderBoards(gameState)
+        , history(gameState, dataBase)
+        , leaderBoards(gameState, dataBase)
         , playing(gameState, settings)
         , paused(gameState, playing)
-        , gameOver(gameState)
+        , gameOver(gameState, dataBase)
         , closeGame(gameState) 
         {}
 
