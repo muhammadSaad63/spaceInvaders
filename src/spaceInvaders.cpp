@@ -91,7 +91,7 @@ class DataBase{
         DataBase()
         : db("Assets/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
         {
-            // to store players' data
+            // creating table 'players' to store players' data
             db.exec(
                 "CREATE TABLE IF NOT EXISTS players" 
                 "("
@@ -100,7 +100,7 @@ class DataBase{
                 ")"
             );
 
-            // to store data about individual games
+            // creating table 'games' to store data about individual games
             db.exec(
                 "CREATE TABLE IF NOT EXISTS games"
                 "("
@@ -117,6 +117,14 @@ class DataBase{
 
                     "FOREIGN KEY (playerID) REFERENCES players(playerID)"
                 ")"
+            );
+
+            // :>
+            db.exec(
+                "INSERT OR IGNORE INTO players (playerID, playerName) VALUES" 
+                    "('1', 'Ebbi'),"
+                    "('2', 'Saad'),"
+                    "('3', 'Umair')"
             );
         }
 
@@ -144,11 +152,12 @@ class DataBase{
             query.bind(4, gameData.waveReached);
             query.bind(5, gameData.timeEnded);
             query.bind(6, gameData.timePlayed);             
+
             query.exec();                               // executing the query
         }
         
         // fetching/reading data
-        vector<GameData>& getHistory(const int maxEntries){
+        vector<GameData> getHistory(const int maxEntries){
             vector<GameData> history;
             history.reserve(maxEntries);
 
@@ -156,7 +165,7 @@ class DataBase{
 
             return history;
         }
-        vector<GameData>& getLeaderBoards(const int maxEntries){
+        vector<GameData> getLeaderBoards(const int maxEntries){
             vector<GameData> leaderBoards;
             leaderBoards.reserve(maxEntries);
 
