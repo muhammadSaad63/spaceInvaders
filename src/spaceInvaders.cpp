@@ -125,7 +125,7 @@ class Storage {
                 }
             }  
 
-            SQLite::Statement query(db, "INSERT INTO players (playerName) VALUES (?)");         // will only insert if the name does not already exist in players (due to defined schema)
+            SQLite::Statement query(db, "INSERT OR IGNORE INTO players (playerName) VALUES (?)");         // will only insert if the name does not already exist in players (due to defined schema); will ignore if it alr exists
 
             query.bind(1, playerName);             // binding playerName to (the 1st & only) ?
             query.exec();                          // executing the query
@@ -716,17 +716,20 @@ class Aliens{
 class MotherShip{
     private:
         Texture motherShip;
-        int     lastSpawned;
-        int     spawnDuration;
-        bool    currentlySpawned;
-        int     hits;
-        int     maxPossibleHits;
-        int     scoreBoost;
+
         Vector2 position;           // using instead of posX, posY
         int     speed;              // speed by which to update position.x
         float   scale;
-        int     randomSpawnPause;   // duration after which to spawn the mothership
+
+        double  lastSpawned;
+        double  spawnDuration;
+        bool    currentlySpawned;
+        double  randomSpawnPause;   // duration after which to spawn the mothership
         bool    spawnFromLeft;      // will be randomly decided;
+
+        int     hits;
+        int     maxPossibleHits;
+        int     scoreBoost;
 
 
     public:
@@ -748,6 +751,7 @@ class MotherShip{
             if (IsTextureValid(motherShip))                             // this check is redundant tho...
             { UnloadTexture(motherShip);  }
         }
+
         void draw(){
             if (currentlySpawned){
                 DrawTextureEx(motherShip, position, 0.0f, scale, WHITE);
@@ -1062,7 +1066,7 @@ class Stars{
             }
         }
         void draw(){
-            for (auto star : stars){
+            for (const auto& star : stars){
                 // DrawCircle(star.centreX, star.centreY, star.radius, WHITE);
                 DrawCircleV({star.centreX, star.centreY}, star.radius, ColorAlpha(WHITE, star.alpha));                  // color alpha to change WHITE's alpha/transparency
             }
@@ -1105,12 +1109,12 @@ class Game{
     public:
         Game()                          // overRiding default constructor 
         : gameState(MENU)               // initializing gameState with MENU
+        , settings(gameState)           // constructed first & before menu since the later requires it
         , menu(gameState, settings)
         , play(gameState)
         , shop(gameState) 
         , history(gameState)
         , leaderBoards(gameState)
-        , settings(gameState)
         , playing(gameState, settings)
         , paused(gameState, playing)
         , gameOver(gameState)
