@@ -163,11 +163,13 @@ class DataBase{
             {                                                                       // y? dil cheh rha teh :>
                 SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
                 query.exec();
+
                 int maxEntries = query.getColumn(0).getInt();
                 numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+
+                history.reserve(numEntries);
             }
 
-            history.reserve(numEntries);
 
             {
                 SQLite::Statement query(db, "SELECT (*) FROM games ORDER BY gameID DESC LIMIT (?)");
@@ -200,26 +202,36 @@ class DataBase{
                 SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
                 query.exec();
                 int maxEntries = query.getColumn(0).getInt();
+
                 numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+
+                leaderBoards.reserve(numEntries);
             }
 
-            leaderBoards.reserve(numEntries);
-
             {
-                SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
-                query.exec();
-                int maxEntries = query.getColumn(0).getInt();
-                numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+                SQLite::Statement query(db, "SELECT (*) FROM games ORDER BY gameID DESC LIMIT (?)");
+                query.bind(1, numEntries);
+
+                while (query.executeStep())
+                {
+                    leaderBoards.push_back(
+                        GameData{ 
+                            query.getColumn(0).getInt(),            // gameID
+                            query.getColumn(1).getInt(),            // playerID
+                            "{--playerName--}",                     // playerName
+                            query.getColumn(2).getInt(),            // score
+                            query.getColumn(3).getInt(),            // enemiesDefeated
+                            query.getColumn(4).getInt(),            // waveReached
+                            query.getColumn(5).getString(),         // timeStarted
+                            query.getColumn(6).getString(),         // timeEnded
+                            query.getColumn(7).getInt(),            // timePlayed
+                        }
+                    );
+                }
             }
 
             return leaderBoards;
         }
-
-        // void addLeaderboardEntry(const LeadeboardItems& llItems) {
-            
-        // }
-        // void setClient() {} // later
-        // auto getClient() {} // also for later idk i dont feel it rn
 };
 
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
