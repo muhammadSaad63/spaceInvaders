@@ -67,7 +67,6 @@ struct LeadeboardItems {
     int score;  // consider making long long as im a gigachad gamer
     int enemiesDefeated;
 };
-
 class Storage {
     protected:
         SQLite::Database db;
@@ -76,29 +75,38 @@ class Storage {
         Storage()
         : db("Assets/gameData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
         {
+            // to store players' data
             db.exec(
-                "CREATE TABLE IF NOT EXISTS leaderboards ("
-                    "gameID INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    "timePlayed INTEGER,"
-                    "timeEnded INTEGER,"
-                    "date TEXT,"
-                    "name TEXT," 
-                    "score INTEGER,"
-                    "enemiesDefeated INTEGER"
+                "CREATE TABLE IF NOT EXISTS players" 
+                "("
+                    "playerID INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    "playerName TEXT UNIQUE NOT NULL"
                 ")"
             );
 
-            db.exec( // add in all the settings and other single variables that need persistence
-                "CREATE TABLE IF NOT EXISTS client ("
-                    "fullscreen BOOLEAN,"
-                    "opacity FLOAT,"
-                    "fps INTEGER" 
-                    "coins INTEGER,"
-                    "wins INTEGER"
+            // to store data about individual games
+            db.exec(
+                "CREATE TABLE IF NOT EXISTS games"
+                "("
+                    "gameID INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    "playerID INTEGER NOT NULL,"
+                    
+                    "score INTEGER NOT NULL DEFAULT 0,"                     // min poss value = 0
+                    "enemiesDefeated INTEGER NOT NULL DEFAULT 0,"           // min poss value = 0
+                    "waveReached INTEGER NOT NULL DEFAULT 1,"               // min poss value = 1
+                    
+                    "timeStarted DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,"          // Current_timestamp is a func which returns the timestamp when the row was written
+                    "timeEnded DATETIME NOT NULL,"
+                    "timePlayed INTEGER NOT NULL,"
+
+                    "FOREIGN KEY (playerID) REFERENCES players(playerID)"
                 ")"
             );
         }
 
+        void addPlayer(const string& playerName){
+            SQLite::Statement query(db, "INSERT INTO players (playerName) VALUES (?)");
+        }
         void addLeaderboardEntry(const LeadeboardItems& llItems) {
             
         }
