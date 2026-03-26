@@ -135,7 +135,7 @@ class Settings : public State{
         const int    textSize        {35};
         const int    offSet          {100};             // gap between text/heading and option/toggler
         const Color  color           {GOLD};
-        const string texts[6]        {"   > FullScreen     ", "   > Show Grid      ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
+        const string texts[6]        {"   > FullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
 
         Sound settingModifySFX;
 
@@ -940,13 +940,18 @@ class Grid{
         }
 };
 struct Star{
+    // position/size
     float centreX;              // x pos of its circular centre
     float centreY;              // y pos of its centre
     float radius;               // its radius
-    float speed;                // the speed at which the star moves downwards
+
+    // twinkling/pulsing
     float twinkleSpeed;         // the rate at which the star will blink
     float twinkleOffset;        // a random value for offsetting its twinkle/blinking
     float alpha;                // its transparency; for twinkling
+
+    // descent/fall
+    float descentSpeed;         // the speed at which the star moves downwards
 };
 class Stars{
     /*
@@ -962,16 +967,18 @@ class Stars{
         vector<Star> stars;                 // a vector array
 
         void generateStars(){
-            for (auto star {0}; star < numStars; star++){
+            for (auto star {0}; star < numStars; ++star){
                 stars.push_back( 
                     Star{
                         (float) GetRandomValue(0, screenWidth),         // centreX
                         (float) GetRandomValue(0, screenHeight),        // centreY
                         (float) GetRandomValue(1, 5) * 0.5f,            // radius; 0.5f since func cant have float arguments
-                        (float) GetRandomValue(1, 100) / 20.0f,         // speed; between 0.05 and 5.0
+
                         (float) GetRandomValue(1, 10),                  // twinkleSPeed
                         (float) GetRandomValue(0, (2*PI)*100) / 100,    // twinkleOffset; just in case; 0 to 628(2pi * 100 ie) which is the max period of a sin wave
-                        (float) 0.4f                                    // alpha
+                        (float) 0.4f,                                   // alpha
+
+                        (float) GetRandomValue(1, 100) / 20.0f          // descentSpeed; between 0.05 and 5.0
                     }
                 );
             }
@@ -992,15 +999,16 @@ class Stars{
         // i think this first time that update() is before draw()... :>
         void update(){
             double currTime = GetTime();            // taking this as the "x" or "theta" here since its constantly changing/increasing
+            
             for (auto& star : stars){
                 // star.alpha = (baseAlpha + (maxAlpha * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))));                         // credits to claude
                 star.alpha = (baseAlpha + ((maxAlpha - baseAlpha) * (1.0f + sin(currTime * star.twinkleSpeed + star.twinkleOffset))/2));            // sin orig returns -1 to 1; offsetting by +1f to make its range 0 to 2f; sin/2 -> 0 to 1f
 
                 // Move stars downwards
-                star.centreY += star.speed;
-                if (star.centreY > GetScreenHeight()){
-                    star.centreY = -star.radius;
-                    star.centreX = (float) GetRandomValue(0, GetScreenWidth());
+                star.centreY += star.descentSpeed;
+                if (star.centreY > screenHeight){
+                    star.centreY = (-star.radius);
+                    star.centreX = (float) GetRandomValue(0, screenWidth);
                 }
             }
         }
@@ -1112,16 +1120,25 @@ class Game{
 
         // using this instead of ~Game()
         void close(){
+            double currTime     {GetTime()};
+            double waitDuration {2.5};                  // in sec
+            
             Sound windowCloseSFX = LoadSound("Assets/SFX/windowClose.mp3");
             PlaySound(windowCloseSFX);          // :D
-            BeginDrawing();
-                ClearBackground(BLANK);
-                DrawText("Plz don't leave meeeee :(", GetScreenWidth()/2 - MeasureText("Plz don't leave meeeee :(", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
-                DrawText("Made by Ebbi, Saad, & Umair, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
-            EndDrawing();
-            WaitTime(2.5);
-            UnloadSound(windowCloseSFX);
             
+            while ((currTime + waitDuration) >= GetTime()){
+                backGround.update();
+
+                BeginDrawing();
+                    backGround.draw(settings.isFullScreen(), settings.isGridEnabled());
+
+                    DrawText("Plz don't leave meeeee :(", GetScreenWidth()/2 - MeasureText("Plz don't leave meeeee :(", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
+                    DrawText("Made by Ebbi, Saad, & Umair, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
+                EndDrawing();
+                // WaitTime(2.5);
+            }
+            
+            UnloadSound(windowCloseSFX);
             CloseAudioDevice();
             CloseWindow();
         }
