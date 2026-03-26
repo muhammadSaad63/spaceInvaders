@@ -60,7 +60,7 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
 
 // Classes -----
 
-struct LeadeboardItems {};
+// struct LeadeboardItems {
 //     int gameID;
 //     int timePlayed; // will change these to proper datetime objects later
 //     int timeEnded; // same here
@@ -151,11 +151,11 @@ class Storage {
 
         }
 
-        void addLeaderboardEntry(const LeadeboardItems& llItems) {
+        // void addLeaderboardEntry(const LeadeboardItems& llItems) {
             
-        }
-        void setClient() {} // later
-        auto getClient() {} // also for later idk i dont feel it rn
+        // }
+        // void setClient() {} // later
+        // auto getClient() {} // also for later idk i dont feel it rn
 };
 
 class State{                                                        // an abstract class to be inherited by all gameState subclasses
