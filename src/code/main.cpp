@@ -10,6 +10,7 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 using std::cout, std::string, std::vector;
 
+
 /*
     [Abstract]
         >
@@ -21,6 +22,7 @@ using std::cout, std::string, std::vector;
     [Finished]
         >
 */
+
 
 // Enums -----
 
@@ -54,15 +56,6 @@ enum InputMode{                 // an ENUM to indicate the chosen playerInputMod
 
 // Classes -----
 
-// struct LeadeboardItems {
-//     int gameID;
-//     int timePlayed; // will change these to proper datetime objects later
-//     int timeEnded; // same here
-//     int date;     // oo cool comment ladder
-//     string name;
-//     int score;  // consider making long long as im a gigachad gamer
-//     int enemiesDefeated;
-// };
 struct GameData{
     int    gameID;
 
