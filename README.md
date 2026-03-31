@@ -1,5 +1,7 @@
 # Space Invaders 👾
-OOP Lab Project
+
+**Space Invaders** is a high-performance C++ recreation of the famous **Space Invaders** game, built using the **raylib** framework and using **OOP** principles.
+
 ---
 
 [Directory Structure]
