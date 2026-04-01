@@ -2,10 +2,9 @@
 
 **Space Invaders** is a high-performance C++ recreation of the classic arcade shooter, built from the ground up using the **Raylib** framework, this project emphasizes proper **OOP** principles and robust state management.
 
-<br> 
+<br>
 
 ---
-
 
 ## 📑 Table of Contents
 
@@ -15,8 +14,6 @@
 | [**📂 Project Structure**](#-project-structure) | Directory map and source code organization |
 | [**🛠️ Tech Stack**](#️-tech-stack) | Deep dive into C++, raylib, and SQLiteCpp integration |
 | [**📜 License**](#-license) | MIT License and open-source usage details |
-
-<br><br>    
 
 ---
 
