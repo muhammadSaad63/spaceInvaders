@@ -31,8 +31,7 @@ set(SQLITECPP_RUN_CPPLINT OFF CACHE BOOL "" FORCE)
 set(SQLITECPP_INTERNAL_SQLITE ON CACHE BOOL "" FORCE) 
 FetchContent_MakeAvailable(SQLiteCpp)
 
-
-add_executable(spaceInvaders src/spaceInvaders.cpp)
+add_executable(spaceInvaders src/code/main.cpp)
 
 if(WIN32)
     target_link_libraries(spaceInvaders PRIVATE raylib SQLiteCpp winmm gdi32)
