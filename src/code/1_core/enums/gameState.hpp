@@ -1,3 +1,5 @@
+#pragma once
+
 
 enum GameState{                 // an ENUM to indicate the current state of the game
     // mainMenu
@@ -15,13 +17,4 @@ enum GameState{                 // an ENUM to indicate the current state of the 
 
     // windowShouldClose()
         CLOSEGAME               // when user chooses to close the window; plays a meme or similar
-};
-enum Player{
-    USER,                       // used to refer to the user/player/human
-    ALIEN                       // used to refer to the enemy/computer/pc/alien(s)
-};
-enum InputMode{                 // an ENUM to indicate the chosen playerInputMode (altered in settings)
-    WASD,                       // W & A keys
-    ARROW,                      // left & right arrowKeys
-    MOUSE                       // Left & Right mouseButtons
 };

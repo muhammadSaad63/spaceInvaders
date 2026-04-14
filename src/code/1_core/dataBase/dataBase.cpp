@@ -1,11 +1,7 @@
-#include <cctype>
-#include <vector>
-#include <sqlite3.h>
-#include <SQLiteCpp.h>
 #include "dataBase.hpp"
-using std::string, std::vector;
 
 
+// helper functions
 void DataBase::createTable_players(){
     db.exec(
         "CREATE TABLE IF NOT EXISTS players" 
@@ -15,7 +11,6 @@ void DataBase::createTable_players(){
         ")"
     );
 }
-
 void DataBase::createTable_games(){
     db.exec(
         "CREATE TABLE IF NOT EXISTS games"
@@ -35,7 +30,6 @@ void DataBase::createTable_games(){
         ")"
     );
 }
-
 void DataBase::initTable_players(){
     db.exec(
         "INSERT OR IGNORE INTO players (playerID, playerName) VALUES" 
@@ -44,7 +38,6 @@ void DataBase::initTable_players(){
             "('3', 'Umair')"
     );
 }
-
 void DataBase::upperCaseStr(string& playerName){
     for (auto& c : playerName){
         if (std::isalpha(c) && std::islower(c)){
@@ -52,14 +45,12 @@ void DataBase::upperCaseStr(string& playerName){
         }
     }  
 }
-
 int DataBase::getNumUniquePlayersInGames(){
     SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
     query.executeStep();
 
     return (query.getColumn(0).getInt());
 }
-
 int DataBase::getTotalGames(){
     SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
     query.executeStep();
@@ -67,6 +58,7 @@ int DataBase::getTotalGames(){
     return (query.getColumn(0).getInt());
 }
 
+// constructor
 DataBase::DataBase()
 : db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
