@@ -11,7 +11,7 @@ class DataBase{
     private:
         SQLite::Database db;
 
-        void createTable_Players(){
+        void createTable_players(){
             db.exec(
                 "CREATE TABLE IF NOT EXISTS players" 
                 "("
@@ -20,7 +20,7 @@ class DataBase{
                 ")"
             );
         }
-        void createTable_Games(){
+        void createTable_games(){
             db.exec(
                 "CREATE TABLE IF NOT EXISTS games"
                 "("
@@ -39,17 +39,7 @@ class DataBase{
                 ")"
             );
         }
-
-    public:
-        DataBase()
-        : db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
-        {
-            // creating table 'players' to store players' data
-            createTable_Players();
-
-            // creating table 'games' to store data about individual games
-
-            // :>
+        void initTable_players(){
             db.exec(
                 "INSERT OR IGNORE INTO players (playerID, playerName) VALUES" 
                     "('1', 'Ebbi'),"
@@ -57,15 +47,44 @@ class DataBase{
                     "('3', 'Umair')"
             );
         }
-
-        // writing/adding data
-        void addPlayer(string& playerName){
-            // uppercasing playerName
+        void upperCaseStr(string& playerName){
             for (auto& c : playerName){
                 if (std::isalpha(c) && std::islower(c)){
                     c = std::toupper(c);
                 }
             }  
+        }
+        int getNumUniquePlayersInGames(){
+            SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
+            query.executeStep();
+
+            return (query.getColumn(0).getInt());
+        }
+        int getTotalGames(){
+            SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
+            query.executeStep();
+
+            return (query.getColumn(0).getInt());
+        }
+
+    public:
+        DataBase()
+        : db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+        {
+            // creating table 'players' to store players' data
+            createTable_players();
+
+            // creating table 'games' to store data about individual games
+            createTable_games();
+
+            // :>
+            initTable_players();
+        }
+
+        // writing/adding data
+        void addPlayer(string& playerName){
+            // uppercasing playerName
+            upperCaseStr(playerName);
 
             SQLite::Statement query(db, "INSERT OR IGNORE INTO players (playerName) VALUES (?)");         // will only insert if the name does not already exist in players (due to defined schema); will ignore if it alr exists
 
@@ -91,11 +110,8 @@ class DataBase{
             vector<GameData> history;
 
             {                                                                       // y? dil cheh rha teh :>
-                SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
-                query.executeStep();
-
-                int maxEntries = query.getColumn(0).getInt();
-                numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+                auto totalEntries = getTotalGames();
+                numEntries = (totalEntries < numEntries)? totalEntries : numEntries;
 
                 history.reserve(numEntries);
             }
@@ -135,11 +151,8 @@ class DataBase{
             vector<GameData> leaderBoards;
 
             {                                                                       // y? dil cheh rha teh :>
-                SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
-                query.executeStep();
-                int maxEntries = query.getColumn(0).getInt();
-
-                numEntries = (maxEntries < numEntries)? maxEntries : numEntries;
+                auto totalEntries = getNumUniquePlayersInGames();
+                numEntries = ((totalEntries < numEntries)? totalEntries : numEntries);
 
                 leaderBoards.reserve(numEntries);
             }
