@@ -77,7 +77,7 @@ class DataBase{
 
     public:
         DataBase()
-        : db("../assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+        : db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
         {
             // creating table 'players' to store players' data
             db.exec(
