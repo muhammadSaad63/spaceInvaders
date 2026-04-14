@@ -19,17 +19,21 @@
 
 int main()
 {
-    // init
-    InitWindow(1080, 720, "Space Invaders 👾");                 // must have this before Game game or else errors due to no openGL context
+    // open OpenGL context window
+    auto screenWidth  {1080};
+    auto screenHeight {720};
+    InitWindow(screenWidth, screenHeight, "Space Invaders 👾");                 // must have this before Game game or else errors due to no openGL context
     
+    // init game
     Game game;
     game.init();
 
+    // game-loop
     while (!WindowShouldClose()){
-        // updating
+        // updating game
         game.update();
 
-        // drawing
+        // drawing game
         BeginDrawing();
 
             game.draw();
@@ -37,6 +41,6 @@ int main()
         EndDrawing();
     }
 
-    // uninit
+    // uninit game
     game.close();
 }
