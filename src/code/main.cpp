@@ -1,18 +1,6 @@
-//                                                             بسم اللہ الرحمان الرحیم  
-
-#include <cmath>               // for sine, PI
-#include <string>
-#include <cctype>               // for isalpha, islower
-#include <vector>
-#include <iostream>
-#include <raylib.h>
-#include <stdlib.h>             // for toupper
-#include "core/core.hpp"
-#include <SQLiteCpp/SQLiteCpp.h>
-using std::cout, std::string, std::vector;
+/*                                                      بسم اللہ الرحمان الرحیم  
 
 
-/*
     [Abstract]
         >
 
@@ -25,7 +13,9 @@ using std::cout, std::string, std::vector;
 */
 
 
-// Main ---
+#include <raylib.h>
+#include "4_game/game.hpp"
+
 
 int main()
 {
