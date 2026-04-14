@@ -1,51 +1,30 @@
+#include <aliens.hpp>
 
 
 
+Alien::Alien() : active(true) {}
 
+void Alien::draw(){
+    if (active){
+        // DrawTexture(texture, posX,);
 
+    }
+}
+void Alien::update(){
+    // 
+}
 
-
-class Alien{
-    private:
-        int posX;
-        int posY;
-        int row;
-        int col;
-        int active;
-        Texture alien;
-        float scale;
-
-    public:
-        Alien() : active(true) {}
-
-        void draw(){
-            if (active){
-                // DrawTexture(texture, posX,);
-
-            }
+void Aliens::draw(){
+    for (auto& rowOfAliens : aliens){
+        for (auto& alien : rowOfAliens){
+            alien.draw();
         }
-        void update(){
-            // 
+    }
+}
+void Aliens::update(){
+    for (auto& rowOfAliens : aliens){
+        for (auto& alien : rowOfAliens){
+            alien.update();
         }
-};
-class Aliens{
-    private:
-        vector<vector<Alien>> aliens;               // 2D array of Alien
-
-    public:
-        //
-        void draw(){
-            for (auto& rowOfAliens : aliens){
-                for (auto& alien : rowOfAliens){
-                    alien.draw();
-                }
-            }
-        }
-        void update(){
-            for (auto& rowOfAliens : aliens){
-                for (auto& alien : rowOfAliens){
-                    alien.update();
-                }
-            }
-        }
-};
+    }
+}
