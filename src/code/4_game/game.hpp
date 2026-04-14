@@ -1,8 +1,7 @@
 #pragma once
 
 
-// raylib
-#include <raylib.h>
+#include <string>
 
 // core
 #include "../1_core/backGround/backGround.hpp"
@@ -40,6 +39,9 @@ class Game{
         GameOver     gameOver;
 
         CloseGame    closeGame;
+
+        void setFavicon(const string& fileName);
+        void playEndCredits();
 
     public:
         Game();
