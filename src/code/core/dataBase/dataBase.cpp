@@ -1,9 +1,4 @@
-#include <cctype>
-#include <vector>
-#include <sqlite3.h>
-#include <SQLiteCpp.h>
 #include "dataBase.hpp"
-using std::string, std::vector;
 
 
 // helper functions
