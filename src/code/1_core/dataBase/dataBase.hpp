@@ -1,12 +1,11 @@
 #pragma once
 
 
-#include <cctype>
-#include <string>
 #include <vector>
+#include <string>
 #include <sqlite3.h>
-#include <SQLiteCpp.h>
 #include "dataBase.hpp"
+#include <SQLiteCpp/SQLiteCpp.h>
 using std::string, std::vector;
 
 
