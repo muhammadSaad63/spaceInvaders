@@ -1,3 +1,6 @@
+#include "spaceShip.hpp"
+
+
 class SpaceShip{
     private:
         Texture spaceShip;
