@@ -1,9 +1,9 @@
-# local files
+# Local Files
 GEMINI.md
 TODO.md
 programData.db
 
-# CMake Cache and More Binaries
+# CMake & Build Files
 build/
 CMakeFiles/
 
