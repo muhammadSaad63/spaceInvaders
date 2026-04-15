@@ -1,90 +1,136 @@
-cmake_minimum_required(VERSION 3.16)
-project(SpaceInvaders LANGUAGES CXX)
+# ─────────────────────────────────────────────────────────────────────────────
+#  Minimum CMake version required to process this file.
+#  3.11+ is needed for FetchContent support.
+# ─────────────────────────────────────────────────────────────────────────────
+cmake_minimum_required(VERSION 3.11)
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Project name. This sets the ${PROJECT_NAME} variable to "space-invaders".
+# ─────────────────────────────────────────────────────────────────────────────
+project(space-invaders)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  In-source build guard.
+#  Prevents running `cmake .` in the root folder, which pollutes it with build
+#  files. Forces the user to do `cmake -B build` instead.
+# ─────────────────────────────────────────────────────────────────────────────
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+    message(FATAL_ERROR "In-source builds are prohibited. Use: cmake -B build")
+endif()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  C++ standard.
+#  CMAKE_CXX_STANDARD      → which C++ version to use (17 = C++17)
+#  CMAKE_CXX_STANDARD_REQUIRED → if the compiler doesn't support it, error out
+# ─────────────────────────────────────────────────────────────────────────────
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ─────────────────────────────────────────────
-#  Output directories
-# ─────────────────────────────────────────────
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# ─────────────────────────────────────────────
-#  Options
-# ─────────────────────────────────────────────
-option(USE_RAYGUI "Enable raygui (header-only)" OFF)
+# ─────────────────────────────────────────────────────────────────────────────
+#  FetchContent — CMake's built-in module for downloading dependencies at
+#  configure time (when you run `cmake -B build`). No manual installs needed.
+# ─────────────────────────────────────────────────────────────────────────────
+include(FetchContent)
 
-# ─────────────────────────────────────────────
-#  Dependencies
-# ─────────────────────────────────────────────
 
-# raylib
-find_package(raylib REQUIRED)
-
-# SQLite3 (low-level C library — required by SQLiteCpp)
-find_package(SQLite3 REQUIRED)
-
-# SQLiteCpp — try system install first, fall back to FetchContent
-find_package(SQLiteCpp QUIET)
-if(NOT SQLiteCpp_FOUND)
-    message(STATUS "SQLiteCpp not found via find_package — fetching from GitHub")
-    include(FetchContent)
-    FetchContent_Declare(
-        SQLiteCpp
-        GIT_REPOSITORY https://github.com/SRombauts/SQLiteCpp.git
-        GIT_TAG        3.3.1
-    )
-    set(SQLITECPP_RUN_CPPLINT    OFF CACHE BOOL "" FORCE)
-    set(SQLITECPP_RUN_CPPCHECK   OFF CACHE BOOL "" FORCE)
-    set(SQLITECPP_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
-    set(SQLITECPP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(SQLiteCpp)
-endif()
-
-# ─────────────────────────────────────────────
-#  Source files
-# ─────────────────────────────────────────────
-set(SOURCES
-    src/main.cpp
-
-    # 1_core
-    src/code/1_core/backGround/backGround.cpp
-    src/code/1_core/dataBase/dataBase.cpp
-    src/code/1_core/enums/enums.cpp
-
-    # 2_entities
-    src/code/2_entities/aliens/aliens.cpp
-    src/code/2_entities/lasers/lasers.cpp
-    src/code/2_entities/motherShip/motherShip.cpp
-    src/code/2_entities/spaceShip/spaceShip.cpp
-
-    # 3_states
-    src/code/3_states/1_state/state.cpp
-    src/code/3_states/2_menu/menu.cpp
-    src/code/3_states/3_play/play.cpp
-    src/code/3_states/4_shop/shop.cpp
-    src/code/3_states/5_leaderBoards/leaderBoards.cpp
-    src/code/3_states/6_history/history.cpp
-    src/code/3_states/7_settings/settings.cpp
-    src/code/3_states/8_playing/playing.cpp
-    src/code/3_states/9_paused/paused.cpp
-    src/code/3_states/10_gameOver/gameOver.cpp
-    src/code/3_states/11_closeGame/closeGame.cpp
-
-    # 4_game
-    src/code/4_game/game.cpp
+# ── Raylib ────────────────────────────────────────────────────────────────────
+#  FetchContent_Declare  → registers WHERE to get the library (doesn't
+#                          download yet)
+#  URL                   → downloads a specific release tarball from GitHub
+#                          (faster than cloning the full git history)
+FetchContent_Declare(
+    raylib
+    URL https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz
 )
 
-# ─────────────────────────────────────────────
-#  Executable
-# ─────────────────────────────────────────────
-add_executable(${PROJECT_NAME} ${SOURCES})
 
-# ─────────────────────────────────────────────
-#  Include directories
-# ─────────────────────────────────────────────
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/src
+#  FetchContent_MakeAvailable → actually downloads, unpacks, and builds raylib
+#                               making it available as a CMake target
+FetchContent_MakeAvailable(raylib)
+
+
+# ── SQLiteCpp ─────────────────────────────────────────────────────────────────
+#  SQLiteCpp is a C++ wrapper around the raw SQLite C API.
+#  GIT_TAG pins the exact version so builds stay reproducible.
+FetchContent_Declare(
+    SQLiteCpp
+    GIT_REPOSITORY https://github.com/SRombauts/SQLiteCpp.git
+    GIT_TAG        3.3.1
+)
+
+
+#  SQLITECPP_RUN_CPPLINT    → disables cpplint style checker (we don't need
+#                              SQLiteCpp's own lint running on our machine)
+#  SQLITECPP_INTERNAL_SQLITE → tells SQLiteCpp to bundle its own copy of
+#                              SQLite, so we don't need a system SQLite install
+#  CACHE BOOL "" FORCE      → writes the value into CMake's cache and forces
+#                              it to override any previous value
+set(SQLITECPP_RUN_CPPLINT    OFF CACHE BOOL "" FORCE)
+set(SQLITECPP_INTERNAL_SQLITE ON  CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(SQLiteCpp)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Source files list.
+#  Every .cpp file that needs to be compiled is listed here.
+#  CMake compiles each one into a .o object file, then links them together.
+#  Note: .hpp headers are NOT listed — they're pulled in automatically via
+#  #include directives in the .cpp files.
+# ─────────────────────────────────────────────────────────────────────────────
+set(SOURCES
+    src/main.cpp                                            # Entry point
+
+    # 1_core — foundational systems used across the whole game
+    src/code/1_core/backGround/backGround.cpp               # Background rendering
+    src/code/1_core/dataBase/dataBase.cpp                   # SQLite DB access layer
+    src/code/1_core/enums/enums.cpp                         # Shared enums / constants
+
+    # 2_entities — game objects that move, collide, and interact
+    src/code/2_entities/aliens/aliens.cpp                   # Alien grid logic
+    src/code/2_entities/lasers/lasers.cpp                   # Laser projectiles
+    src/code/2_entities/motherShip/motherShip.cpp           # Bonus mothership
+    src/code/2_entities/spaceShip/spaceShip.cpp             # Player ship
+
+    # 3_states — one file per screen/state in the state machine
+    src/code/3_states/1_state/state.cpp                     # Abstract base state
+    src/code/3_states/2_menu/menu.cpp                       # Main menu screen
+    src/code/3_states/3_play/play.cpp                       # Play screen wrapper
+    src/code/3_states/4_shop/shop.cpp                       # Shop screen
+    src/code/3_states/5_leaderBoards/leaderBoards.cpp       # Leaderboard screen
+    src/code/3_states/6_history/history.cpp                 # Match history screen
+    src/code/3_states/7_settings/settings.cpp               # Settings screen
+    src/code/3_states/8_playing/playing.cpp                 # Active gameplay state
+    src/code/3_states/9_paused/paused.cpp                   # Pause screen
+    src/code/3_states/10_gameOver/gameOver.cpp              # Game over screen
+    src/code/3_states/11_closeGame/closeGame.cpp            # Exit / cleanup state
+
+    # 4_game — top-level game loop and state manager
+    src/code/4_game/game.cpp                                # Game class, main loop
+)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Executable target.
+#  add_executable(name, files...) tells CMake to compile all SOURCES and link
+#  them into a single binary called "spaceInvaders".
+# ─────────────────────────────────────────────────────────────────────────────
+add_executable(spaceInvaders ${SOURCES})
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Include directories.
+#  Tells the compiler WHERE to look when it sees #include "someHeader.hpp".
+#  Without this, you'd need full relative paths in every #include.
+#  PRIVATE means these paths are only used when compiling spaceInvaders itself,
+#  not exposed to other targets that might depend on it.
+# ─────────────────────────────────────────────────────────────────────────────
+target_include_directories(spaceInvaders PRIVATE
+    ${CMAKE_SOURCE_DIR}/src                                 # lets you do #include "code/..."
 
     # 1_core
     ${CMAKE_SOURCE_DIR}/src/code/1_core/backGround
@@ -114,50 +160,42 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/code/4_game
 )
 
-# ─────────────────────────────────────────────
-#  raygui (header-only — just needs an include path)
-# ─────────────────────────────────────────────
-if(USE_RAYGUI)
-    # Assumes raygui.h lives at: external/raygui/src/raygui.h
-    # Adjust if yours differs
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_SOURCE_DIR}/external/raygui/src
-    )
-    target_compile_definitions(${PROJECT_NAME} PRIVATE RAYGUI_IMPLEMENTATION)
-endif()
 
-# ─────────────────────────────────────────────
-#  Link libraries
-# ─────────────────────────────────────────────
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    raylib
-    SQLiteCpp
-    SQLite::SQLite3
-)
-
-# ─────────────────────────────────────────────
-#  Copy assets next to the binary after build
-# ─────────────────────────────────────────────
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/src/assets
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
-    COMMENT "Copying assets (data, fonts, graphics, sounds) to bin/"
-)
-
-# ─────────────────────────────────────────────
-#  Platform-specific flags
-# ─────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+#  Linking.
+#  target_link_libraries → connects compiled libraries to our executable.
+#  PRIVATE               → these libs are only needed by spaceInvaders itself.
+#
+#  Windows needs two extra system libs:
+#    winmm  → Windows Multimedia API (audio, timers) — required by raylib
+#    gdi32  → Windows Graphics Device Interface    — required by raylib
+#
+#  WIN32_EXECUTABLE TRUE → hides the console window on Windows so only the
+#                          game window appears (remove while debugging)
+# ─────────────────────────────────────────────────────────────────────────────
 if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE winmm)
-elseif(APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        "-framework IOKit"
-        "-framework Cocoa"
-        "-framework OpenGL"
-    )
-elseif(UNIX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        m dl pthread
-    )
+    target_link_libraries(spaceInvaders PRIVATE raylib SQLiteCpp winmm gdi32)
+    set_target_properties(spaceInvaders PROPERTIES WIN32_EXECUTABLE TRUE)
+else()
+    # Linux / macOS only need raylib and SQLiteCpp
+    target_link_libraries(spaceInvaders PRIVATE raylib SQLiteCpp)
 endif()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Asset deployment.
+#  After the binary is built, this command copies the entire src/assets/ folder
+#  next to the executable so the game can find its fonts, graphics, sounds, etc.
+#
+#  $<TARGET_FILE_DIR:spaceInvaders> → resolves to wherever the .exe/.out lands
+#  (e.g. build/ on Linux, build/Debug/ on Windows with MSVC)
+#
+#  This runs every build, but cmake -E copy_directory is a no-op when nothing
+#  has changed, so it doesn't slow things down.
+# ─────────────────────────────────────────────────────────────────────────────
+add_custom_command(TARGET spaceInvaders POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/assets"
+        "$<TARGET_FILE_DIR:spaceInvaders>/assets"
+    COMMENT "Deploying assets for the space invaders to hide behind"
+)
