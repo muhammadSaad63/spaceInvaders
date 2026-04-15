@@ -2,7 +2,6 @@
 
 
 #include <vector>
-#include <iostream>
 #include <raylib.h>
 #include "../lasers/lasers.hpp"
 using std::vector;
@@ -26,6 +25,10 @@ class MotherShip{
         int     maxPossibleHits;
         int     scoreBoost;
 
+        Rectangle getMotherShipRect();
+        void      spawnMotherShip();
+        void      despawnMotherShip();
+        void      updateMotherShip();
 
     public:
         MotherShip();
@@ -33,6 +36,4 @@ class MotherShip{
 
         void draw();
         void update(vector<Laser>& lasers, int& score);
-
-        Rectangle motherShipRect();
 };
