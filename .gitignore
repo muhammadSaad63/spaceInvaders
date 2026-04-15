@@ -1,28 +1,12 @@
-# Configuration Files
-.vscode/
-
-# Compiled Binaries
-*.exe
-*.out
-spaceInvaders
-spaceInvaders.exe
+# local files
+GEMINI.md
+TODO.md
+programData.db
 
 # CMake Cache and More Binaries
 build/
-_deps/
-CPackConfig.cmake
-CPackSourceConfig.cmake
-CMakeCache.txt
 CMakeFiles/
-Makefile
-cmake_install.cmake
 
-#temp 
-temp.cpp
-temp
-GEMINI.md
-TODO.md
-
-# database
-gameData.db
-*.db
+# Compiled Binaries
+spaceInvaders
+spaceInvaders.exe
