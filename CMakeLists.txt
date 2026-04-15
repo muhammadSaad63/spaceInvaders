@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.11)
 # ─────────────────────────────────────────────────────────────────────────────
 #  Project name. This sets the ${PROJECT_NAME} variable to "space-invaders".
 # ─────────────────────────────────────────────────────────────────────────────
-project(space-invaders)
+project(spaceInvaders)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -205,3 +205,18 @@ add_custom_command(TARGET spaceInvaders POST_BUILD
         "$<TARGET_FILE_DIR:spaceInvaders>/assets"
     COMMENT "Deploying assets for the space invaders to hide behind"
 )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. Configure (only needed once, or after CMakeLists changes)
+#    cmake -B build
+
+# 2. Compile
+#    cmake --build build
+
+# 3. Run (Linux/macOS)
+#    ./build/spaceInvaders
+
+# 3. Run (Windows)
+#.   \build\Debug\spaceInvaders.exe
+# ─────────────────────────────────────────────────────────────────────────────
