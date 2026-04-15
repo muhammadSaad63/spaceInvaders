@@ -23,7 +23,7 @@ endif()
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  C++ standard.
-#  CMAKE_CXX_STANDARD      → which C++ version to use (17 = C++17)
+#  CMAKE_CXX_STANDARD          → which C++ version to use (17 = C++17)
 #  CMAKE_CXX_STANDARD_REQUIRED → if the compiler doesn't support it, error out
 # ─────────────────────────────────────────────────────────────────────────────
 set(CMAKE_CXX_STANDARD 17)
@@ -42,20 +42,24 @@ include(FetchContent)
 #                          download yet)
 #  URL                   → downloads a specific release tarball from GitHub
 #                          (faster than cloning the full git history)
+# ──────────────────────────────────────────────────────────────────────────────
 FetchContent_Declare(
     raylib
     URL https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz
 )
 
 
+# ──────────────────────────────────────────────────────────────────────────────
 #  FetchContent_MakeAvailable → actually downloads, unpacks, and builds raylib
 #                               making it available as a CMake target
+# ──────────────────────────────────────────────────────────────────────────────
 FetchContent_MakeAvailable(raylib)
 
 
 # ── SQLiteCpp ─────────────────────────────────────────────────────────────────
 #  SQLiteCpp is a C++ wrapper around the raw SQLite C API.
 #  GIT_TAG pins the exact version so builds stay reproducible.
+# ──────────────────────────────────────────────────────────────────────────────
 FetchContent_Declare(
     SQLiteCpp
     GIT_REPOSITORY https://github.com/SRombauts/SQLiteCpp.git
@@ -63,12 +67,14 @@ FetchContent_Declare(
 )
 
 
+# ──────────────────────────────────────────────────────────────────────────────
 #  SQLITECPP_RUN_CPPLINT    → disables cpplint style checker (we don't need
 #                              SQLiteCpp's own lint running on our machine)
 #  SQLITECPP_INTERNAL_SQLITE → tells SQLiteCpp to bundle its own copy of
 #                              SQLite, so we don't need a system SQLite install
 #  CACHE BOOL "" FORCE      → writes the value into CMake's cache and forces
 #                              it to override any previous value
+# ──────────────────────────────────────────────────────────────────────────────
 set(SQLITECPP_RUN_CPPLINT    OFF CACHE BOOL "" FORCE)
 set(SQLITECPP_INTERNAL_SQLITE ON  CACHE BOOL "" FORCE)
 
