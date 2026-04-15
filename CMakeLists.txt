@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.11)
 # ─────────────────────────────────────────────────────────────────────────────
 #  Project name. This sets the ${PROJECT_NAME} variable to "space-invaders".
 # ─────────────────────────────────────────────────────────────────────────────
-project(space-invaders)
+project(spaceInvaders)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -81,6 +81,14 @@ set(SQLITECPP_INTERNAL_SQLITE ON  CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(SQLiteCpp)
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# <cstdlint>
+# Force the inclusion of cstdint ONLY for C++ files within the SQLiteCpp library
+# ──────────────────────────────────────────────────────────────────────────────
+target_compile_options(SQLiteCpp INTERFACE $<$<COMPILE_LANGUAGE:CXX>:-include cstdint>)
+target_compile_options(SQLiteCpp PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-include cstdint>)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 #  Source files list.
 #  Every .cpp file that needs to be compiled is listed here.
@@ -89,12 +97,14 @@ FetchContent_MakeAvailable(SQLiteCpp)
 #  #include directives in the .cpp files.
 # ─────────────────────────────────────────────────────────────────────────────
 set(SOURCES
-    src/main.cpp                                            # Entry point
+    src/code/main.cpp                                            # Entry point
 
     # 1_core — foundational systems used across the whole game
     src/code/1_core/backGround/backGround.cpp               # Background rendering
     src/code/1_core/dataBase/dataBase.cpp                   # SQLite DB access layer
-    src/code/1_core/enums/enums.cpp                         # Shared enums / constants
+    # src/code/1_core/enums/gameState.hpp                     # gameState enum
+    # src/code/1_core/enums/inputMode.hpp                     # inputMode enum
+    # src/code/1_core/enums/player.hpp                        # player enum
 
     # 2_entities — game objects that move, collide, and interact
     src/code/2_entities/aliens/aliens.cpp                   # Alien grid logic
@@ -103,7 +113,7 @@ set(SOURCES
     src/code/2_entities/spaceShip/spaceShip.cpp             # Player ship
 
     # 3_states — one file per screen/state in the state machine
-    src/code/3_states/1_state/state.cpp                     # Abstract base state
+    # src/code/3_states/1_state/state.hpp                     # Abstract base state
     src/code/3_states/2_menu/menu.cpp                       # Main menu screen
     src/code/3_states/3_play/play.cpp                       # Play screen wrapper
     src/code/3_states/4_shop/shop.cpp                       # Shop screen
@@ -125,7 +135,7 @@ set(SOURCES
 #  add_executable(name, files...) tells CMake to compile all SOURCES and link
 #  them into a single binary called "spaceInvaders".
 # ─────────────────────────────────────────────────────────────────────────────
-add_executable(spaceInvaders ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -205,3 +215,18 @@ add_custom_command(TARGET spaceInvaders POST_BUILD
         "$<TARGET_FILE_DIR:spaceInvaders>/assets"
     COMMENT "Deploying assets for the space invaders to hide behind"
 )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. Configure (only needed once, or after CMakeLists changes)
+#    cmake -B build
+
+# 2. Compile
+#    cmake --build build
+
+# 3. Run (Linux/macOS)
+#    ./build/spaceInvaders
+
+# 3. Run (Windows)
+#.   \build\Debug\spaceInvaders.exe
+# ─────────────────────────────────────────────────────────────────────────────
