@@ -81,6 +81,14 @@ set(SQLITECPP_INTERNAL_SQLITE ON  CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(SQLiteCpp)
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# <cstdlint>
+# Force the inclusion of cstdint ONLY for C++ files within the SQLiteCpp library
+# ──────────────────────────────────────────────────────────────────────────────
+target_compile_options(SQLiteCpp INTERFACE $<$<COMPILE_LANGUAGE:CXX>:-include cstdint>)
+target_compile_options(SQLiteCpp PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-include cstdint>)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 #  Source files list.
 #  Every .cpp file that needs to be compiled is listed here.
@@ -127,7 +135,7 @@ set(SOURCES
 #  add_executable(name, files...) tells CMake to compile all SOURCES and link
 #  them into a single binary called "spaceInvaders".
 # ─────────────────────────────────────────────────────────────────────────────
-add_executable(spaceInvaders ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 
 # ─────────────────────────────────────────────────────────────────────────────
