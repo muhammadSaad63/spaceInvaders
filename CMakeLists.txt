@@ -89,12 +89,14 @@ FetchContent_MakeAvailable(SQLiteCpp)
 #  #include directives in the .cpp files.
 # ─────────────────────────────────────────────────────────────────────────────
 set(SOURCES
-    src/main.cpp                                            # Entry point
+    src/code/main.cpp                                            # Entry point
 
     # 1_core — foundational systems used across the whole game
     src/code/1_core/backGround/backGround.cpp               # Background rendering
     src/code/1_core/dataBase/dataBase.cpp                   # SQLite DB access layer
-    src/code/1_core/enums/enums.cpp                         # Shared enums / constants
+    # src/code/1_core/enums/gameState.hpp                     # gameState enum
+    # src/code/1_core/enums/inputMode.hpp                     # inputMode enum
+    # src/code/1_core/enums/player.hpp                        # player enum
 
     # 2_entities — game objects that move, collide, and interact
     src/code/2_entities/aliens/aliens.cpp                   # Alien grid logic
@@ -103,7 +105,7 @@ set(SOURCES
     src/code/2_entities/spaceShip/spaceShip.cpp             # Player ship
 
     # 3_states — one file per screen/state in the state machine
-    src/code/3_states/1_state/state.cpp                     # Abstract base state
+    # src/code/3_states/1_state/state.hpp                     # Abstract base state
     src/code/3_states/2_menu/menu.cpp                       # Main menu screen
     src/code/3_states/3_play/play.cpp                       # Play screen wrapper
     src/code/3_states/4_shop/shop.cpp                       # Shop screen
