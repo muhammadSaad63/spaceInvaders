@@ -1,12 +1,15 @@
+#include "shop.hpp"
+
+
 class Shop : public State{
     private:
-        DataBase& dataBase;
+        // DataBase& dataBase;
         // GameData& gameData;
 
     public:
-        Shop(GameState& gameState, DataBase& dataBase) 
+        Shop(GameState& gameState) 
         : State(gameState)
-        , dataBase(dataBase)
+        // , dataBase(dataBase)
         {}
 
         void draw(){
