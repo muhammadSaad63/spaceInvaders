@@ -14,7 +14,7 @@
 
 
 int main()
-{
+{ 
     // open OpenGL context window
     auto windowWidth  {1080};
     auto windowHeight {720};

@@ -1,5 +1,4 @@
-
-
+#include "settings.hpp"
 
 
 class Settings : public State{
