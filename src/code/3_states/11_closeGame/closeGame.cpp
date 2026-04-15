@@ -1,3 +1,5 @@
+#include "closeGame.hpp"
+
 
 class CloseGame : public State{
     private:
@@ -8,9 +10,9 @@ class CloseGame : public State{
 
         // not working
         void draw(){
-            DrawText("closing", 50, 50, 50, GOLD);
+            //
         }
         void update(){
-            WaitTime(3);
+            //
         }
 };
