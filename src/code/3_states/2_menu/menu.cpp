@@ -51,7 +51,7 @@ GameState MenuIcons::update(SpaceShip& spaceShip){
                     selectedTime = GetTime();
                     selectedState = icon.gameState;
 
-                    return;
+                    return MENU;
                 }
             }
         }
