@@ -1,13 +1,15 @@
+#include "gameOver.hpp"
+
 
 class GameOver : public State{
     private:
-        DataBase& dataBase;
+        // DataBase& dataBase;
         // GameData& gameData;
 
     public:
-        GameOver(GameState& gameState, DataBase& dataBase) 
+        GameOver(GameState& gameState) 
         : State(gameState)
-        , dataBase(dataBase)
+        // , dataBase(dataBase)
         {}
 
         void draw(){
@@ -15,9 +17,5 @@ class GameOver : public State{
         }
         void update(){
             //
-
-            if (WindowShouldClose()){
-                gameState = CLOSEGAME;
-            }
         }
 };

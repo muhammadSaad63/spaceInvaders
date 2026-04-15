@@ -1,12 +1,15 @@
+#include "leaderBoards.hpp"
+
+
 class LeaderBoards : public State{
     private:
-        DataBase& dataBase;
+        // DataBase& dataBase;
         // GameData& gameData;
 
     public:
-        LeaderBoards(GameState& gameState, DataBase& dataBase) 
+        LeaderBoards(GameState& gameState) 
         : State(gameState)
-        , dataBase(dataBase)
+        // , dataBase(dataBase)
         {}
 
         void draw(){

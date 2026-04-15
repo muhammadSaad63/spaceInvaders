@@ -1,12 +1,15 @@
+#include "history.hpp"
+
+
 class History : public State{
     private:
-        DataBase& dataBase;
+        // DataBase& dataBase;
         // GameData& gameData;
 
     public:
-        History(GameState& gameState, DataBase& dataBase) 
+        History(GameState& gameState) 
         : State(gameState)
-        , dataBase(dataBase)
+        // , dataBase(dataBase)
         {}
 
         void draw(){

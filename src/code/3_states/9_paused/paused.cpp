@@ -1,3 +1,4 @@
+#include "paused.hpp"
 
 
 class Paused : public State{
