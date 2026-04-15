@@ -1,3 +1,6 @@
+#include "playing.hpp"
+
+
 class Playing : public State{
     private:
         SpaceShip      spaceShip; 
