@@ -1,10 +1,6 @@
-/*                                                      بسم اللہ الرحمان الرحیم  
+//                                                              بسم اللہ الرحمان الرحیم  
 
-
-    [Abstract]
-        >
-
-
+/*
     [Started]
         > Mar 9th, 2026
 
@@ -20,9 +16,10 @@
 int main()
 {
     // open OpenGL context window
-    auto screenWidth  {1080};
-    auto screenHeight {720};
-    InitWindow(screenWidth, screenHeight, "Space Invaders 👾");                 // must have this before Game game or else errors due to no openGL context
+    auto windowWidth  {1080};
+    auto windowHeight {720};
+    auto windowName   {"Space Invaders 👾"};
+    InitWindow(windowWidth, windowHeight, windowName);                 // must have this before Game game or else errors due to no openGL context
     
     // init game
     Game game;
