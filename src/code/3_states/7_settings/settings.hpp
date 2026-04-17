@@ -13,71 +13,106 @@ class Settings : public State{
     // copied from your Mr.Pong game - ebbi
 
     private:
-        bool         fullScreen      {false};         // setwindowstate(FLAG_BORDERLESS_WINDOWED_MODE); ClearWindowState(); SetWindowSize();
-        bool         showGrid        {true};          // whether to show the background grid or not
+        bool         enableFullScreen      {false};         // setwindowstate(FLAG_BORDERLESS_WINDOWED_MODE); ClearWindowState(); SetWindowSize();
+        bool         enableGrid        {true};          // whether to show the background grid or not
         int          frameRate       {60};            // again, why 63.
         float        windowOpacity   {0.9f};
         float        masterVolume    {0.5};
         InputMode    playerInputMode {WASD};
 
         const int    posX            {23};
-        int          posY            {63};
+        const int    initPosY        {23};          // the y value at which to start drawing
+        int          posY            {};
         const int    textSize        {35};
         const int    offSet          {100};             // gap between text/heading and option/toggler
         const Color  color           {GOLD};
-        const string texts[6]        {"   > FullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
+        const string texts[6]        {"   > enableFullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
 
         Sound settingModifySFX;
 
+        // internal, helper functions
+        int getPosY(const auto& index){
+            return (initPosY + ((index - 1) * offset) + ((enableFullScreen && index == 2)? 63 : 0));
+        }
+
+        void drawHeader(const auto& index){
+            posY = getPosY(index);
+
+            DrawText("Settings", posX, posY, 53, GOLD);
+        }
+        void drawFullScreen(const auto& index){
+            posY = getPosY(index);
+
+            DrawText(texts[0].c_str(), posX, posY, textSize, color);
+            DrawText(TextFormat("%s", (enableFullScreen)? "Enabled" : "Disabled"), posX + MeasureText(texts[0].c_str(), textSize) + 100, posY, textSize, (enableFullScreen)? GREEN : RED);
+        }
+        void drawGrid(const auto& index){
+            posY = getPosY(index);
+
+            DrawText(texts[1].c_str(), posX, posY, textSize, color);
+            DrawText(TextFormat("%s", (enableGrid)? "Enabled" : "Disabled"), posX + MeasureText(texts[1].c_str(), textSize) + 100, posY, textSize, (enableGrid)? GREEN : RED);
+
+        }
+        void drawFrameRate(const auto& index){
+            posY = getPosY(index);
+
+            DrawText(texts[2].c_str(), posX, posY, textSize, color);
+            DrawText(TextFormat("%d", frameRate), posX + MeasureText(texts[2].c_str(), textSize) + 100, posY, textSize, (frameRate == 23)? RED : (frameRate == 40)? ORANGE : (frameRate == 63)? YELLOW : GREEN);
+        }
+        void drawWindowOpacity(const auto& index){
+            posY = getPosY(index);
+
+            DrawText(texts[3].c_str(), posX, posY, textSize, color);
+            DrawText(TextFormat("%.1f", windowOpacity), posX + MeasureText(texts[3].c_str(), textSize) + offSet, posY, textSize, (windowOpacity <= 0.4)? RED : (windowOpacity <= 0.7)? YELLOW : GREEN);
+        }
+        void drawMasterVolume(const auto& index){
+            posY = getPosY(index);
+        
+            DrawText(texts[4].c_str(), posX, posY, textSize, color);
+            DrawText(TextFormat("%.0f%%", masterVolume * 100), posX + MeasureText(texts[4].c_str(), textSize) + offSet, posY, textSize, (masterVolume <= 0.4)? RED : (masterVolume <= 0.7)? YELLOW : GREEN);
+            
+        }
+        void drawInputMode(const auto& index){
+            posY = getPosY(index);
+
+            DrawText(texts[5].c_str(), posX, posY, textSize, color);
+            // (playerInputMode == WASD)? BLUE : (playerInputMode == ArrowKeys)? PURPLE : BEIGE);      
+            DrawText(TextFormat("%s", (playerInputMode == WASD)? "WASD Keys" : (playerInputMode == ARROW)? "Arrow Keys" : "Mouse Wheel"), posX + MeasureText(texts[5].c_str(), textSize) + offSet, posY, textSize, BEIGE);  
+        }
+
     public:
-        Settings(GameState& gameState) : State(gameState) 
-        {
-            settingModifySFX = LoadSound("../assets/sounds/sfx/settingModify.mp3");
+        Settings(GameState& gameState) : State(gameState) {
+            settingModifySFX = LoadSound("../../../assets/sounds/sfx/settingModify.mp3");
         }
         ~Settings(){
             UnloadSound(settingModifySFX);
         }
 
         void draw(){
-            posY = 23;
-
             // header
-            DrawText("Settings", posX, posY, 53, GOLD);
+            drawHeader(1);
+
+            // fullScreen
+            drawFullScreen(2);
+
+            // grid toggle
+            drawGrid(3);
+
+            // frame rate
+            drawFrameRate(4);
+
+            // window opacity
+            drawWindowOpacity(5);
+
+            // master volume
+            drawMasterVolume(6);
+
+            // input mode
+            drawInputMode(7);
 
             // instructions
             // DrawText("Click on a setting or scroll through it to change it.", GetScreenWidth() - MeasureText("Click on a setting or scroll through it to change it.", 23), 35, 23, GOLD);
             DrawText("Press ENTER to go back.", GetScreenWidth() - MeasureText("Press ENTER to go back.", 23) - 23, GetScreenHeight() - 50, 23, GOLD);
-
-            // fullscreen
-            posY += (offSet + ((fullScreen)? 63 : 0));
-            DrawText(texts[0].c_str(), posX, posY, textSize, color);
-            DrawText(TextFormat("%s", (fullScreen)? "Enabled" : "Disabled"), posX + MeasureText(texts[0].c_str(), textSize) + 100, posY, textSize, (fullScreen)? GREEN : RED);
-
-            // grid toggle
-            posY += offSet;
-            DrawText(texts[1].c_str(), posX, posY, textSize, color);
-            DrawText(TextFormat("%s", (showGrid)? "Enabled" : "Disabled"), posX + MeasureText(texts[1].c_str(), textSize) + 100, posY, textSize, (showGrid)? GREEN : RED);
-
-            // frame rate
-            posY += offSet;
-            DrawText(texts[2].c_str(), posX, posY, textSize, color);
-            DrawText(TextFormat("%d", frameRate), posX + MeasureText(texts[2].c_str(), textSize) + 100, posY, textSize, (frameRate == 23)? RED : (frameRate == 40)? ORANGE : (frameRate == 63)? YELLOW : GREEN);
-            
-            // window opacity
-            posY += offSet;
-            DrawText(texts[3].c_str(), posX, posY, textSize, color);
-            DrawText(TextFormat("%.1f", windowOpacity), posX + MeasureText(texts[3].c_str(), textSize) + offSet, posY, textSize, (windowOpacity <= 0.4)? RED : (windowOpacity <= 0.7)? YELLOW : GREEN);
-            
-            // master volume
-            posY += offSet;
-            DrawText(texts[4].c_str(), posX, posY, textSize, color);
-            DrawText(TextFormat("%.0f%%", masterVolume * 100), posX + MeasureText(texts[4].c_str(), textSize) + offSet, posY, textSize, (masterVolume <= 0.4)? RED : (masterVolume <= 0.7)? YELLOW : GREEN);
-
-            // input mode
-            posY += offSet;
-            DrawText(texts[5].c_str(), posX, posY, textSize, color);
-            // (playerInputMode == WASD)? BLUE : (playerInputMode == ArrowKeys)? PURPLE : BEIGE);      
-            DrawText(TextFormat("%s", (playerInputMode == WASD)? "WASD Keys" : (playerInputMode == ARROW)? "Arrow Keys" : "Mouse Wheel"), posX + MeasureText(texts[5].c_str(), textSize) + offSet, posY, textSize, BEIGE);  
         }
 
         void update(){
@@ -85,15 +120,15 @@ class Settings : public State{
                 gameState = MENU;
             }
 
-            posY = 23;
+            posY = getPosY(1);
 
-            // fullscreen
-            posY += (offSet + ((fullScreen)? 63 : 0));
+            // enableFullScreen
+            posY = getPosY(2);
             // if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
             // {
-            //     fullScreen = !fullScreen;
-            //     if (fullScreen){
-            //         // SetWindowState(FLAG_FULLSCREEN_MODE);
+            //     enableFullScreen = !enableFullScreen;
+            //     if (enableFullScreen){
+            //         // SetWindowState(FLAG_enableFullScreen_MODE);
             //         SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE); // op :D
             //     }
             //     else{
@@ -105,15 +140,15 @@ class Settings : public State{
             // }
 
             // grid toggle
-            posY += offSet;
+            posY = getPosY(3);
             if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[1].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
             {
-                showGrid = !showGrid;
+                enableGrid = !enableGrid;
                 PlaySound(settingModifySFX);
             }
 
             // framerate
-            posY += offSet;
+            posY = getPosY(4);
             if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[2].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("123", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 123 is the max width of poss values
             {
 
@@ -134,7 +169,7 @@ class Settings : public State{
             }
 
             // window opacity
-            posY += offSet;
+            posY = getPosY(5);
             if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[3].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("0.1", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 0.1 is the max width of poss values
             {
                 windowOpacity += 0.1f;
@@ -147,7 +182,7 @@ class Settings : public State{
             }
 
             // master volume
-            posY += offSet;
+            posY = getPosY(6);
             if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[4].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("100%", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 100% is the max width of poss values
             {
                 masterVolume += 0.1f;
@@ -160,7 +195,7 @@ class Settings : public State{
             }
 
             // input mode
-            posY += offSet;
+            posY = getPosY(7);
             if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[5].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Mouse Wheel", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // "Mouse Wheel" is the max width of poss values
             {
                 playerInputMode = ((playerInputMode == WASD)? ARROW : (playerInputMode == ARROW)? MOUSE : WASD);
@@ -171,10 +206,10 @@ class Settings : public State{
         InputMode& getMovementMode(){
             return playerInputMode;
         }
-        bool isFullScreen(){
-            return fullScreen;
+        bool isFullScreenEnabled(){
+            return enableFullScreen;
         }
         bool isGridEnabled(){
-            return showGrid;
+            return enableGrid;
         }
 };
