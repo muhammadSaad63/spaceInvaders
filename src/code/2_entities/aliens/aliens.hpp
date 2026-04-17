@@ -1,53 +1,63 @@
 #include <array>
 #include <string>
+#include <vector>
 #include <raylib.h>
-using std::array, std::string;
+using std::array, std::string, std::vector;
 
 
 class Alien{
     private:
-        Texture2D alien;
+        Texture2D texture;
         bool      active;
 
         void loadAlien(const string& fileName){
-            alien = LoadTexture(fileName.c_str());
+            texture = LoadTexture(fileName.c_str());
         }
 
     public:
         Alien() : active(true)
-        { alien = LoadTexture("1.png"); }
+        { texture = LoadTexture("1.png"); }
 
         void draw(const Vector2& position, const int& scale){
-            DrawTextureEx(alien, position, 0.0f, scale, WHITE);
+            DrawTextureEx(texture, position, 0.0f, scale, WHITE);
         }
         bool isActive(){
             return active;
         }
         Texture2D& getTexture(){
-            return alien;
+            return texture;
         }   
+        void activate(){
+            if (!active)
+            { active = true; }
+        }
+        void deActivate(){
+            if (active)
+            { active = false; }
+        }
 };
-
 
 class Aliens{
     private:
         const static int                        numRows   {3};
-        const static int                        numAliens {5};                        // dunno u but was not working without static
-        array<array<Alien, numAliens>, numRows> aliens;                               // 2D array of Alien
+        const static int                        numAliens {5};                                                   // dunno u but was not working without static
+        array<array<Alien, numAliens>, numRows> aliens;                                                          // 2D array of Alien
         const float                             scale     {0.1f};
         
-        const int edgePadding { 63 };                                                      // on one side
+        const int edgePadding { 63 };                                                                            // on one side
         // const int alienSpacing  { (GetScreenWidth() - (padding_X * 2)) / numAliens };
         // const int alienSpacing  { (aliens[0][0].getTexture().width  * scale) + 13 };
         const int alienSpacing  { 81 };
         // const int rowSpacing    { (aliens[0][0].getTexture().height * scale) + 13 };
         const int rowSpacing    { 70 };
 
-        Vector2 swarmPos {edgePadding + 23, 63};
+        Vector2 swarmPos {};
         float speed {1.0f};
-        int direction {-1};              // 1 right, -1 left
+        int direction {-1};                                                                                     // 1 right, -1 left
         // const int swarmWidth { (alienSpacing * (numAliens - 1)) + (aliens[0][0].getTexture().width) };
         const int swarmWidth { (alienSpacing * (numAliens - 1)) + (alienSpacing) };
+
+        // vector<Laser> lasers;
 
         bool hittingLeftEdge(){
             return (swarmPos.x <= edgePadding);
@@ -63,11 +73,15 @@ class Aliens{
                     (float) (aliens[rowNum][alienNum].getTexture().height)
             };
         }
+        void centerSwarm(){
+            swarmPos.x = ((GetScreenWidth() - swarmWidth) / 2);
+            swarmPos.y = 63;
+        }
 
 
     public:
         Aliens(){
-            swarmPos.x = ((GetScreenWidth() - swarmWidth) / 2);             // centering swarm at start
+            centerSwarm();                                                                           // centering swarm at start
         }
 
         void draw(){
@@ -88,7 +102,7 @@ class Aliens{
             if (hittingLeftEdge() || hittingRightEdge()){
                 direction *= -1;
 
-                swarmPos.y += rowSpacing/3;
+                swarmPos.y += (rowSpacing / 3);
             }
         }
 
@@ -102,6 +116,15 @@ class Aliens{
             }
 
             return true;
+        }
+        void reset(){
+            centerSwarm();
+
+            for (auto& rowOfAliens : aliens){
+                for (auto& alien : rowOfAliens){
+                    alien.activate();
+                }
+            }
         }
 };
 
