@@ -72,7 +72,7 @@ SpaceShip::~SpaceShip(){
 // exposed methods
 void SpaceShip::draw(){
     // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
-    DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, 0.1f, WHITE);
+    DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, scale, WHITE);
 
     for (auto &laser : lasers){
         if (laser.isActive()){

@@ -2,17 +2,19 @@
 
 
 #include "../1_state/state.hpp"
+#include "../../1_core/dataBase/dataBase.hpp"
+#include "../../1_core/enums/gameState.hpp"
 
 
 class GameOver : public State{
     private:
-        // DataBase& dataBase;
+        DataBase& dataBase;
         // GameData& gameData;
 
     public:
-        GameOver(GameState& gameState) 
+        GameOver(GameState& gameState, DataBase& dataBase) 
         : State(gameState)
-        // , dataBase(dataBase)
+        , dataBase(dataBase)
         {}
 
         void draw(){

@@ -2,7 +2,7 @@
 #include "dataBase.hpp"
 
 
-
+// SQLITE::DataBase DataBase::db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
 // helper functions
 void DataBase::createTable_players(){
@@ -35,7 +35,7 @@ void DataBase::createTable_games(){
 }
 void DataBase::initTable_players(){
     db.exec(
-        "INSERT OR IGNORE INTO players (playerID, playerName) VALUES" 
+        "INSERT OR IGNORE INTO players (playerID, playerName) VALUES " 
             "('1', 'Ebbi'),"
             "('2', 'Saad'),"
             "('3', 'Umair')"
@@ -62,10 +62,24 @@ int DataBase::getTotalGames(){
 }
 
 // init
-void DataBase::init()
+// void DataBase::init()
+// {
+//     SQLite::Database instance("../../assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+
+//     db = &instance;
+//     // creating table 'players' to store players' data
+//     createTable_players();
+
+//     // creating table 'games' to store data about individual games
+//     createTable_games();
+
+//     // :>
+//     initTable_players();
+// }
+
+DataBase::DataBase()
+: db("../../assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
-    db = SQLITE::DataBase("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-    
     // creating table 'players' to store players' data
     createTable_players();
 
@@ -113,10 +127,10 @@ vector<GameData> DataBase::getHistory(int numEntries){
 
     {
         SQLite::Statement query(db, 
-                                    "SELECT g.gameID, g.playerID, p.playerName, g.score, g.enemiesDefeated,"
+                                    "SELECT g.gameID, g.playerID, p.playerName, g.score, g.enemiesDefeated, "
                                     "g.waveReached, g.timeStarted, g.timeEnded, g.timePlayed "
-                                    "FROM games AS g"
-                                    "JOIN players AS p ON g.playerID = p.playerID"
+                                    "FROM games AS g "
+                                    "JOIN players AS p ON g.playerID = p.playerID "
                                     "ORDER BY g.gameID DESC LIMIT (?)"
                                 );
         query.bind(1, numEntries);
@@ -153,11 +167,11 @@ vector<GameData> DataBase::getLeaderBoards(int numEntries){
 
     {
         SQLite::Statement query(db, 
-                                    "SELECT games.playerID, players.playerName, MAX(games.score)"
-                                    "FROM games"
-                                    "JOIN players ON games.playerID = players.playerID"
-                                    "GROUP BY playerID"
-                                    "ORDER BY Max(score) DESC"
+                                    "SELECT games.playerID, players.playerName, MAX(games.score) "
+                                    "FROM games "
+                                    "JOIN players ON games.playerID = players.playerID "
+                                    "GROUP BY playerID "
+                                    "ORDER BY Max(score) DESC "
                                     "LIMIT (?)"
                                 );
         query.bind(1, numEntries);
