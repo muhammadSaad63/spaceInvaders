@@ -22,7 +22,7 @@ void Game::playEndCredits(){
         backGround.update();
 
         BeginDrawing();
-            backGround.draw(settings.isFullScreen(), settings.isGridEnabled());
+            backGround.draw(settings.isFullScreenEnabled(), settings.isGridEnabled());
 
             DrawText("Plz don't leave meeeee :(", GetScreenWidth()/2 - MeasureText("Plz don't leave meeeee :(", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
             DrawText("Made by Ebbi, Saad, & Umair, bi-idhni-Allahi Taala :D", 23, GetScreenHeight() - 35 - 5, 35, GOLD);
