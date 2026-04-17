@@ -2,6 +2,8 @@
 #include "dataBase.hpp"
 
 
+
+
 // helper functions
 void DataBase::createTable_players(){
     db.exec(
@@ -59,10 +61,11 @@ int DataBase::getTotalGames(){
     return (query.getColumn(0).getInt());
 }
 
-// constructor
-DataBase::DataBase()
-: db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+// init
+void DataBase::init()
 {
+    db = SQLITE::DataBase("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+    
     // creating table 'players' to store players' data
     createTable_players();
 

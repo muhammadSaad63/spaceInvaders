@@ -29,6 +29,8 @@ void Game::playEndCredits(){
         EndDrawing();
         // WaitTime(2.5);
     }
+
+    UnloadSound(windowCloseSFX);
 }
 
 // constructor
@@ -95,7 +97,6 @@ void Game::update(){
 void Game::close(){
     playEndCredits();
     
-    UnloadSound(windowCloseSFX);
     CloseAudioDevice();
     CloseWindow();
 }
