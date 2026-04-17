@@ -24,30 +24,54 @@ struct GameData{
     int    timePlayed;
 };
 
+// class DataBase{
+//     private:
+//         inline static SQLite::Database* db {nullptr};              
+
+//         // internal, helper methods
+//         static void createTable_players();
+//         static void createTable_games();
+//         static void initTable_players();
+//         static void upperCaseStr(string& playerName);
+//         static int  getNumUniquePlayersInGames();
+//         static int  getTotalGames();
+
+//         // default constructor
+//         DataBase() {}                                       // so no object can be made
+
+//     public:
+//         // init method instead of constructor (since no objects are to be made)
+//         static void init();
+
+//         // writing/adding data
+//         static void addPlayer(string& playerName);
+//         static void addGame(GameData& gameData);
+        
+//         // fetching/reading data
+//         static vector<GameData> getHistory(int numEntries);
+//         static vector<GameData> getLeaderBoards(int numEntries);
+// };
+
 class DataBase{
     private:
-        static SQLite::Database db("space.db",);
+        SQLite::Database db;              
 
         // internal, helper methods
-        static void createTable_players();
-        static void createTable_games();
-        static void initTable_players();
-        static void upperCaseStr(string& playerName);
-        static int  getNumUniquePlayersInGames();
-        static int  getTotalGames();
-
-        // default constructor
-        DataBase() {}                                       // so no object can be made
+        void createTable_players();
+        void createTable_games();
+        void initTable_players();
+        void upperCaseStr(string& playerName);
+        int  getNumUniquePlayersInGames();
+        int  getTotalGames();
 
     public:
-        // init method instead of constructor
-        static void init();
+        DataBase();
 
         // writing/adding data
-        static void addPlayer(string& playerName);
-        static void addGame(GameData& gameData);
+        void addPlayer(string& playerName);
+        void addGame(GameData& gameData);
         
         // fetching/reading data
-        static vector<GameData> getHistory(int numEntries);
-        static vector<GameData> getLeaderBoards(int numEntries);
+        vector<GameData> getHistory(int numEntries);
+        vector<GameData> getLeaderBoards(int numEntries);
 };

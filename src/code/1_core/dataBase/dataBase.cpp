@@ -2,7 +2,7 @@
 #include "dataBase.hpp"
 
 
-
+// SQLITE::DataBase DataBase::db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
 // helper functions
 void DataBase::createTable_players(){
@@ -62,10 +62,24 @@ int DataBase::getTotalGames(){
 }
 
 // init
-void DataBase::init()
+// void DataBase::init()
+// {
+//     SQLite::Database instance("../../assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+
+//     db = &instance;
+//     // creating table 'players' to store players' data
+//     createTable_players();
+
+//     // creating table 'games' to store data about individual games
+//     createTable_games();
+
+//     // :>
+//     initTable_players();
+// }
+
+DataBase::DataBase()
+: db("../../assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
-    db = SQLITE::DataBase("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-    
     // creating table 'players' to store players' data
     createTable_players();
 
