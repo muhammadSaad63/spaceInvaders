@@ -1,4 +1,4 @@
-include <array>
+#include <array>
 #include <string>
 #include <raylib.h>
 using std::array, std::string;
@@ -17,43 +17,51 @@ class Alien{
         Alien() : active(true)
         { alien = LoadTexture("1.png"); }
 
+        void draw(const Vector2& position, const int& scale){
+            DrawTextureEx(alien, position, 0.0f, scale, WHITE);
+        }
         bool isActive(){
             return active;
         }
         Texture2D& getTexture(){
             return alien;
-        }
-        void shoot(){
-
-        }
+        }   
 };
 
 
 class Aliens{
     private:
-        const static int                          numRows     {3};
-        const static int                          numAliens {5};                        // dunno u but was not working without static
-        array<array<Alien, numAliens>, numRows> aliens;                                 // 2D array of Alien
-        const float                               scale       {0.1f};
+        const static int                        numRows   {3};
+        const static int                        numAliens {5};                        // dunno u but was not working without static
+        array<array<Alien, numAliens>, numRows> aliens;                               // 2D array of Alien
+        const float                             scale     {0.1f};
         
         const int edgePadding { 63 };                                                      // on one side
-        // const int alienWidth  { (GetScreenWidth() - (padding_X * 2)) / numAliens };
-        // const int alienWidth  { (aliens[0][0].getTexture().width  * scale) + 13 };
-        const int alienWidth  { 81 };
-        // const int rowWidth    { (aliens[0][0].getTexture().height * scale) + 13 };
-        const int rowWidth    { 70 };
+        // const int alienSpacing  { (GetScreenWidth() - (padding_X * 2)) / numAliens };
+        // const int alienSpacing  { (aliens[0][0].getTexture().width  * scale) + 13 };
+        const int alienSpacing  { 81 };
+        // const int rowSpacing    { (aliens[0][0].getTexture().height * scale) + 13 };
+        const int rowSpacing    { 70 };
 
         Vector2 swarmPos {edgePadding + 23, 63};
         float speed {1.0f};
         int direction {-1};              // 1 right, -1 left
-        // const int swarmWidth { (alienWidth * (numAliens - 1)) + (aliens[0][0].getTexture().width) };
-        const int swarmWidth { (alienWidth * (numAliens - 1)) + (alienWidth) };
+        // const int swarmWidth { (alienSpacing * (numAliens - 1)) + (aliens[0][0].getTexture().width) };
+        const int swarmWidth { (alienSpacing * (numAliens - 1)) + (alienSpacing) };
 
         bool hittingLeftEdge(){
             return (swarmPos.x <= edgePadding);
         }
         bool hittingRightEdge(){
             return ((swarmPos.x + swarmWidth) >= (GetScreenWidth() - edgePadding));
+        }
+        Rectangle getAlienRect(const int& rowNum, const int& alienNum){
+            return Rectangle{
+                    (swarmPos.x + ((alienNum - 1) * alienSpacing)),
+                    (swarmPos.y + ((alienNum - 1) * rowSpacing)),
+                    (float) (aliens[rowNum][alienNum].getTexture().width),
+                    (float) (aliens[rowNum][alienNum].getTexture().height)
+            };
         }
 
 
@@ -65,12 +73,12 @@ class Aliens{
         void draw(){
             Vector2 position {};
 
-            for (auto rowOfAliens {0}; rowOfAliens < numRows; ++rowOfAliens){
-                for (auto alien {0}; alien < numAliens; ++alien){
-                    position.x = (swarmPos.x + (alienWidth * alien));
-                    position.y = (swarmPos.y + (rowOfAliens * rowWidth));
+            for (auto rowNum {0}; rowNum < numRows; ++rowNum){
+                for (auto alienNum {0}; alienNum < numAliens; ++alienNum){
+                    position.x = (swarmPos.x + (alienSpacing * alienNum));
+                    position.y = (swarmPos.y + (rowNum * rowSpacing));
 
-                    DrawTextureEx(aliens[0][0].getTexture(), position, 0.0f, scale, WHITE);
+                    aliens[rowNum][alienNum].draw(position, scale);
                 }
             }
         }
@@ -80,7 +88,7 @@ class Aliens{
             if (hittingLeftEdge() || hittingRightEdge()){
                 direction *= -1;
 
-                swarmPos.y += rowWidth/3;
+                swarmPos.y += rowSpacing/3;
             }
         }
 
