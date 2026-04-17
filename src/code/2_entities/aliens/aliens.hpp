@@ -30,29 +30,25 @@ class Alien{
         }
 };
 
-enum Direction{
-    LEFT,
-    RIGHT,
-    DOWN
-};
-
 class Aliens{
     private:
         const static int                          numRows     {3};
-        const static int                          numAliens {7};                        // dunno u but was not working without static
+        const static int                          numAliens {5};                        // dunno u but was not working without static
         array<array<Alien, numAliens>, numRows> aliens;                                 // 2D array of Alien
         const float                               scale       {0.1f};
-        // Direction                                 direction   {RIGHT};
         
         const int edgePadding { 63 };                                                      // on one side
         // const int alienWidth  { (GetScreenWidth() - (padding_X * 2)) / numAliens };
-        const int alienWidth  { (aliens[0][0].getTexture().width  * scale) + 13 };
-        const int rowWidth    { (aliens[0][0].getTexture().height * scale) + 13 };
+        // const int alienWidth  { (aliens[0][0].getTexture().width  * scale) + 13 };
+        const int alienWidth  { 81 };
+        // const int rowWidth    { (aliens[0][0].getTexture().height * scale) + 13 };
+        const int rowWidth    { 70 };
 
-        Vector2 swarmPos {0, 63};
-        int speed {2.0};
-        int direction;              // 1 right, -1 left
-        const int swarmWidth { (alienWidth * (numAliens - 1)) + (aliens[0][0].getTexture().width) };
+        Vector2 swarmPos {edgePadding + 23, 63};
+        float speed {0.5f};
+        int direction {-1};              // 1 right, -1 left
+        // const int swarmWidth { (alienWidth * (numAliens - 1)) + (aliens[0][0].getTexture().width) };
+        const int swarmWidth { (alienWidth * (numAliens - 1)) + (alienWidth) };
 
         bool hittingLeftEdge(){
             return (swarmPos.x <= edgePadding);
@@ -64,20 +60,15 @@ class Aliens{
 
     public:
         void draw(){
-            auto posy {45};
+            Vector2 position {};
 
-            for (auto& rowOfAlien : aliens){
-                auto posx = (GetScreenWidth() - (numAliens * alienWidth))/2;
-                // auto posx {alienWidth};
-                posy += (rowWidth);
+            for (auto rowOfAliens {0}; rowOfAliens < numRows; ++rowOfAliens){
+                for (auto alien {0}; alien < numAliens; ++alien){
+                    position.x = (swarmPos.x + (alienWidth * alien));
+                    position.y = (swarmPos.y + (rowOfAliens * rowWidth));
 
-                for (auto& alien : rowOfAlien){
-                    if (alien.isActive()){
-                        DrawTextureEx(alien.getTexture(), Vector2{(float)posx, (float)posy}, 0.0f, 0.1f, WHITE);
-                    }
-
-                    posx += alienWidth;
-                }   
+                    DrawTextureEx(aliens[0][0].getTexture(), position, 0.0f, scale, WHITE);
+                }
             }
         }
         void update(){
@@ -86,7 +77,7 @@ class Aliens{
             if (hittingLeftEdge() || hittingRightEdge()){
                 direction *= -1;
 
-                swarmPos.y += rowWidth;
+                swarmPos.y += rowWidth/3;
             }
         }
 
@@ -111,8 +102,10 @@ int main(){
     Aliens a;
 
     while (!WindowShouldClose()){
-        
+        a.update();
+
         BeginDrawing();
+            ClearBackground(BLANK);
             a.draw();  
         EndDrawing();  
     }
