@@ -1,11 +1,6 @@
-#include <raylib.h>
-
-
-
-
-#include <array>
-#include <raylib.h>
+include <array>
 #include <string>
+#include <raylib.h>
 using std::array, std::string;
 
 
@@ -28,7 +23,11 @@ class Alien{
         Texture2D& getTexture(){
             return alien;
         }
+        void shoot(){
+
+        }
 };
+
 
 class Aliens{
     private:
@@ -45,7 +44,7 @@ class Aliens{
         const int rowWidth    { 70 };
 
         Vector2 swarmPos {edgePadding + 23, 63};
-        float speed {0.5f};
+        float speed {1.0f};
         int direction {-1};              // 1 right, -1 left
         // const int swarmWidth { (alienWidth * (numAliens - 1)) + (aliens[0][0].getTexture().width) };
         const int swarmWidth { (alienWidth * (numAliens - 1)) + (alienWidth) };
@@ -59,6 +58,10 @@ class Aliens{
 
 
     public:
+        Aliens(){
+            swarmPos.x = ((GetScreenWidth() - swarmWidth) / 2);             // centering swarm at start
+        }
+
         void draw(){
             Vector2 position {};
 
@@ -105,8 +108,10 @@ int main(){
         a.update();
 
         BeginDrawing();
+
             ClearBackground(BLANK);
             a.draw();  
+
         EndDrawing();  
     }
 
