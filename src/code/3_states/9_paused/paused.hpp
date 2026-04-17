@@ -1,49 +1,23 @@
 #pragma once
 
 
-#include <raygui.h>
+#include <raylib.h>
 #include "../1_state/state.hpp"
 #include "../8_playing/playing.hpp"
+#include "../../1_core/enums/gameState.hpp"
 
 
 class Paused : public State{
     private:
         Playing& playing;
-        int      textSize {83};
+        int      textSize  {83};
         Sound    gameResumedSFX;
         Sound    gameStoppedSFX;
 
     public:
-        Paused(GameState& gameState, Playing& playing) 
-        : State(gameState)
-        , playing(playing) 
-        {
-            gameResumedSFX = LoadSound("../assets/sounds/sfx/gameResumed.mp3");
-            gameStoppedSFX = LoadSound("../assets/sounds/sfx/gameStopped.mp3");
-        }
-        ~Paused(){
-            UnloadSound(gameResumedSFX);
-            UnloadSound(gameStoppedSFX);
-        }
+        Paused(GameState& gameState, Playing& playing);
+        ~Paused();
 
-        void draw(){
-            // DrawText("GamePlay Paused.\n- Press \"p\" to resume.\n- Press \"x\" to finish.", GetScreenWidth() / 2 - MeasureText("GamePlay Paused.\n- Press \"p\" to resume.\n- Press \"x\" to finish.", textSize) / 2, GetScreenHeight() /2 - 3*textSize/2, textSize, GOLD);        // thats long....;  100 here is the fontsize
-            DrawText("GamePlay Paused.", GetScreenWidth() / 2 - MeasureText("GamePlay Paused.", textSize) / 2, GetScreenHeight()/2 - textSize/2 - 50, textSize, GOLD);        // thats long....;  100 here is the fontsize
-            DrawText("- Press \"p\" to resume.\n- Press \"x\" to finish.", GetScreenWidth() / 2 - MeasureText("- Press \"p\" to resume.\n- Press \"x\" to finish.", textSize/1.5) / 2, GetScreenHeight()/2 - textSize/2 - 50 + textSize + 30, textSize/1.5, GOLD);
-        }
-        void update(){
-            if (IsKeyPressed(KEY_P)){
-                PlaySound(gameResumedSFX);
-
-                gameState = PLAYING;
-                WaitTime(1);
-            }
-            if (IsKeyPressed(KEY_X)){
-                PlaySound(gameStoppedSFX);
-                
-                gameState = MENU;
-                // playing.resetAll();
-                WaitTime(1);
-            }
-        }
+        void draw();
+        void update();
 };
