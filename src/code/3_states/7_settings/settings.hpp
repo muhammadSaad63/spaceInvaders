@@ -35,6 +35,7 @@ class Settings : public State{
             return (initPosY + ((index - 1) * offset) + ((enableFullScreen && index == 2)? 63 : 0));
         }
 
+        // draw helpers
         void drawHeader(const auto& index){
             posY = getPosY(index);
 
@@ -80,6 +81,94 @@ class Settings : public State{
             DrawText(TextFormat("%s", (playerInputMode == WASD)? "WASD Keys" : (playerInputMode == ARROW)? "Arrow Keys" : "Mouse Wheel"), posX + MeasureText(texts[5].c_str(), textSize) + offSet, posY, textSize, BEIGE);  
         }
 
+        // update helpers
+        void updateFullScreen(const auto& index){
+            posY = getPosY(index);
+
+            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
+            {
+                enableFullScreen = !enableFullScreen;
+                if (enableFullScreen){
+                    // SetWindowState(FLAG_enableFullScreen_MODE);
+                    SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE); // op :D
+                }
+                else{
+                    ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
+                    SetWindowSize(1080, 720);
+                }
+
+                PlaySound(settingModifySFX);
+            }
+        }
+        void updateGrid(const auto& index){
+            posY = getPosY(index);
+
+            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[1].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
+            {
+                enableGrid = !enableGrid;
+                PlaySound(settingModifySFX);
+            }
+        }
+        void updateFrameRate(const auto& index){
+            posY = getPosY(index);
+
+            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[2].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("123", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 123 is the max width of poss values
+            {
+                switch (frameRate) {
+                    case 15: frameRate = 30; break;
+                    case 30: frameRate = 45; break;
+                    case 45: frameRate = 60; break;
+                    case 60: frameRate = 15; break;
+                    default: frameRate = 60; break;
+                }
+
+                // what is this code...
+                // dear God
+                // frameRate = ((frameRate == 20)? 40 : (frameRate == 40)? 60 : (frameRate == 60)? 120 : 20);          // y these values? simple: me like em :)
+                
+                SetTargetFPS(frameRate);
+                PlaySound(settingModifySFX);
+            }
+        }
+        void updateWindowOpacity(const auto& index){
+            posY = getPosY(index);
+
+            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[3].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("0.1", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 0.1 is the max width of poss values
+            {
+                windowOpacity += 0.1f;
+                if (windowOpacity >= 1.1f){             // >= needed since float addition can result in smthing like 1.00001f (wahi fpn kay precision ka masla)
+                    windowOpacity = 0.1f;
+                }
+                
+                SetWindowOpacity(windowOpacity);
+                PlaySound(settingModifySFX);
+            }
+        }
+        void updateMasterVolume(const auto& index){
+            posY = getPosY(index);
+        
+            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[4].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("100%", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 100% is the max width of poss values
+            {
+                masterVolume += 0.1f;
+                if (masterVolume >= 1.1f){             // >= needed since float addition can result in smthing like 1.00001f (wahi fpn kay precision ka masla)
+                    masterVolume = 0.0f;
+                }
+                
+                SetMasterVolume(masterVolume);
+                PlaySound(settingModifySFX);             // to test modified vol
+            }
+        }
+        void updateInputMode(const auto& index){
+            posY = getPosY(index);
+
+            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[5].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Mouse Wheel", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // "Mouse Wheel" is the max width of poss values
+            {
+                playerInputMode = ((playerInputMode == WASD)? ARROW : (playerInputMode == ARROW)? MOUSE : WASD);
+                
+                PlaySound(settingModifySFX);
+            }
+        }
+
     public:
         Settings(GameState& gameState) : State(gameState) {
             settingModifySFX = LoadSound("../../../assets/sounds/sfx/settingModify.mp3");
@@ -120,88 +209,23 @@ class Settings : public State{
                 gameState = MENU;
             }
 
-            posY = getPosY(1);
-
             // enableFullScreen
-            posY = getPosY(2);
-            // if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
-            // {
-            //     enableFullScreen = !enableFullScreen;
-            //     if (enableFullScreen){
-            //         // SetWindowState(FLAG_enableFullScreen_MODE);
-            //         SetWindowState(FLAG_BORDERLESS_WINDOWED_MODE); // op :D
-            //     }
-            //     else{
-            //         ClearWindowState(FLAG_BORDERLESS_WINDOWED_MODE);
-            //         SetWindowSize(1080, 720);
-            //     }
-
-            //     PlaySound(settingModifySFX);
-            // }
+            updateFullScreen(2);
 
             // grid toggle
-            posY = getPosY(3);
-            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[1].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
-            {
-                enableGrid = !enableGrid;
-                PlaySound(settingModifySFX);
-            }
+            updateGrid(3);
 
             // framerate
-            posY = getPosY(4);
-            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[2].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("123", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 123 is the max width of poss values
-            {
-
-                switch (frameRate) {
-                    case 15: frameRate = 30; break;
-                    case 30: frameRate = 45; break;
-                    case 45: frameRate = 60; break;
-                    case 60: frameRate = 15; break;
-                    default: frameRate = 60; break;
-                }
-
-                // what is this code...
-                // dear God
-                // frameRate = ((frameRate == 20)? 40 : (frameRate == 40)? 60 : (frameRate == 60)? 120 : 20);          // y these values? simple: me like em :)
-                
-                SetTargetFPS(frameRate);
-                PlaySound(settingModifySFX);
-            }
+            updateFrameRate(4);
 
             // window opacity
-            posY = getPosY(5);
-            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[3].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("0.1", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 0.1 is the max width of poss values
-            {
-                windowOpacity += 0.1f;
-                if (windowOpacity >= 1.1f){             // >= needed since float addition can result in smthing like 1.00001f (wahi fpn kay precision ka masla)
-                    windowOpacity = 0.1f;
-                }
-                
-                SetWindowOpacity(windowOpacity);
-                PlaySound(settingModifySFX);
-            }
+            updateWindowOpacity(5);
 
             // master volume
-            posY = getPosY(6);
-            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[4].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("100%", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 100% is the max width of poss values
-            {
-                masterVolume += 0.1f;
-                if (masterVolume >= 1.1f){             // >= needed since float addition can result in smthing like 1.00001f (wahi fpn kay precision ka masla)
-                    masterVolume = 0.0f;
-                }
-                
-                SetMasterVolume(masterVolume);
-                PlaySound(settingModifySFX);             // to test modified vol
-            }
+            updateMasterVolume(6);
 
             // input mode
-            posY = getPosY(7);
-            if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[5].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Mouse Wheel", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // "Mouse Wheel" is the max width of poss values
-            {
-                playerInputMode = ((playerInputMode == WASD)? ARROW : (playerInputMode == ARROW)? MOUSE : WASD);
-                
-                PlaySound(settingModifySFX);
-            }
+            updateInputMode(7);
         }
         InputMode& getMovementMode(){
             return playerInputMode;
