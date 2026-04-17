@@ -2,6 +2,7 @@
 GEMINI.md
 TODO.md
 programData.db
+*.zip
 
 # CMake & Build Files
 build/
