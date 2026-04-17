@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <sqlite3.h>
 #include "dataBase.hpp"
 #include <SQLiteCpp/SQLiteCpp.h>
 using std::string, std::vector;
@@ -46,7 +45,7 @@ struct GameData{
 //         // writing/adding data
 //         static void addPlayer(string& playerName);
 //         static void addGame(GameData& gameData);
-        
+
 //         // fetching/reading data
 //         static vector<GameData> getHistory(int numEntries);
 //         static vector<GameData> getLeaderBoards(int numEntries);
