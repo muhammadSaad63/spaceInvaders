@@ -26,23 +26,28 @@ struct GameData{
 
 class DataBase{
     private:
-        SQLite::Database db;
+        static SQLite::Database db("space.db",);
 
-        void createTable_players();
-        void createTable_games();
-        void initTable_players();
-        void upperCaseStr(string& playerName);
-        int getNumUniquePlayersInGames();
-        int getTotalGames();
+        // internal, helper methods
+        static void createTable_players();
+        static void createTable_games();
+        static void initTable_players();
+        static void upperCaseStr(string& playerName);
+        static int  getNumUniquePlayersInGames();
+        static int  getTotalGames();
+
+        // default constructor
+        DataBase() {}                                       // so no object can be made
 
     public:
-        DataBase();
+        // init method instead of constructor
+        static void init();
 
         // writing/adding data
-        void addPlayer(string& playerName);
-        void addGame(GameData& gameData);
+        static void addPlayer(string& playerName);
+        static void addGame(GameData& gameData);
         
         // fetching/reading data
-        vector<GameData> getHistory(int numEntries);
-        vector<GameData> getLeaderBoards(int numEntries);
+        static vector<GameData> getHistory(int numEntries);
+        static vector<GameData> getLeaderBoards(int numEntries);
 };
