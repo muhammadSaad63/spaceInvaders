@@ -1,8 +1,11 @@
+#pragma once
+
+
 #include <array>
-#include <string>
 #include <vector>
 #include <raylib.h>
-using std::array, std::string, std::vector;
+#include "../lasers/lasers.hpp"
+using std::array, std::vector;
 
 
 class Alien{
@@ -10,141 +13,79 @@ class Alien{
         Texture2D texture;
         bool      active;
 
-        void loadAlien(const string& fileName){
-            texture = LoadTexture(fileName.c_str());
-        }
-
     public:
-        Alien() : active(true)
-        { texture = LoadTexture("1.png"); }
+        Alien();
+        ~Alien();
 
-        void draw(const Vector2& position, const int& scale){
-            DrawTextureEx(texture, position, 0.0f, scale, WHITE);
-        }
-        bool isActive(){
-            return active;
-        }
-        Texture2D& getTexture(){
-            return texture;
-        }   
-        void activate(){
-            if (!active)
-            { active = true; }
-        }
-        void deActivate(){
-            if (active)
-            { active = false; }
-        }
+        void draw(const Vector2& position, const float scale);
+
+        bool      isActive();
+        void      activate();
+        void      deActivate();
+        float     getTextureWidth();
+        float     getTextureHeight();
+        Rectangle getRect(const Vector2& position, const float scale);
 };
+
 
 class Aliens{
     private:
-        const static int                        numRows   {3};
-        const static int                        numAliens {5};                                                   // dunno u but was not working without static
-        array<array<Alien, numAliens>, numRows> aliens;                                                          // 2D array of Alien
-        const float                             scale     {0.1f};
+        int                                   waveNum        { 0 };                                                 // the current wave num
+    
+        // swarm formation
+        const static int                      numRows        { 3 };                                                 // the total num of rows of aliens in the swarm; dunno y but it wasnt working witout static;
+        const static int                      numCols        { 5 };                                                 // the num of aliens in each row of the swarm
+        array<array<Alien, numCols>, numRows> aliens;                                                               // a 2d static array of Alien(s)
+
+        // swarm info
+        Vector2                               swarmPosition  { 0, 0 };                                              // a tuple containing the (x, y) coor of the top-left point of the swarm
+        int                                   swarmDirection { 1    };                                              // unit vector represeting direction of speed: 1 right, -1 left
+        const int                             swarmWidth     { (alienSpacing * (numCols - 1)) + (alienSpacing) };   // the total width/length of the swarm
         
-        const int edgePadding { 63 };                                                                            // on one side
-        // const int alienSpacing  { (GetScreenWidth() - (padding_X * 2)) / numAliens };
-        // const int alienSpacing  { (aliens[0][0].getTexture().width  * scale) + 13 };
-        const int alienSpacing  { 81 };
-        // const int rowSpacing    { (aliens[0][0].getTexture().height * scale) + 13 };
-        const int rowSpacing    { 70 };
+        // swarm speed
+        const float                           baseSpeed      { 0.5f      };                                         // ie the min poss speed of each alien
+        float                                 currSpeed      { baseSpeed };                                         // speed of each alien in the swarm in the current wave
+        const float                           acceleration   { 0.15f     };                                         // ie the speed increase of each alien per wave
+        
+        // drawing constants
+        const static int                      alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
+        const static int                      rowSpacing     { 70   };                                              // vertical gap between each row in the swarm
+        const static int                      edgePadding    { 63   };                                              // the horizontal padding on each side of the screen
+        const static float                    textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
+        
+        // lasers info
+        vector<Laser>                         alienLasers    {      };                                              // a vector to store the index of active aliens in a row
+        float                                 shootTimer     { 0.0f };                                              // the time passed (in s) after the last laser was shot
+        float                                 shootInterval  { 2.0f };                                              // the time interval/duration bw each consecutive laser firing
 
-        Vector2 swarmPos {};
-        float speed {1.0f};
-        int direction {-1};                                                                                     // 1 right, -1 left
-        // const int swarmWidth { (alienSpacing * (numAliens - 1)) + (aliens[0][0].getTexture().width) };
-        const int swarmWidth { (alienSpacing * (numAliens - 1)) + (alienSpacing) };
+        // internal, helper methods
+        bool  hittingLeftEdge();                                                                                    // returns true if the left end of the swarm is hitting the left edge of the screen
+        bool  hittingRightEdge();                                                                                   // returns true if the right end of the swarm is hitting the right edge of the screen                                                                  
 
-        // vector<Laser> lasers;
+        void  centerSwarm();                                                                                        // positions the swarm at the centre of the window (for the start of each wave)
+        float calcSwarmSpeed();                                                                                     // calculates and returns the swarmSpeed for the current waveNum
+        void  activateSwarm();                                                                                      // sets all the aliens in the swarm to active
+        void  loadNextWave();                                                                                       // makes use of the above 3 helper methods to bring about the next wave
+        bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
 
-        bool hittingLeftEdge(){
-            return (swarmPos.x <= edgePadding);
-        }
-        bool hittingRightEdge(){
-            return ((swarmPos.x + swarmWidth) >= (GetScreenWidth() - edgePadding));
-        }
-        Rectangle getAlienRect(const int& rowNum, const int& alienNum){
-            return Rectangle{
-                    (swarmPos.x + ((alienNum - 1) * alienSpacing)),
-                    (swarmPos.y + ((alienNum - 1) * rowSpacing)),
-                    (float) (aliens[rowNum][alienNum].getTexture().width),
-                    (float) (aliens[rowNum][alienNum].getTexture().height)
-            };
-        }
-        void centerSwarm(){
-            swarmPos.x = ((GetScreenWidth() - swarmWidth) / 2);
-            swarmPos.y = 63;
-        }
-
+        bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
+        void  shootALaser();                                                                                        // shoots a laser from an active alien in the swarm
 
     public:
-        Aliens(){
-            centerSwarm();                                                                           // centering swarm at start
-        }
+        Aliens();
 
-        void draw(){
-            Vector2 position {};
+        void draw();
+        void update();
 
-            for (auto rowNum {0}; rowNum < numRows; ++rowNum){
-                for (auto alienNum {0}; alienNum < numAliens; ++alienNum){
-                    position.x = (swarmPos.x + (alienSpacing * alienNum));
-                    position.y = (swarmPos.y + (rowNum * rowSpacing));
+        // collision: call from Playing — deactivates the alien, returns true on hit
+        bool checkPlayerLaserCollision(Laser& laser);
+        
+        // returns alien lasers so Playing can check vs player
+        vector<Laser>& getLasers();                                                                                 // getter for the lasers vector
+        
+        int  getWaveNum();                                                                                          // getter for waveNum
+        bool areAllDestroyed();                                                                                     // wrapper for isSwarmDestroyed()
 
-                    aliens[rowNum][alienNum].draw(position, scale);
-                }
-            }
-        }
-        void update(){
-            swarmPos.x += (speed * direction);
-
-            if (hittingLeftEdge() || hittingRightEdge()){
-                direction *= -1;
-
-                swarmPos.y += (rowSpacing / 3);
-            }
-        }
-
-        bool areAllDestroyed(){
-            for (auto& rowOfAlien : aliens){
-                for (auto& alien : rowOfAlien){
-                    if (alien.isActive()){
-                        return false;
-                    }
-                }   
-            }
-
-            return true;
-        }
-        void reset(){
-            centerSwarm();
-
-            for (auto& rowOfAliens : aliens){
-                for (auto& alien : rowOfAliens){
-                    alien.activate();
-                }
-            }
-        }
+        // returns the world-space rect for alien at [row][col]
+        Rectangle getAlienRect(int row, int col);
 };
-
-
-int main(){
-    InitWindow(1080, 720, "test");
-    SetTargetFPS(60);
-
-    Aliens a;
-
-    while (!WindowShouldClose()){
-        a.update();
-
-        BeginDrawing();
-
-            ClearBackground(BLANK);
-            a.draw();  
-
-        EndDrawing();  
-    }
-
-    CloseWindow();
-}
