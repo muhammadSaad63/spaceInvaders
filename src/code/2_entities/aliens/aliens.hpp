@@ -93,7 +93,7 @@ class Alien{
         Alien() : active(true)
         { texture = LoadTexture("1.png"); }
 
-        void draw(const Vector2& position, const int& scale){
+        void draw(const Vector2& position, const float& scale){
             DrawTextureEx(texture, position, 0.0f, scale, WHITE);
         }
 
@@ -138,11 +138,12 @@ class Aliens{
         int         waveNum      { 0 };                   // the current wave num
         const float baseSpeed    { 0.5f };                // ie the min poss speed of each alien
         float       currSpeed    { baseSpeed };           // speed of each alien in the swarm in the current wave
-        const float acceleration { 0.5f };                // ie the speed increase of each alien per wave
+        const float acceleration { 0.15f };               // ie the speed increase of each alien per wave
         
         vector<Laser> lasers;
-        float shootTimer    { 0.0f };                     // stores number of secs passed since last laser shot                 
-        float shootInterval { 1.5f };                     // the number of sec after which to shoot another laser
+        float shootTimer      { 0.0f };                     // stores number of secs passed since last laser shot                 
+        float shootInterval   { 2.0f };                     // the number of sec after which to shoot another laser
+        float lastCheckedTime {};
 
         // internal, helper methods
         bool hittingLeftEdge(){
@@ -156,17 +157,17 @@ class Aliens{
             swarmPosition.x = ((GetScreenWidth() - swarmWidth) / 2);
             swarmPosition.y = 63;
         }
-        float calcCurrSpeed(){
+        float calcSwarmSpeed(){
             return (baseSpeed + ((waveNum - 1) * acceleration));
         }
-        void activateAllAliens(){
+        void activateSwarm(){
             for (auto& rowOfAliens : aliens){
                 for (auto& alien : rowOfAliens){
                     alien.activate();
                 }
             }
         }
-        bool swarmDestroyed(){
+        bool isSwarmDestroyed(){
             for (auto& rowOfAlien : aliens){
                 for (auto& alien : rowOfAlien){
                     if (alien.isActive()){
@@ -180,12 +181,65 @@ class Aliens{
         void loadNextWave(){
             waveNum++;                              // increments waveNum
 
-            currSpeed = calcCurrSpeed();            // calculates new current speed and assigns the value to currSpeed
+            currSpeed = calcSwarmSpeed();           // calculates new current speed and assigns the value to currSpeed
 
-            activateAllAliens();                    // set active status of all aliens to true
+            activateSwarm();                        // set active status of all aliens to true
 
             centerSwarm();                          // centers the alien swarm across the screen
         }
+        bool hasSecondPassed(const float& currTime){
+            return ((currTime - lastCheckedTime) >= 1.0f);
+        }
+        void getRandomActiveAlien(int& rowNum, int& alienNum){
+            vector<int> activeAliens;
+            activeAliens.reserve(numAliens);
+
+            auto col {0};
+
+            for (auto row {2}; row >= 0; --row){
+                activeAliens.clear();
+
+                col = 0;
+                for (col < numAliens; ++col){
+                    if (aliens[row][col].isActive()){
+                        activeAliens.push_back(col);
+                    }
+                }
+
+                if (activeAliens.size() > 0){
+                    auto alienToShoot = GetRandomValue(0, activeAliens.size() - 1);
+                    
+                    rowNum   = row;
+                    alienNum = col;
+
+                    return;
+                }
+            }
+        }
+        void shoot(){
+            if (shootTimer >= shootInterval){
+                // choose random alien adn shoot
+                int rowNum, alienNum;
+                getRandomActiveAlien(rowNum, alienNum);
+                
+                auto posX = (swarmPosition.x + (alienSpacing * alienNum) + aliens[rowNum][alienNum].getTextureWidth()/2);
+                auto posY = (swarmPosition.y + (rowNum * rowSpacing) + aliens[rowNum][alienNum].getTextureHeight());
+                lasers.push_back(Laser{ posX, posY });
+
+                shootTimer = 0;
+                shootInterval = static_cast<float>(GetRandomValue(2, 8) / 2.0f);               // sets timer for the next laser shooting as a random value bw 1 & 4 (inclusive)
+            }
+            else{ 
+                auto currTime = GetTime();
+
+                if (hasSecondPassed(currTime)){
+                    shootTimer++;
+                }
+                
+                lastCheckedTime = currTime;
+            }
+        }
+
 
     public:
         Aliens(){
@@ -205,17 +259,18 @@ class Aliens{
             }
         }
         void update(){
-            if (swarmDestroyed()){
+            if (isSwarmDestroyed()){
                 loadNextWave();
-            }
 
-            swarmPosition.x += (currSpeed * swarmDirection);
+                return;
+            }
 
             if (hittingLeftEdge() || hittingRightEdge()){
                 swarmDirection *= -1;
-
                 swarmPosition.y += (rowSpacing / 3);
             }
+
+            swarmPosition.x += (currSpeed * swarmDirection);
         }
 
         Rectangle getAlienRect(const int& rowNum, const int& alienNum){
@@ -225,6 +280,9 @@ class Aliens{
                             (aliens[rowNum][alienNum].getTextureWidth()  * scale),
                             (aliens[rowNum][alienNum].getTextureHeight() * scale)
             };
+        }
+        int& getWaveNum(){
+            return waveNum;
         }
 };
 
