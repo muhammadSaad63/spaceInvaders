@@ -76,7 +76,7 @@ class Aliens{
         Aliens();
 
         void draw();
-        void update(spaceShipLasers, score);
+        void update(vector<Laser>& spaceShipLasers, int& score);
 
         // collision: call from Playing — deactivates the alien, returns true on hit
         bool checkPlayerLaserCollision(Laser& laser);

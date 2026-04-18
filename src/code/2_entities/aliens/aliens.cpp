@@ -160,7 +160,8 @@ void Aliens::draw(){
     }
 }
 
-void Aliens::update(){
+void Aliens::update(vector<Laser>& spaceShipLasers, int& score)
+{
     if (isSwarmDestroyed()){
         loadNextWave();
 
