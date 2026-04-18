@@ -58,7 +58,7 @@ void Game::init(){
 }
 
 void Game::draw(){                                                    // draws based upon the current gameState
-    backGround.draw(settings.isFullScreen(), settings.isGridEnabled());
+    backGround.draw(settings.isFullScreenEnabled(), settings.isGridEnabled());
 
     switch(gameState)
     {
