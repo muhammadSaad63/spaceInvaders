@@ -22,6 +22,7 @@ class Alien{
         bool      isActive();
         void      activate();
         void      deActivate();
+
         float     getTextureWidth();
         float     getTextureHeight();
         Rectangle getRect(const Vector2& position, const float scale);
@@ -54,7 +55,7 @@ class Aliens{
         const static float                    textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
         
         // lasers info
-        vector<Laser>                         alienLasers    {      };                                              // a vector to store the index of active aliens in a row
+        vector<Laser>                         lasers         {      };                                              // a vector to store the index of active aliens in a row
         float                                 shootTimer     { 0.0f };                                              // the time passed (in s) after the last laser was shot
         float                                 shootInterval  { 2.0f };                                              // the time interval/duration bw each consecutive laser firing
 
@@ -75,7 +76,7 @@ class Aliens{
         Aliens();
 
         void draw();
-        void update();
+        void update(vector<Laser>& spaceShipLasers, int& score);
 
         // collision: call from Playing — deactivates the alien, returns true on hit
         bool checkPlayerLaserCollision(Laser& laser);
