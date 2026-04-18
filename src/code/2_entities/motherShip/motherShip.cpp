@@ -47,7 +47,7 @@ MotherShip::MotherShip()
 , hits(0)                                                       // number of hits currently sustained by the motherShip
 , maxPossibleHits(7)                                            // max number of hits to defeat/destruct the motherShip
 , scoreBoost(1000)                                              // 1000 extra points on destruction
-, motherShip(LoadTexture("../assets/graphics/enemies/motherShips/1.png"))
+, motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
 , position({0.0f, 50})
 , scale(0.15f)
 , randomSpawnPause(30)                                          // 30s

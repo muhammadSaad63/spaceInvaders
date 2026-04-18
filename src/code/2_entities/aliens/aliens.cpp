@@ -6,7 +6,7 @@ using std::pair;
 Alien::Alien() 
 : active(true)
 {
-    texture = LoadTexture("../assets/graphics/aliens/1.png");
+    texture = LoadTexture("src/assets/graphics/aliens/1.png");
 }
 Alien::~Alien(){
     if (texture.id){
