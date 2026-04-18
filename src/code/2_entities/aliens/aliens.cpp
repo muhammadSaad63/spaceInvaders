@@ -208,7 +208,7 @@ void Aliens::draw(){
     }
 }
 
-void Aliens::update(vector<Laser>& spaceShipLasers, int& score)
+void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefeated)
 {
     if (isSwarmDestroyed()){
         loadNextWave();
@@ -231,6 +231,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score)
 
     // checking for collision with spaceship's lasers
     auto aliensDefeated = checkSpaceShipLasersCollision(spaceShipLasers);
+    enemiesDefeated += aliensDefeated;
     score += (aliensDefeated * scoreBoost);
 }
 
