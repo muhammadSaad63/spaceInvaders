@@ -49,10 +49,10 @@ class Aliens{
         const float                           acceleration   { 0.15f     };                                         // ie the speed increase of each alien per wave
         
         // drawing constants
-        const static int                      alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
-        const static int                      rowSpacing     { 70   };                                              // vertical gap between each row in the swarm
-        const static int                      edgePadding    { 63   };                                              // the horizontal padding on each side of the screen
-        const static float                    textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
+        int                                   alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
+        int                                   rowSpacing     { 70   };                                              // vertical gap between each row in the swarm
+        int                                   edgePadding    { 63   };                                              // the horizontal padding on each side of the screen
+        float                                 textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
         
         // lasers info
         vector<Laser>                         lasers         {      };                                              // a vector to store the index of active aliens in a row
