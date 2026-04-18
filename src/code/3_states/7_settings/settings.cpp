@@ -7,7 +7,7 @@ using std::string;
 
 // internal, helper functions
 int Settings::getPosY(const int& index){
-    return (initPosY + ((index - 1) * offset) + ((enableFullScreen && index == 2)? 63 : 0));
+    return (initPosY + ((index - 1) * offSet) + ((enableFullScreen && index == 2)? 63 : 0));
 }
 
 // draw helpers
