@@ -42,7 +42,8 @@ class Aliens{
         Vector2                               swarmPosition  { 0, 0 };                                              // a tuple containing the (x, y) coor of the top-left point of the swarm
         int                                   swarmDirection { 1    };                                              // unit vector represeting direction of speed: 1 right, -1 left
         const int                             swarmWidth     { (alienSpacing * (numCols - 1)) + (alienSpacing) };   // the total width/length of the swarm
-        
+        const int                             scoreBoost     { 50   };                                              // the increment in the session's score upon defeating a alien
+
         // swarm speed
         const float                           baseSpeed      { 0.5f      };                                         // ie the min poss speed of each alien
         float                                 currSpeed      { baseSpeed };                                         // speed of each alien in the swarm in the current wave
@@ -70,7 +71,12 @@ class Aliens{
         bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
 
         bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
-        void  shootALaser();                                                                                        // shoots a laser from an active alien in the swarm
+        void  shootALaser();         
+        void  updateLasers();                                                                               // shoots a laser from an active alien in the swarm
+
+        Rectangle getAlienRect(int row, int col);
+        bool      checkSpaceShipLaserCollision(Laser& laser);
+        int       checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers);
 
     public:
         Aliens();
@@ -78,15 +84,6 @@ class Aliens{
         void draw();
         void update(vector<Laser>& spaceShipLasers, int& score);
 
-        // collision: call from Playing — deactivates the alien, returns true on hit
-        bool checkPlayerLaserCollision(Laser& laser);
-        
-        // returns alien lasers so Playing can check vs player
+        int            getWaveNum();                                                                                // getter for waveNum
         vector<Laser>& getLasers();                                                                                 // getter for the lasers vector
-        
-        int  getWaveNum();                                                                                          // getter for waveNum
-        bool areAllDestroyed();                                                                                     // wrapper for isSwarmDestroyed()
-
-        // returns the world-space rect for alien at [row][col]
-        Rectangle getAlienRect(int row, int col);
 };
