@@ -11,10 +11,6 @@ class Play : public State{
     public:
         Play(GameState& gameState) : State(gameState) {}
 
-        void draw(){
-
-        }
-        void update(){
-
-        }
+        void draw();
+        void update();
 };
