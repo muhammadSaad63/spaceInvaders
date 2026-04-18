@@ -1,5 +1,3 @@
-#pragma once
-
 #include <raylib.h>
 #include "settings.hpp"
 using std::string;
