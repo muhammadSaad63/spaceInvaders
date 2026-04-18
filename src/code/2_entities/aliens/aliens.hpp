@@ -92,6 +92,11 @@ class Alien{
     public:
         Alien() : active(true)
         { texture = LoadTexture("1.png"); }
+        ~Alien(){
+            if (texture.id){
+                UnloadTexture(texture);
+            }
+        }
 
         void draw(const Vector2& position, const float& scale){
             DrawTextureEx(texture, position, 0.0f, scale, WHITE);
