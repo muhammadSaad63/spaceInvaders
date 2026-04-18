@@ -78,7 +78,7 @@ int DataBase::getTotalGames(){
 // }
 
 DataBase::DataBase()
-: db("../../assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+: db("src/assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
     // creating table 'players' to store players' data
     createTable_players();

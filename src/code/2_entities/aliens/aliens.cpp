@@ -6,7 +6,7 @@ using std::pair;
 Alien::Alien() 
 : active(true)
 {
-    texture = LoadTexture("../assets/graphics/aliens/1.png");
+    texture = LoadTexture("src/assets/graphics/aliens/1.png");
 }
 Alien::~Alien(){
     if (texture.id){
@@ -131,7 +131,55 @@ void Aliens::shootALaser(){
 
     lasers.push_back(Laser{ static_cast<int>(laserX), static_cast<int>(laserY) });
 }
+void Aliens::updateLasers(){
+    for (auto it = lasers.begin(); it != lasers.end();){                  // using it as iterator
+        if (it->isActive()){
+            it->update(ALIEN);
+            ++it;
+        } 
+        else{
+            it = lasers.erase(it);                                     // removing inactive lasers
+        }
+    }
+}
 
+Rectangle Aliens::getAlienRect(int row, int col){
+    Vector2 position{
+        swarmPosition.x + (col * alienSpacing),
+        swarmPosition.y + (row * rowSpacing)
+    };
+
+    return aliens[row][col].getRect(position, textureScale);
+}
+bool Aliens::checkSpaceShipLaserCollision(Laser& spaceShipLaser){
+    if (!spaceShipLaser.isActive()) { return false; }
+
+    for (auto row {0}; row < numRows; ++row){
+        for (auto col {0}; col < numCols; ++col){
+            if (!aliens[row][col].isActive()) { continue; }
+
+            if (CheckCollisionRecs(spaceShipLaser.getRect(), getAlienRect(row, col))){
+                aliens[row][col].deActivate();
+                spaceShipLaser.deActivate();
+
+                return true;                // one laser can only hit one alien
+            }
+        }
+    }
+
+    return false;
+}
+int Aliens::checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers){
+    auto aliensDefeated {0};
+
+    for (auto& laser : spaceShipLasers){
+        if (checkSpaceShipLaserCollision(laser)){
+            aliensDefeated++;;
+        }
+    }
+
+    return aliensDefeated;                      // no alien died; yayyyyyyyyy
+}
 
 Aliens::Aliens(){
     loadNextWave();
@@ -179,46 +227,14 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score)
     shootALaser();
 
     // updating active lasers
-    for (auto it = lasers.begin(); it != lasers.end();){                  // using it as iterator
-        if (it->isActive()){
-            it->update(ALIEN);
-            ++it;
-        } 
-        else{
-            it = lasers.erase(it);                                     // removing inactive lasers
-        }
-    }
-}
+    updateLasers();
 
-Rectangle Aliens::getAlienRect(int row, int col){
-    Vector2 position{
-        swarmPosition.x + (col * alienSpacing),
-        swarmPosition.y + (row * rowSpacing)
-    };
-
-    return aliens[row][col].getRect(position, textureScale);
-}
-
-bool Aliens::checkPlayerLaserCollision(Laser& laser){
-    if (!laser.isActive()) return false;
-
-    for (int row = 0; row < numRows; ++row){
-        for (int col = 0; col < numCols; ++col){
-            if (!aliens[row][col].isActive()) continue;
-
-            if (CheckCollisionRecs(laser.getRect(), getAlienRect(row, col))){
-                aliens[row][col].deActivate();
-                laser.deActivate();
-                return true;                // one laser can only hit one alien
-            }
-        }
-    }
-    return false;
+    // checking for collision with spaceship's lasers
+    auto aliensDefeated = checkSpaceShipLasersCollision(spaceShipLasers);
+    score += (aliensDefeated * scoreBoost);
 }
 
 vector<Laser>& Aliens::getLasers(){
     return lasers;
 }
-
 int  Aliens::getWaveNum()      { return waveNum; }
-bool Aliens::areAllDestroyed() { return isSwarmDestroyed(); }

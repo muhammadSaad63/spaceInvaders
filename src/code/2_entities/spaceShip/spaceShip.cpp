@@ -5,7 +5,7 @@ using std::cout;
 
 // internal, helper methods
 void SpaceShip::loadShip(const string& fileName){
-    spaceShip = LoadTexture(TextFormat("../assets/graphics/player/spaceShips/%s", fileName.c_str()));
+    spaceShip = LoadTexture(TextFormat("src/assets/graphics/player/spaceShips/%s", fileName.c_str()));
     
     // returns true if the texture is loaded into memory; alternatively coudlve used "if (spaceShip.id)"
     cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(spaceShip)? ") has" : ") has NOT") << " loaded properly.\n";

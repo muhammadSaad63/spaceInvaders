@@ -1,12 +1,11 @@
 # Local Files
 GEMINI.md
 TODO.md
-programData.db
+*.db
 *.zip
 
 # CMake & Build Files
 build/
-CMakeFiles/
 
 # Compiled Binaries
 spaceInvaders
