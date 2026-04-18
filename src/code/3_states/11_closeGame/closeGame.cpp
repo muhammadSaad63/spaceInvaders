@@ -1,18 +1,11 @@
 #include "closeGame.hpp"
 
 
-class CloseGame : public State{
-    private:
-        //
+CloseGame::CloseGame(GameState& gameState) : State(gameState) {}
 
-    public:
-        CloseGame(GameState& gameState) : State(gameState) {}
+void CloseGame::draw(){
 
-        // not working
-        void draw(){
-            //
-        }
-        void update(){
-            //
-        }
-};
+}
+void CloseGame::update(){
+
+}
