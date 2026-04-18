@@ -391,7 +391,7 @@ void Aliens::loadNextWave(){
     activateSwarm();
     centerSwarm();
 
-    alienLasers.clear();
+    lasers.clear();
     shootTimer    = 0.0f;
     shootInterval = 2.0f;
 }
@@ -444,7 +444,7 @@ void Aliens::shootALaser(){
                  + (row * rowSpacing)
                  + (aliens[row][col].getTextureHeight() * textureScale);                                    // add full height of texture
 
-    alienLasers.push_back(Laser{ static_cast<int>(laserX), static_cast<int>(laserY) });
+    lasers.push_back(Laser{ static_cast<int>(laserX), static_cast<int>(laserY) });
 }
 
 
@@ -468,7 +468,7 @@ void Aliens::draw(){
     }
 
     // Draw alien lasers
-    for (auto& laser : alienLasers){
+    for (auto& laser : lasers){
         if (laser.isActive()){
             laser.draw();
         }
@@ -476,40 +476,41 @@ void Aliens::draw(){
 }
 
 void Aliens::update(){
-    // Wave cleared → start the next one immediately
     if (isSwarmDestroyed()){
         loadNextWave();
+
         return;
     }
 
-    // --- Swarm movement ---
-    // Check edges BEFORE moving so we never overshoot
+    // move aliens' swarm
     if (hittingLeftEdge() || hittingRightEdge()){
-        swarmDirection  *= -1;
-        swarmPosition.y += static_cast<float>(rowSpacing) / 3.0f;
+        swarmDirection  *= -1;                                                  // reversing direc
+        swarmPosition.y += static_cast<float>(rowSpacing) / 3.0f;               // moving down when hit edge
     }
     swarmPosition.x += currSpeed * swarmDirection;
 
-    // --- Alien laser firing ---
-    shoot();
+    // fire a laser if can
+    shootALaser();
 
-    // --- Update alien lasers ---
-    for (auto it = alienLasers.begin(); it != alienLasers.end();){
+    // updating active lasers
+    for (auto it = lasers.begin(); it != lasers.end();){                  // using it as iterator
         if (it->isActive()){
             it->update(ALIEN);
             ++it;
-        } else {
-            it = alienLasers.erase(it);
+        } 
+        else{
+            it = lasers.erase(it);                                     // removing inactive lasers
         }
     }
 }
 
-Rectangle Aliens::getAlienRect(int row, int col) const{
-    Vector2 pos{
+Rectangle Aliens::getAlienRect(int row, int col){
+    Vector2 position{
         swarmPosition.x + (col * alienSpacing),
         swarmPosition.y + (row * rowSpacing)
     };
-    return aliens[row][col].getRect(pos, scale);
+
+    return aliens[row][col].getRect(position, textureScale);
 }
 
 bool Aliens::checkPlayerLaserCollision(Laser& laser){
@@ -529,9 +530,9 @@ bool Aliens::checkPlayerLaserCollision(Laser& laser){
     return false;
 }
 
-vector<Laser>& Aliens::getAlienLasers(){
-    return alienLasers;
+vector<Laser>& Aliens::getLasers(){
+    return lasers;
 }
 
-int  Aliens::getWaveNum()   const { return waveNum; }
-bool Aliens::allDestroyed() const { return isSwarmDestroyed(); }
+int  Aliens::getWaveNum()      { return waveNum; }
+bool Aliens::areAllDestroyed() { return isSwarmDestroyed(); }
