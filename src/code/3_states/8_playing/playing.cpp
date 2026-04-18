@@ -1,46 +1,30 @@
 #include "playing.hpp"
 
 
-class Playing : public State{
-    private:
-        SpaceShip      spaceShip; 
-        Aliens         aliens;
-        MotherShip     motherShip;
+Playing::Playing(GameState& gameState, Settings& settings) 
+: State(gameState)
+, spaceShip("1.png")
+, score(0) 
+, enemiesDefeated(0)
+, movementMode(settings.getMovementMode())
+, spaceShipLasers(spaceShip.getLasers())
+, aliensLasers(aliens.getLasers())
+{}
 
-        int            score;
-        int            enemiesDefeated;
-        InputMode&     movementMode;        // for storing reference of playerInputMode from settings
-        vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
+void Playing::draw(){
+    spaceShip.draw();
+    aliens.draw();
+    motherShip.draw();
+    // obstacles.draw();
+}
+void Playing::update(){
+    if (IsKeyPressed(KEY_P)){
+        gameState = PAUSED;
+    }
 
-    public:
-        Playing(GameState& gameState, Settings& settings) 
-        : State(gameState)
-        , spaceShip("1.png")
-        , score(0) 
-        , movementMode(settings.getMovementMode())
-        , lasers(spaceShip.getLasers())
-        {}
+    spaceShip.update(movementMode, aliensLasers);
+    aliens.update(spaceShipLasers, score);
+    motherShip.update(spaceShipLasers, score);
+    // obstacles.update();
 
-        void init(){
-
-        }
-        void draw(){
-            spaceShip.draw();
-            // aliens.draw();
-            motherShip.draw();
-            // obstacles.draw();
-        }
-        void update(){
-            spaceShip.update(movementMode);
-            // aliens.update();
-            motherShip.update(lasers, score);
-            // obstacles.update();
-
-            if (IsKeyPressed(KEY_P)){
-                gameState = PAUSED;
-            }
-            if (WindowShouldClose()){
-                gameState = CLOSEGAME;
-            }
-        }
-};
+}

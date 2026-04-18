@@ -9,13 +9,8 @@ class CloseGame : public State{
         //
 
     public:
-        CloseGame(GameState& gameState) : State(gameState) {}
+        CloseGame(GameState& gameState);
 
-        // not working
-        void draw(){
-            //
-        }
-        void update(){
-            //
-        }
+        void draw();
+        void update();
 };

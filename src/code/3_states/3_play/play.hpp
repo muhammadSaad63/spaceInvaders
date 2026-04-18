@@ -9,12 +9,8 @@ class Play : public State{
         //
 
     public:
-        Play(GameState& gameState) : State(gameState) {}
+        Play(GameState& gameState);
 
-        void draw(){
-
-        }
-        void update(){
-
-        }
+        void draw();
+        void update();
 };

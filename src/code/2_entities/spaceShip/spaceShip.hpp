@@ -29,6 +29,7 @@ class SpaceShip{
         ~SpaceShip();
 
         void draw();
+        void update(InputMode inputMode);                                        // overloading update; one for main, other for playing
         void update(InputMode inputMode, vector<Laser>& aliensLaser);
 
         void reset();

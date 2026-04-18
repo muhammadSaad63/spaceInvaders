@@ -1,17 +1,11 @@
 #include "play.hpp"
 
 
-class Play : public State{
-    private:
-        //
+Play::Play(GameState& gameState) : State(gameState) {}
 
-    public:
-        Play(GameState& gameState) : State(gameState) {}
+void Play::draw(){
 
-        void draw(){
+}
+void Play::update(){
 
-        }
-        void update(){
-
-        }
-};
+}

@@ -1,52 +1,50 @@
-#pragma once
-
 #include <raylib.h>
 #include "settings.hpp"
 using std::string;
 
 
 // internal, helper functions
-int Settings::getPosY(const auto& index){
-    return (initPosY + ((index - 1) * offset) + ((enableFullScreen && index == 2)? 63 : 0));
+int Settings::getPosY(const int& index){
+    return (initPosY + ((index - 1) * offSet) + ((enableFullScreen && index == 2)? 63 : 0));
 }
 
 // draw helpers
-void Settings::drawHeader(const auto& index){
+void Settings::drawHeader(const int& index){
     posY = getPosY(index);
 
     DrawText("Settings", posX, posY, 53, GOLD);
 }
-void Settings::drawFullScreen(const auto& index){
+void Settings::drawFullScreen(const int& index){
     posY = getPosY(index);
 
     DrawText(texts[0].c_str(), posX, posY, textSize, color);
     DrawText(TextFormat("%s", (enableFullScreen)? "Enabled" : "Disabled"), posX + MeasureText(texts[0].c_str(), textSize) + 100, posY, textSize, (enableFullScreen)? GREEN : RED);
 }
-void Settings::drawGrid(const auto& index){
+void Settings::drawGrid(const int& index){
     posY = getPosY(index);
 
     DrawText(texts[1].c_str(), posX, posY, textSize, color);
     DrawText(TextFormat("%s", (enableGrid)? "Enabled" : "Disabled"), posX + MeasureText(texts[1].c_str(), textSize) + 100, posY, textSize, (enableGrid)? GREEN : RED);
 }
-void Settings::drawFrameRate(const auto& index){
+void Settings::drawFrameRate(const int& index){
     posY = getPosY(index);
 
     DrawText(texts[2].c_str(), posX, posY, textSize, color);
     DrawText(TextFormat("%d", frameRate), posX + MeasureText(texts[2].c_str(), textSize) + 100, posY, textSize, (frameRate == 23)? RED : (frameRate == 40)? ORANGE : (frameRate == 63)? YELLOW : GREEN);
 }
-void Settings::drawWindowOpacity(const auto& index){
+void Settings::drawWindowOpacity(const int& index){
     posY = getPosY(index);
 
     DrawText(texts[3].c_str(), posX, posY, textSize, color);
     DrawText(TextFormat("%.1f", windowOpacity), posX + MeasureText(texts[3].c_str(), textSize) + offSet, posY, textSize, (windowOpacity <= 0.4)? RED : (windowOpacity <= 0.7)? YELLOW : GREEN);
 }
-void Settings::drawMasterVolume(const auto& index){
+void Settings::drawMasterVolume(const int& index){
     posY = getPosY(index);
 
     DrawText(texts[4].c_str(), posX, posY, textSize, color);
     DrawText(TextFormat("%.0f%%", masterVolume * 100), posX + MeasureText(texts[4].c_str(), textSize) + offSet, posY, textSize, (masterVolume <= 0.4)? RED : (masterVolume <= 0.7)? YELLOW : GREEN);
 }
-void Settings::drawInputMode(const auto& index){
+void Settings::drawInputMode(const int& index){
     posY = getPosY(index);
 
     DrawText(texts[5].c_str(), posX, posY, textSize, color);
@@ -55,7 +53,7 @@ void Settings::drawInputMode(const auto& index){
 }
 
 // update helpers
-void Settings::updateFullScreen(const auto& index){
+void Settings::updateFullScreen(const int& index){
     posY = getPosY(index);
 
     if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[0].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
@@ -73,7 +71,7 @@ void Settings::updateFullScreen(const auto& index){
         PlaySound(settingModifySFX);
     }
 }
-void Settings::updateGrid(const auto& index){
+void Settings::updateGrid(const int& index){
     posY = getPosY(index);
 
     if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[1].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
@@ -82,7 +80,7 @@ void Settings::updateGrid(const auto& index){
         PlaySound(settingModifySFX);
     }
 }
-void Settings::updateFrameRate(const auto& index){
+void Settings::updateFrameRate(const int& index){
     posY = getPosY(index);
 
     if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[2].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("123", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 123 is the max width of poss values
@@ -103,7 +101,7 @@ void Settings::updateFrameRate(const auto& index){
         PlaySound(settingModifySFX);
     }
 }
-void Settings::updateWindowOpacity(const auto& index){
+void Settings::updateWindowOpacity(const int& index){
     posY = getPosY(index);
 
     if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[3].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("0.1", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 0.1 is the max width of poss values
@@ -117,7 +115,7 @@ void Settings::updateWindowOpacity(const auto& index){
         PlaySound(settingModifySFX);
     }
 }
-void Settings::updateMasterVolume(const auto& index){
+void Settings::updateMasterVolume(const int& index){
     posY = getPosY(index);
 
     if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[4].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("100%", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // 100% is the max width of poss values
@@ -131,7 +129,7 @@ void Settings::updateMasterVolume(const auto& index){
         PlaySound(settingModifySFX);             // to test modified vol
     }
 }
-void Settings::updateInputMode(const auto& index){
+void Settings::updateInputMode(const int& index){
     posY = getPosY(index);
 
     if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[5].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Mouse Wheel", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))          // "Mouse Wheel" is the max width of poss values

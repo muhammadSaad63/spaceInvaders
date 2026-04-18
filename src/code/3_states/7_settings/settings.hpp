@@ -30,24 +30,24 @@ class Settings : public State{
         Sound settingModifySFX;
 
         // internal, helper functions
-        int getPosY(const auto& index);
+        int getPosY(const int& index);
 
         // draw helpers
-        void drawHeader(const auto& index);
-        void drawFullScreen(const auto& index);
-        void drawGrid(const auto& index);
-        void drawFrameRate(const auto& index);
-        void drawWindowOpacity(const auto& index);
-        void drawMasterVolume(const auto& index);
-        void drawInputMode(const auto& index);
+        void drawHeader(const int& index);
+        void drawFullScreen(const int& index);
+        void drawGrid(const int& index);
+        void drawFrameRate(const int& index);
+        void drawWindowOpacity(const int& index);
+        void drawMasterVolume(const int& index);
+        void drawInputMode(const int& index);
 
         // update helpers
-        void updateFullScreen(const auto& index);
-        void updateGrid(const auto& index);
-        void updateFrameRate(const auto& index);
-        void updateWindowOpacity(const auto& index);
-        void updateMasterVolume(const auto& index);
-        void updateInputMode(const auto& index);
+        void updateFullScreen(const int& index);
+        void updateGrid(const int& index);
+        void updateFrameRate(const int& index);
+        void updateWindowOpacity(const int& index);
+        void updateMasterVolume(const int& index);
+        void updateInputMode(const int& index);
 
     public:
         Settings(GameState& gameState);

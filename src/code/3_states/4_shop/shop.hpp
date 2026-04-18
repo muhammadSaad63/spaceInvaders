@@ -6,19 +6,11 @@
 
 class Shop : public State{
     private:
-        // DataBase& dataBase;
-        // GameData& gameData;
+        //
 
     public:
-        Shop(GameState& gameState) 
-        : State(gameState)
-        // , dataBase(dataBase)
-        {}
+        Shop(GameState& gameState);
 
-        void draw(){
-
-        }
-        void update(){
-
-        }
+        void draw();
+        void update();
 };

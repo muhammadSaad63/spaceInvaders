@@ -1,21 +1,11 @@
 #include "history.hpp"
 
 
-class History : public State{
-    private:
-        // DataBase& dataBase;
-        // GameData& gameData;
+History::History(GameState& gameState) : State(gameState) {}
 
-    public:
-        History(GameState& gameState) 
-        : State(gameState)
-        // , dataBase(dataBase)
-        {}
+void History::draw(){
 
-        void draw(){
+}
+void History::update(){
 
-        }
-        void update(){
-
-        }
-};
+}

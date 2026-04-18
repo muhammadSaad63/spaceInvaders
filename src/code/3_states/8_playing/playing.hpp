@@ -14,46 +14,19 @@
 
 class Playing : public State{
     private:
-        SpaceShip      spaceShip; 
-        Aliens         aliens;
-        MotherShip     motherShip;
+        SpaceShip      spaceShip;                    // composition of spaceship
+        Aliens         aliens;                       // composition of aliens (swarm of alien)
+        MotherShip     motherShip;                   // composition of mothership
 
-        int            score;
-        int            enemiesDefeated;
-        InputMode&     movementMode;        // for storing reference of playerInputMode from settings
+        int            score;                        // score reached in the game session
+        int            enemiesDefeated;              // total number of enemies defeated
+        InputMode&     movementMode;                 // for storing reference of playerInputMode from settings
         vector<Laser>& spaceShipLasers;              // for storing reference of lasers from spaceShip
-        vector<Laser>& aliensLasers;
+        vector<Laser>& aliensLasers;                 // reference of laser vector from aliens
 
     public:
-        Playing(GameState& gameState, Settings& settings) 
-        : State(gameState)
-        , spaceShip("1.png")
-        , score(0) 
-        , movementMode(settings.getMovementMode())
-        , spaceShipLasers(spaceShip.getLasers())
-        , aliensLasers(aliens.getLasers())
-        {}
+        Playing(GameState& gameState, Settings& settings);
 
-        void init(){
-
-        }
-        void draw(){
-            spaceShip.draw();
-            aliens.draw();
-            motherShip.draw();
-            // obstacles.draw();
-        }
-        void update(){
-            spaceShip.update(movementMode, aliensLasers);
-            aliens.update(spaceShipLasers, score);
-            motherShip.update(spaceShipLasers, score);
-            // obstacles.update();
-
-            if (IsKeyPressed(KEY_P)){
-                gameState = PAUSED;
-            }
-            // if (WindowShouldClose()){
-            //     gameState = CLOSEGAME;
-            // }
-        }
+        void draw();
+        void update();
 };

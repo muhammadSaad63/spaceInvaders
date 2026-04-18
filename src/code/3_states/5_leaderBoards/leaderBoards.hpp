@@ -6,19 +6,11 @@
 
 class LeaderBoards : public State{
     private:
-        // DataBase& dataBase;
-        // GameData& gameData;
+        //
 
     public:
-        LeaderBoards(GameState& gameState) 
-        : State(gameState)
-        // , dataBase(dataBase)
-        {}
+        LeaderBoards(GameState& gameState);
 
-        void draw(){
-
-        }
-        void update(){
-
-        }
+        void draw();
+        void update();
 };

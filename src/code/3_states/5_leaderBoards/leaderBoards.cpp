@@ -1,21 +1,11 @@
 #include "leaderBoards.hpp"
 
 
-class LeaderBoards : public State{
-    private:
-        // DataBase& dataBase;
-        // GameData& gameData;
+LeaderBoards::LeaderBoards(GameState& gameState) : State(gameState) {}
 
-    public:
-        LeaderBoards(GameState& gameState) 
-        : State(gameState)
-        // , dataBase(dataBase)
-        {}
+void LeaderBoards::draw(){
 
-        void draw(){
+}
+void LeaderBoards::update(){
 
-        }
-        void update(){
-
-        }
-};
+}
