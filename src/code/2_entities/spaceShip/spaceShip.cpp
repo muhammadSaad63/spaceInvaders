@@ -80,6 +80,33 @@ void SpaceShip::draw(){
         }
     }
 }
+void SpaceShip::update(InputMode inputMode){
+    int screenWidth = GetScreenWidth();
+
+    // moving ship
+    switch (inputMode)
+    {
+        case WASD:   { moveWASD(screenWidth);  break; }
+        case ARROW:  { moveArrow(screenWidth); break; }
+        case MOUSE:  { moveMouse(screenWidth); break; }
+    }
+
+    // firing lasers
+    if (IsKeyPressed(KEY_SPACE)){
+        lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
+    }
+
+    // updating lasers
+    for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
+        if (it->isActive()){                                          // updating laser if they active
+            it->update(USER);
+            ++it;
+        }
+        else{                                                         // removing laser if they inactive
+            it = lasers.erase(it);                                    // erase returns iterator to next element
+        }
+    }
+}
 void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLaser){
     int screenWidth = GetScreenWidth();
 
