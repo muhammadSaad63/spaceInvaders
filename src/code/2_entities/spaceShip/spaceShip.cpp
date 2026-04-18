@@ -80,7 +80,7 @@ void SpaceShip::draw(){
         }
     }
 }
-void SpaceShip::update(InputMode inputMode){
+void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLaser){
     int screenWidth = GetScreenWidth();
 
     // moving ship
