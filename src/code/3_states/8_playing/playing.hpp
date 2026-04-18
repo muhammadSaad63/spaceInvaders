@@ -21,7 +21,8 @@ class Playing : public State{
         int            score;
         int            enemiesDefeated;
         InputMode&     movementMode;        // for storing reference of playerInputMode from settings
-        vector<Laser>& lasers;              // for storing reference of lasers from spaceShip
+        vector<Laser>& spaceShipLasers;              // for storing reference of lasers from spaceShip
+        vector<Laser>& aliensLasers;
 
     public:
         Playing(GameState& gameState, Settings& settings) 
@@ -29,7 +30,8 @@ class Playing : public State{
         , spaceShip("1.png")
         , score(0) 
         , movementMode(settings.getMovementMode())
-        , lasers(spaceShip.getLasers())
+        , spaceShipLasers(spaceShip.getLasers())
+        , aliensLasers(aliens.getLasers())
         {}
 
         void init(){
@@ -37,21 +39,21 @@ class Playing : public State{
         }
         void draw(){
             spaceShip.draw();
-            // aliens.draw();
+            aliens.draw();
             motherShip.draw();
             // obstacles.draw();
         }
         void update(){
-            spaceShip.update(movementMode);
-            // aliens.update();
-            motherShip.update(lasers, score);
+            spaceShip.update(movementMode, aliensLasers);
+            aliens.update(spaceShipLasers, score);
+            motherShip.update(spaceShipLasers, score);
             // obstacles.update();
 
             if (IsKeyPressed(KEY_P)){
                 gameState = PAUSED;
             }
-            if (WindowShouldClose()){
-                gameState = CLOSEGAME;
-            }
+            // if (WindowShouldClose()){
+            //     gameState = CLOSEGAME;
+            // }
         }
 };
