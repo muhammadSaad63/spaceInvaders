@@ -6,19 +6,11 @@
 
 class History : public State{
     private:
-        // DataBase& dataBase;
-        // GameData& gameData;
+        //
 
     public:
-        History(GameState& gameState) 
-        : State(gameState)
-        // , dataBase(dataBase)
-        {}
+        History(GameState& gameState);
 
-        void draw(){
-
-        }
-        void update(){
-
-        }
+        void draw();
+        void update();
 };
