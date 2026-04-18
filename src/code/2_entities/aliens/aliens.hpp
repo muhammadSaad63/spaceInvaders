@@ -3,10 +3,9 @@
 
 #include <array>
 #include <vector>
-#include <string>
 #include <raylib.h>
 #include "../lasers/lasers.hpp"
-using std::array, std::string, std::vector;
+using std::array, std::vector;
 
 
 class Alien{
@@ -33,7 +32,7 @@ class Aliens{
     private:
         int                                   waveNum        { 0 };                                                 // the current wave num
     
-        // swarm (the collection of aliens) info
+        // swarm formation
         const static int                      numRows        { 3 };                                                 // the total num of rows of aliens in the swarm; dunno y but it wasnt working witout static;
         const static int                      numCols        { 5 };                                                 // the num of aliens in each row of the swarm
         array<array<Alien, numCols>, numRows> aliens;                                                               // a 2d static array of Alien(s)
@@ -60,17 +59,17 @@ class Aliens{
         float                                 shootInterval  { 2.0f };                                              // the time interval/duration bw each consecutive laser firing
 
         // internal, helper methods
-        bool  hittingLeftEdge();
-        bool  hittingRightEdge();
+        bool  hittingLeftEdge();                                                                                    // returns true if the left end of the swarm is hitting the left edge of the screen
+        bool  hittingRightEdge();                                                                                   // returns true if the right end of the swarm is hitting the right edge of the screen                                                                  
 
-        void  centerSwarm();
-        float calcSwarmSpeed();
-        void  activateSwarm();
-        bool  isSwarmDestroyed();
-        void  loadNextWave();
+        void  centerSwarm();                                                                                        // positions the swarm at the centre of the window (for the start of each wave)
+        float calcSwarmSpeed();                                                                                     // calculates and returns the swarmSpeed for the current waveNum
+        void  activateSwarm();                                                                                      // sets all the aliens in the swarm to active
+        void  loadNextWave();                                                                                       // makes use of the above 3 helper methods to bring about the next wave
+        bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
 
-        bool  getRandomActiveAlien(int& outRow, int& outCol);
-        void  shootALaser();
+        bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
+        void  shootALaser();                                                                                        // shoots a laser from an active alien in the swarm
 
     public:
         Aliens();
@@ -78,15 +77,14 @@ class Aliens{
         void draw();
         void update();
 
-        
         // collision: call from Playing — deactivates the alien, returns true on hit
         bool checkPlayerLaserCollision(Laser& laser);
         
         // returns alien lasers so Playing can check vs player
-        vector<Laser>& getAlienLasers();
+        vector<Laser>& getLasers();                                                                                 // getter for the lasers vector
         
-        int  getWaveNum();
-        bool allDestroyed();
+        int  getWaveNum();                                                                                          // getter for waveNum
+        bool areAllDestroyed();                                                                                     // wrapper for isSwarmDestroyed()
 
         // returns the world-space rect for alien at [row][col]
         Rectangle getAlienRect(int row, int col);
