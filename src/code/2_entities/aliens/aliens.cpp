@@ -51,6 +51,13 @@ bool Aliens::hittingRightEdge(){
     return ((swarmPosition.x + swarmWidth) >= (GetScreenWidth() - edgePadding));
 }
 
+void Aliens::loadAliens(const string &fileName){
+    for (auto& row : aliens){
+        for (auto& alien : row){
+            alien.loadAlien(fileName);
+        }
+    }
+}
 void Aliens::centerSwarm(){
     swarmPosition.x = static_cast<float>((GetScreenWidth() - swarmWidth) / 2);
     swarmPosition.y = 63.0f;
@@ -78,10 +85,14 @@ bool Aliens::isSwarmDestroyed(){
 }
 void Aliens::loadNextWave(){
     waveNum++;
-    currSpeed = calcSwarmSpeed();
+    
+    if (waveNum == 1){
+        loadAliens("1.png");
+    }
 
     activateSwarm();
     centerSwarm();
+    currSpeed = calcSwarmSpeed();
 
     lasers.clear();
     shootTimer    = 0.0f;
