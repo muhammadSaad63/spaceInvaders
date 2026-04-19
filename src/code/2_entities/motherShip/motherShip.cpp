@@ -70,7 +70,7 @@ MotherShip::MotherShip()
 , position({0.0f, 23})
 , scale(0.15f)
 , randomSpawnPause(30)                                          // 30s
-, speed(1.5f)
+, speed(1.25f)
 , spawnFromLeft(true)
 {}
 MotherShip::~MotherShip(){
