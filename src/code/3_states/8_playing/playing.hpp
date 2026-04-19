@@ -22,9 +22,16 @@ class Playing : public State{
         vector<Laser>& aliensLasers;                        // reference of laser vector from aliens
         vector<Laser>& spaceShipLasers;                     // for storing reference of lasers from spaceShip
         
+        int&           waveNum;
         int            gameScore            {0};            // score reached in the game session
         int            enemiesDefeated      {0};            // total number of enemies defeated
         int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
+
+        void drawScore();
+        void drawWaveNum();
+        void drawSeperators();
+        void drawLivesRemaining();
+        void drawUI();
 
     public:
         Playing(GameState& gameState, Settings& settings);

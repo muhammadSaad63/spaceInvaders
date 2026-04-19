@@ -35,7 +35,7 @@ void Game::playEndCredits(){
 
 // constructor
 Game::Game()                        // overRiding default constructor 
-: gameState(MENU)                   // initializing gameState with MENU
+: gameState(PLAYING)                   // initializing gameState with MENU
 , settings(gameState)               // constructed first & before menu since the later requires it
 , menu(gameState, settings)
 , play(gameState)

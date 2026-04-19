@@ -91,7 +91,7 @@ SpaceShip::SpaceShip(const string& fileName){
     loadShip(fileName);
 
     textureScale = 0.1f;
-    bottomOffset = 23;
+    bottomOffset = 35;
 
     position.x = (GetScreenWidth() / 2 - (texture.width  * textureScale) / 2);
     position.y = (GetScreenHeight()    - (texture.height * textureScale) - bottomOffset); 
@@ -161,4 +161,7 @@ void SpaceShip::reset(){
 }
 vector<Laser>& SpaceShip::getLasers(){
     return lasers;
+}
+Texture& SpaceShip::getTexture(){
+    return texture;
 }

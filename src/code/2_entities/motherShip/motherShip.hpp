@@ -19,6 +19,7 @@ class MotherShip{
         bool    currentlySpawned;
         double  randomSpawnPause;   // duration after which to spawn the mothership
         bool    spawnFromLeft;      // will be randomly decided;
+        int     edgePadding;
 
         int     hits;
         int     maxPossibleHits;
