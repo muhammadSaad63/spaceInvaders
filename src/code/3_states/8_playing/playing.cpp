@@ -1,6 +1,9 @@
 #include "playing.hpp"
 
 
+void Playing::drawCountdown(){
+    
+}
 void Playing::drawScore(){
     auto color = ((gameScore < 2000)? RED : (gameScore < 5000)? YELLOW : GREEN);
 
@@ -36,6 +39,10 @@ void Playing::drawUI(){
     drawWaveNum();
     drawSeperators();
     drawLivesRemaining();
+}
+
+void Playing::updateCountdown(){
+
 }
 float Playing::getAlpha(){
     float alpha {};
@@ -87,25 +94,36 @@ Playing::Playing(GameState &gameState, Settings &settings)
 {}
 
 void Playing::draw(){
+    if (playingCountdown){
+        drawCountdown();
+        return;
+    }
+
+    if (announcingWave){
+        announceWave();
+        return;
+    }
+
     drawUI();
 
     spaceShip.draw();
     aliens.draw();
     motherShip.draw();
     // obstacles.draw();
-
-    if (announcingWave){
-        announceWave();
-    }
 }
 void Playing::update(){
     if (!playerLivesRemaining){
         gameState = GAMEOVER;
         return;
     }
-
+    
     if (IsKeyPressed(KEY_P)){
         gameState = PAUSED;
+        return;
+    }
+
+    if (playingCountdown){
+        updateCountdown();
         return;
     }
 

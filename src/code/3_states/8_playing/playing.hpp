@@ -21,22 +21,34 @@ class Playing : public State{
         InputMode&     movementMode;                        // for storing reference of playerInputMode from settings
         vector<Laser>& aliensLasers;                        // reference of laser vector from aliens
         vector<Laser>& spaceShipLasers;                     // for storing reference of lasers from spaceShip
-        
+
+        bool           playingCountdown       {true};
+        float          elapsedCountdownTime   {0.0f};
+        float          totalCountdownDuration {3.0f};
+
+        bool           announcingWave          {true};
+        float          announcmentDuration     {3.0f};         // 3 sec        
+        float          elapsedAnnouncementTime {0.0f};
+
+        // implement starting countdown, laser particle effects, alien proper edge bounce logic, gameOver logic, lasers should not pass thru menuButtons even when one is selected
+
         int&           waveNum;
         int            currWave;
         int            gameScore            {0};            // score reached in the game session
         int            enemiesDefeated      {0};            // total number of enemies defeated
         int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
 
-        bool           announcingWave       {true};
-        float          announcmentTimer     {0.0f};
-        float          announcmentDuration  {3.0f};         // 3 sec        
 
+        // draw helpers
+        void  drawCountdown();
         void  drawScore();
         void  drawWaveNum();
         void  drawSeperators();
         void  drawLivesRemaining();
         void  drawUI();
+
+        // update helpers
+        void  updateCountdown();
         float getAlpha();
         void  announceWave();
         void  updateWaveAnnouncement();
