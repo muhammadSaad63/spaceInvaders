@@ -52,6 +52,37 @@ void SpaceShip::moveMouse(const int screenWidth){
         { posX = screenWidth - (spaceShip.width * scale); }
     }
 }
+void SpaceShip::updateLasers(){
+    for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
+        if (it->isActive()){                                          // updating laser if they active
+            it->update(USER);
+            ++it;
+        }
+        else{                                                         // removing laser if they inactive
+            it = lasers.erase(it);                                    // erase returns iterator to next element
+        }
+    }
+}
+Rectangle SpaceShip::getSpaceShipRect(){
+    return Rectangle{
+        posX,
+        posY,
+        (spaceShip.width  * scale),
+        (spaceShip.height * scale)
+    };
+}
+void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int& playerLivesRemaining){
+    for (auto& laser : aliensLasers){
+        if (CheckCollisionRecs(getSpaceShipRect(), laser.getRect())){
+            laser.deActivate();
+            playerLivesRemaining--;
+
+            if (!playerLivesRemaining){                 // ie all lives lost (reached 0)
+                return;
+            }
+        }
+    }
+}
 
 // constructor & destructor
 SpaceShip::SpaceShip(const string& fileName){
@@ -97,17 +128,9 @@ void SpaceShip::update(InputMode inputMode){
     }
 
     // updating lasers
-    for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
-        if (it->isActive()){                                          // updating laser if they active
-            it->update(USER);
-            ++it;
-        }
-        else{                                                         // removing laser if they inactive
-            it = lasers.erase(it);                                    // erase returns iterator to next element
-        }
-    }
+    updateLasers();
 }
-void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLaser){
+void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLasers, int& playerLivesRemaining){
     int screenWidth = GetScreenWidth();
 
     // moving ship
@@ -124,15 +147,10 @@ void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLaser){
     }
 
     // updating lasers
-    for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
-        if (it->isActive()){                                          // updating laser if they active
-            it->update(USER);
-            ++it;
-        }
-        else{                                                         // removing laser if they inactive
-            it = lasers.erase(it);                                    // erase returns iterator to next element
-        }
-    }
+    updateLasers();
+
+    // checking for collisions with enemy/alien lasers
+    checkCollisionWithAliensLasers(aliensLasers, playerLivesRemaining);
 }
 
 void SpaceShip::reset(){

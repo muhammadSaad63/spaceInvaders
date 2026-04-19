@@ -19,10 +19,13 @@ class SpaceShip{
 
         vector<Laser>  lasers;
 
-        void loadShip(const string& fileName);
-        void moveWASD(const int screenWidth);
-        void moveArrow(const int screenWidth);
-        void moveMouse(const int screenWidth);
+        void      loadShip(const string& fileName);
+        void      moveWASD(const int screenWidth);
+        void      moveArrow(const int screenWidth);
+        void      moveMouse(const int screenWidth);
+        void      updateLasers();
+        Rectangle getSpaceShipRect();
+        void      checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int& playerLivesRemaining);
 
     public:
         SpaceShip(const string& fileName);
@@ -30,7 +33,7 @@ class SpaceShip{
 
         void draw();
         void update(InputMode inputMode);                                        // overloading update; one for main, other for playing
-        void update(InputMode inputMode, vector<Laser>& aliensLaser);
+        void update(InputMode inputMode, vector<Laser>& aliensLasers, int& playerLivesRemaining);
 
         void reset();
         vector<Laser>& getLasers();
