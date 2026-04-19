@@ -153,7 +153,7 @@ void Aliens::shootALaser(){
 }
 void Aliens::updateLasers(){
     for (auto it = lasers.begin(); it != lasers.end();){                  // using it as iterator
-        if (it->isActive()){
+        if (it->isAlive()){
             it->update(ALIEN);
             ++it;
         } 
@@ -222,7 +222,7 @@ void Aliens::draw(){
 
     // Draw alien lasers
     for (auto& laser : lasers){
-        if (laser.isActive()){
+        if (laser.isAlive()){
             laser.draw();
         }
     }

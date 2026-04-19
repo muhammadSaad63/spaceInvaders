@@ -24,7 +24,7 @@ void MenuIcons::draw(){
         DrawText(icon.text.c_str(), textX, textY, icon.textSize, WHITE);
         
         if (selected && (icon.gameState == selectedState)) 
-        DrawRectangleRoundedLinesEx(icon.rect, 0.1f, 10, 5, WHITE);
+        DrawRectangleRoundedLinesEx(icon.rect, 0.1f, 10, 5, RAYWHITE);
     }
 }
 GameState MenuIcons::update(SpaceShip& spaceShip){
@@ -33,37 +33,37 @@ GameState MenuIcons::update(SpaceShip& spaceShip){
     // if an icon was previously successfuly selected
     if (selected){
         if ((selectedTime + selectedDelay) <= GetTime()){
-            lasers.clear();
             spaceShip.reset();
             selected = false;
 
             return selectedState;
         }
     }
-    else{        
-        // checking for any successful selections/collisions
-        for (auto& icon : icons){
-            for (auto& laser : lasers){
-                if (CheckCollisionRecs(icon.rect, laser.getRect())){
-                    laser.deActivate();
-                    
-                    selected = true;
-                    selectedTime = GetTime();
-                    selectedState = icon.gameState;
 
-                    return MENU;
+    // checking for any successful selections/collisions
+    for (auto& icon : icons){
+        for (auto& laser : lasers){
+            if (CheckCollisionRecs(icon.rect, laser.getRect())){
+                laser.deActivate();
+                
+                if (!selected){
+                    selected      = true;
+                    selectedTime  = GetTime();
+                    selectedState = icon.gameState;
                 }
             }
         }
     }
+
     return MENU;
 }
 
 Menu::Menu(GameState& gameState, Settings& settings) 
-        : State(gameState)
-        , spaceShip("1.png")
-        , movementMode(settings.getMovementMode())
-        {}
+    : State(gameState)
+    , spaceShip("1.png")
+    , movementMode(settings.getMovementMode())
+    {}
+
 void Menu::draw(){
     spaceShip.draw();
     icons.draw();

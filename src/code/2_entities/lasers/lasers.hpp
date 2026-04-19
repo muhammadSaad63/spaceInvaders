@@ -12,12 +12,17 @@ class Laser{
         float width;
         float height;
 
-        int   speed;
-        bool  active;
+        int     speed;
+        bool    active;
+
+        bool  exploding;
+        float explosionDuration;
+        float explosionStartTime;
 
         // helper functions
         void updatePlayerLaser();
         void updateAlienLaser();
+        void drawExplosion();
 
     public:
         Laser(const int posX, const int posY);
@@ -26,6 +31,7 @@ class Laser{
         void draw();
 
         Rectangle getRect();
+        bool      isAlive();
         bool      isActive();
         void      deActivate();
 };

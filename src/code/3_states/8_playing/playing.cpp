@@ -1,6 +1,19 @@
 #include "playing.hpp"
+#include <cmath>
+using std::ceilf;
 
 
+void Playing::drawCountdown(){
+    auto  secondProgress = fmodf(elapsedCountdownTime, 1.0f);                        // how much of the corr second has passed
+    auto  displayNum     = static_cast<int>( ceilf(totalCountdownDuration - elapsedCountdownTime) );
+    auto  fontSize       = static_cast<int>( 350 - (150.0f * secondProgress) );             // font size shrinks as each seconds passes and then maximizes
+    auto  alpha          = static_cast<float>(  1.0f - (secondProgress * 0.35f) );         // 1.0 → 0.65
+    Color baseColor      = ((displayNum == 3)? RED : (displayNum == 2)? YELLOW : GREEN);
+    auto  text           = TextFormat("%d", displayNum);
+
+
+    DrawText(text, (GetScreenWidth()/2 - MeasureText(text, fontSize)/2), (GetScreenHeight()/2 - fontSize/2), fontSize, ColorAlpha(baseColor, alpha));
+}
 void Playing::drawScore(){
     auto color = ((gameScore < 2000)? RED : (gameScore < 5000)? YELLOW : GREEN);
 
@@ -19,7 +32,7 @@ void Playing::drawSeperators(){
 }
 void Playing::drawLivesRemaining(){
     auto& texture  = spaceShip.getTexture();
-    auto iconScale = 0.035;
+    auto iconScale = 0.035f;
     auto padding   = 13;
 
     Vector2 position;
@@ -37,6 +50,15 @@ void Playing::drawUI(){
     drawSeperators();
     drawLivesRemaining();
 }
+
+void Playing::updateCountdown(){
+    elapsedCountdownTime += GetFrameTime();
+
+    if (elapsedCountdownTime >= totalCountdownDuration){
+        playingCountdown = false;
+        return;
+    }
+}
 float Playing::getAlpha(){
     float alpha {};
 
@@ -47,11 +69,11 @@ float Playing::getAlpha(){
         return 1.0f;                                          // 1.0f
     }
     else{                                                     // 2.0f < elapsedAnnouncementTime <= 3.0f
-        return (announcmentDuration - elapsedAnnouncementTime);      // 1.0f -> 0.0f
+        return (totalAnnouncementDuration - elapsedAnnouncementTime);      // 1.0f -> 0.0f
     }
 }
 void Playing::announceWave(){
-        string waveText = TextFormat("WAVE  %0d", waveNum);
+        string waveText = TextFormat("WAVE  %02d", waveNum);
         auto   fontSize = 90;
         auto   posX     = (GetScreenWidth() /2 - MeasureText(waveText.c_str(), fontSize)/2);
         auto   posY     = (GetScreenHeight()/2 - fontSize/2);
@@ -64,7 +86,7 @@ void Playing::announceWave(){
 void Playing::updateWaveAnnouncement(){
     elapsedAnnouncementTime += GetFrameTime();
 
-    if (elapsedAnnouncementTime >= announcmentDuration){
+    if (elapsedAnnouncementTime >= totalAnnouncementDuration){
         announcingWave   = false;
         elapsedAnnouncementTime = 0.0f;
     }
@@ -87,25 +109,36 @@ Playing::Playing(GameState &gameState, Settings &settings)
 {}
 
 void Playing::draw(){
-    drawUI();
+    if (playingCountdown){
+        drawCountdown();
+        return;
+    }
+
+    drawUI();                   // move this below the announcingWave block below if u no wanna make the ui visible while waveAnnouncments
+
+    if (announcingWave){
+        announceWave();
+        return;
+    }
 
     spaceShip.draw();
     aliens.draw();
     motherShip.draw();
     // obstacles.draw();
-
-    if (announcingWave){
-        announceWave();
-    }
 }
 void Playing::update(){
     if (!playerLivesRemaining){
         gameState = GAMEOVER;
         return;
     }
-
+    
     if (IsKeyPressed(KEY_P)){
         gameState = PAUSED;
+        return;
+    }
+
+    if (playingCountdown){
+        updateCountdown();
         return;
     }
 
@@ -122,4 +155,19 @@ void Playing::update(){
     aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
+}
+
+void Playing::reset(){
+    gameScore               = { 0 };
+    enemiesDefeated         = { 0 };
+    playerLivesRemaining    = { 3 };
+
+    playingCountdown        = { true };
+    elapsedCountdownTime    = { 0.0f };
+    announcingWave          = { true };
+    elapsedAnnouncementTime = { 0.0f };
+
+    spaceShip.reset();
+    // motherShip.reset();
+    // aliens.reset();
 }
