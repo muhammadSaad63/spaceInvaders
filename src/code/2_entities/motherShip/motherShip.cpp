@@ -44,7 +44,7 @@ void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, in
                 gameScore += scoreBoost;
                 enemiesDefeated++;
 
-                cout << "[Game] motherShip Destructed\n";
+                cout << "[Captain Saad] The MotherShip has been blown to smithereens! :D\n";
                 // playsound
 
                 return;
@@ -102,7 +102,7 @@ void MotherShip::update(vector<Laser>& spaceShipLasers, int& gameScore, int& ene
         if (reachedEdge()){            
             despawnMotherShip();
 
-            cout << "[Game] Despawning motherShip (time over)\n";
+            cout << "[Captain Saad] The MotherShip has warped into the cosmos :(\n";
             // playsound...
 
             return;
@@ -120,7 +120,7 @@ void MotherShip::update(vector<Laser>& spaceShipLasers, int& gameScore, int& ene
         if (GetTime() >= (lastSpawned + randomSpawnPause)){
             spawnMotherShip();
             
-            cout << "[Game] Spawning motherShip\n";
+            cout << "[Captain Saad] An alien motherShip has warped into our space! :O\n";
             // playsound...
         }
     }

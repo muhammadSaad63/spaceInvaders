@@ -8,7 +8,7 @@ void SpaceShip::loadShip(const string& fileName){
     texture = LoadTexture(TextFormat("src/assets/graphics/player/spaceShips/%s", fileName.c_str()));
     
     // returns true if the texture is loaded into memory; alternatively coudlve used "if (texture.id)"
-    cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(texture)? ") has" : ") has NOT") << " loaded properly.\n";
+    cout << "[Captain Saad] SpaceShip texture (" << fileName << (IsTextureValid(texture)? ") has" : ") has NOT") << " loaded properly.\n";
 }
 void SpaceShip::moveWASD(const int screenWidth){
     if (IsKeyDown(KEY_A)){
@@ -76,6 +76,7 @@ void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int&
         if (CheckCollisionRecs(getSpaceShipRect(), laser.getRect())){
             laser.deActivate();
             playerLivesRemaining--;
+            cout << "[Captain Saad] We lost a life! Only " << playerLivesRemaining << " remaining. :(\n"; 
 
             if (!playerLivesRemaining){                 // ie all lives lost (reached 0)
                 return;

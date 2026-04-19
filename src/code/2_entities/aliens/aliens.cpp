@@ -1,6 +1,7 @@
 #include <utility>
+#include <iostream>
 #include "aliens.hpp"
-using std::pair;
+using std::cout, std::pair;
 
 
 Alien::Alien() 
@@ -81,6 +82,7 @@ bool Aliens::isSwarmDestroyed(){
         }
     }
 
+    cout << "[Captain Saad] Wave Cleared Successfully :D\n";
     return true;
 }
 void Aliens::loadNextWave(){
