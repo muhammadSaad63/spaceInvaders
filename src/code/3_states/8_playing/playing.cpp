@@ -40,14 +40,14 @@ void Playing::drawUI(){
 float Playing::getAlpha(){
     float alpha {};
 
-    if (announcmentTimer <= 1.0f){                            // fade in at start
-        return announcmentTimer;                              // 0.0f -> 1.0f
+    if (elapsedAnnouncementTime <= 1.0f){                            // fade in at start
+        return elapsedAnnouncementTime;                              // 0.0f -> 1.0f
     }
-    else if (announcmentTimer <= 2.0f){                       // remain at max alpha lvl for 1s
+    else if (elapsedAnnouncementTime <= 2.0f){                       // remain at max alpha lvl for 1s
         return 1.0f;                                          // 1.0f
     }
-    else{                                                     // 2.0f < announcmentTimer <= 3.0f
-        return (announcmentDuration - announcmentTimer);      // 1.0f -> 0.0f
+    else{                                                     // 2.0f < elapsedAnnouncementTime <= 3.0f
+        return (announcmentDuration - elapsedAnnouncementTime);      // 1.0f -> 0.0f
     }
 }
 void Playing::announceWave(){
@@ -62,11 +62,11 @@ void Playing::announceWave(){
         DrawText(waveText.c_str(), posX, posY, fontSize, color);
 }
 void Playing::updateWaveAnnouncement(){
-    announcmentTimer += GetFrameTime();
+    elapsedAnnouncementTime += GetFrameTime();
 
-    if (announcmentTimer >= announcmentDuration){
+    if (elapsedAnnouncementTime >= announcmentDuration){
         announcingWave   = false;
-        announcmentTimer = 0.0f;
+        elapsedAnnouncementTime = 0.0f;
     }
 }
 void Playing::startWaveAnnouncement(){
