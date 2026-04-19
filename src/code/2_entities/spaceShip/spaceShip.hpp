@@ -10,12 +10,11 @@ using std::string, std::vector;
 
 class SpaceShip{
     private:
-        Texture        spaceShip;
-        float          posX;
-        float          posY;
-        float          scale;              // the scale by which to shrink the spaceShip texture; default 0.1f
+        Texture        texture;
+        Vector2        position;
+        float          textureScale;       // the scale by which to shrink the spaceShip texture; default 0.1f
         int            bottomOffset;       // the value by which to offset/raise the ship from the bottom of the screen; default 50
-        float          speed;
+        float          horizontalSpeed;
 
         vector<Laser>  lasers;
 

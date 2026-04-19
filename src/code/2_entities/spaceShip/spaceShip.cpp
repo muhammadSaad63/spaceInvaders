@@ -5,51 +5,51 @@ using std::cout;
 
 // internal, helper methods
 void SpaceShip::loadShip(const string& fileName){
-    spaceShip = LoadTexture(TextFormat("src/assets/graphics/player/spaceShips/%s", fileName.c_str()));
+    texture = LoadTexture(TextFormat("src/assets/graphics/player/spaceShips/%s", fileName.c_str()));
     
-    // returns true if the texture is loaded into memory; alternatively coudlve used "if (spaceShip.id)"
-    cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(spaceShip)? ") has" : ") has NOT") << " loaded properly.\n";
+    // returns true if the texture is loaded into memory; alternatively coudlve used "if (texture.id)"
+    cout << "[GAME] SpaceShip texture (" << fileName << (IsTextureValid(texture)? ") has" : ") has NOT") << " loaded properly.\n";
 }
 void SpaceShip::moveWASD(const int screenWidth){
     if (IsKeyDown(KEY_A)){
-        posX -= speed;
+        position.x -= horizontalSpeed;
 
-        if (posX <= 0)
-        {  posX = 0; }
+        if (position.x <= 0)
+        {  position.x = 0; }
     }
     if (IsKeyDown(KEY_D)){
-        posX += speed;
+        position.x += horizontalSpeed;
 
-        if ((posX + (spaceShip.width * scale)) >= screenWidth)
-        { posX = screenWidth - (spaceShip.width * scale); }
+        if ((position.x + (texture.width * textureScale)) >= screenWidth)
+        { position.x = screenWidth - (texture.width * textureScale); }
     }
 }
 void SpaceShip::moveArrow(const int screenWidth){
     if (IsKeyDown(KEY_LEFT)){
-        posX -= speed;
+        position.x -= horizontalSpeed;
 
-        if (posX <= 0)
-        { posX = 0;  }
+        if (position.x <= 0)
+        { position.x = 0;  }
     }
     if (IsKeyDown(KEY_RIGHT)){
-        posX += speed;
+        position.x += horizontalSpeed;
 
-        if ((posX + (spaceShip.width * scale)) >= screenWidth)
-        { posX = screenWidth - (spaceShip.width * scale); }
+        if ((position.x + (texture.width * textureScale)) >= screenWidth)
+        { position.x = screenWidth - (texture.width * textureScale); }
     }
 }
 void SpaceShip::moveMouse(const int screenWidth){
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-        posX -= speed;
+        position.x -= horizontalSpeed;
 
-        if (posX <= 0)
-        { posX = 0; }
+        if (position.x <= 0)
+        { position.x = 0; }
     }
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-        posX += speed;
+        position.x += horizontalSpeed;
 
-        if ((posX + (spaceShip.width * scale)) >= screenWidth)
-        { posX = screenWidth - (spaceShip.width * scale); }
+        if ((position.x + (texture.width * textureScale)) >= screenWidth)
+        { position.x = screenWidth - (texture.width * textureScale); }
     }
 }
 void SpaceShip::updateLasers(){
@@ -65,10 +65,10 @@ void SpaceShip::updateLasers(){
 }
 Rectangle SpaceShip::getSpaceShipRect(){
     return Rectangle{
-        posX,
-        posY,
-        (spaceShip.width  * scale),
-        (spaceShip.height * scale)
+        position.x,
+        position.y,
+        (texture.width  * textureScale),
+        (texture.height * textureScale)
     };
 }
 void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int& playerLivesRemaining){
@@ -88,22 +88,22 @@ void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int&
 SpaceShip::SpaceShip(const string& fileName){
     loadShip(fileName);
 
-    scale = 0.1f;
+    textureScale = 0.1f;
     bottomOffset = 50;
 
-    posX = (GetScreenWidth() / 2 - (spaceShip.width  * scale) / 2);
-    posY = (GetScreenHeight()    - (spaceShip.height * scale) - bottomOffset); 
+    position.x = (GetScreenWidth() / 2 - (texture.width  * textureScale) / 2);
+    position.y = (GetScreenHeight()    - (texture.height * textureScale) - bottomOffset); 
 
-    speed = 5;
+    horizontalSpeed = 5;
 }
 SpaceShip::~SpaceShip(){
-    UnloadTexture(spaceShip);
+    UnloadTexture(texture);
 }
 
 // exposed methods
 void SpaceShip::draw(){
-    // DrawTexture(spaceShip, posX, posY, WHITE);                                     // doesnt allow scaling
-    DrawTextureEx(spaceShip, Vector2{(float) posX, (float) posY}, 0.0f, scale, WHITE);
+    // DrawTexture(texture, position.x, position.y, WHITE);                                     // doesnt allow scaling
+    DrawTextureEx(texture, Vector2{(float) position.x, (float) position.y}, 0.0f, textureScale, WHITE);
 
     for (auto &laser : lasers){
         if (laser.isActive()){
@@ -124,7 +124,7 @@ void SpaceShip::update(InputMode inputMode){
 
     // firing lasers
     if (IsKeyPressed(KEY_SPACE)){
-        lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
+        lasers.push_back(Laser{(int) (position.x + (texture.width * textureScale)/2), (int) position.y});
     }
 
     // updating lasers
@@ -143,7 +143,7 @@ void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLasers, int& pl
 
     // firing lasers
     if (IsKeyPressed(KEY_SPACE)){
-        lasers.push_back(Laser{(int) (posX + (spaceShip.width * scale)/2), (int) posY});
+        lasers.push_back(Laser{(int) (position.x + (texture.width * textureScale)/2), (int) position.y});
     }
 
     // updating lasers
@@ -154,8 +154,8 @@ void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLasers, int& pl
 }
 
 void SpaceShip::reset(){
-    posX = (GetScreenWidth() / 2 - (spaceShip.width  * scale) / 2);
-    posY = (GetScreenHeight()    - (spaceShip.height * scale) - bottomOffset); 
+    position.x = (GetScreenWidth() / 2 - (texture.width  * textureScale) / 2);
+    position.y = (GetScreenHeight()    - (texture.height * textureScale) - bottomOffset); 
 }
 vector<Laser>& SpaceShip::getLasers(){
     return lasers;
