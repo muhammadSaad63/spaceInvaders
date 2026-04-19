@@ -62,7 +62,7 @@ void Aliens::loadAliens(const string &fileName){
 }
 void Aliens::centerSwarm(){
     swarmPosition.x = static_cast<float>((GetScreenWidth() - swarmWidth) / 2);
-    swarmPosition.y = 63.0f;
+    swarmPosition.y = 123.0f;
 }
 float Aliens::calcSwarmSpeed(){
     return (baseSpeed + ((waveNum - 1) * acceleration));
@@ -231,9 +231,9 @@ void Aliens::draw(){
 void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefeated)
 {
     if (isSwarmDestroyed()){
+        cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "Alien Swarm #" << waveNum << " was successfully vanquished :D" << ANSI_RESET << "\n";
         loadNextWave();
 
-        cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "Alien Swarm #" << waveNum << " was successfully vanquished :D" << ANSI_RESET << "\n";
         return;
     }
 
@@ -259,4 +259,4 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
 vector<Laser>& Aliens::getLasers(){
     return lasers;
 }
-int  Aliens::getWaveNum()      { return waveNum; }
+int&  Aliens::getWaveNum()      { return waveNum; }

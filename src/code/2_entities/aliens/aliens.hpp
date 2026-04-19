@@ -43,14 +43,14 @@ class Aliens{
         // drawing constants
         int                                   alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
         int                                   rowSpacing     { 51   };                                              // vertical gap between each row in the swarm
-        int                                   edgePadding    { 63   };                                              // the horizontal padding on each side of the screen
+        int                                   edgePadding    { 23   };                                              // the horizontal padding on each side of the screen
         float                                 textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
         
         // swarm info
         Vector2                               swarmPosition  { 0, 0 };                                              // a tuple containing the (x, y) coor of the top-left point of the swarm
         int                                   swarmDirection { 1    };                                              // unit vector represeting direction of speed: 1 right, -1 left
         const int                             swarmWidth     { (alienSpacing * (numCols - 1)) + (alienSpacing) };   // the total width/length of the swarm
-        const int                             scoreBoost     { 50   };                                              // the increment in the session's score upon defeating a alien
+        const int                             scoreBoost     { 10   };                                              // the increment in the session's score upon defeating a alien
 
         // swarm speed
         const float                           baseSpeed      { 0.5f      };                                         // ie the min poss speed of each alien
@@ -87,6 +87,6 @@ class Aliens{
         void draw();
         void update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefeated);
 
-        int            getWaveNum();                                                                                // getter for waveNum
+        int&           getWaveNum();                                                                                // getter for waveNum
         vector<Laser>& getLasers();                                                                                 // getter for the lasers vector
 };
