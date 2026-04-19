@@ -59,10 +59,11 @@ GameState MenuIcons::update(SpaceShip& spaceShip){
 }
 
 Menu::Menu(GameState& gameState, Settings& settings) 
-        : State(gameState)
-        , spaceShip("1.png")
-        , movementMode(settings.getMovementMode())
-        {}
+    : State(gameState)
+    , spaceShip("1.png")
+    , movementMode(settings.getMovementMode())
+    {}
+
 void Menu::draw(){
     spaceShip.draw();
     icons.draw();
