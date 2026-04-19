@@ -78,8 +78,8 @@ MotherShip::MotherShip()
 , maxPossibleHits(9)                                            // max number of hits to defeat/destruct the motherShip
 , scoreBoost(1000)                                              // 1000 extra points on destruction
 , motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
-, position({0.0f, 90})
-, scale(0.125f)
+, position({0, 85})
+, scale(0.13f)
 , randomSpawnPause(30)                                          // 30s
 , speed(1.25f)
 , spawnFromLeft(true)

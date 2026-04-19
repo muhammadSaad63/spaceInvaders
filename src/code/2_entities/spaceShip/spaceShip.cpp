@@ -158,6 +158,8 @@ void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLasers, int& pl
 void SpaceShip::reset(){
     position.x = (GetScreenWidth() / 2 - (texture.width  * textureScale) / 2);
     position.y = (GetScreenHeight()    - (texture.height * textureScale) - bottomOffset); 
+
+    lasers.clear();
 }
 vector<Laser>& SpaceShip::getLasers(){
     return lasers;

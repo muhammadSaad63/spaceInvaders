@@ -23,15 +23,24 @@ class Playing : public State{
         vector<Laser>& spaceShipLasers;                     // for storing reference of lasers from spaceShip
         
         int&           waveNum;
+        int            currWave;
         int            gameScore            {0};            // score reached in the game session
         int            enemiesDefeated      {0};            // total number of enemies defeated
         int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
 
-        void drawScore();
-        void drawWaveNum();
-        void drawSeperators();
-        void drawLivesRemaining();
-        void drawUI();
+        bool           announcingWave       {true};
+        float          announcmentTimer     {0.0f};
+        float          announcmentDuration  {3.0f};         // 3 sec        
+
+        void  drawScore();
+        void  drawWaveNum();
+        void  drawSeperators();
+        void  drawLivesRemaining();
+        void  drawUI();
+        float getAlpha();
+        void  announceWave();
+        void  updateWaveAnnouncement();
+        void  startWaveAnnouncement();
 
     public:
         Playing(GameState& gameState, Settings& settings);

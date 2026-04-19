@@ -37,12 +37,52 @@ void Playing::drawUI(){
     drawSeperators();
     drawLivesRemaining();
 }
-Playing::Playing(GameState& gameState, Settings& settings) 
+float Playing::getAlpha(){
+    float alpha {};
+
+    if (elapsedAnnouncementTime <= 1.0f){                            // fade in at start
+        return elapsedAnnouncementTime;                              // 0.0f -> 1.0f
+    }
+    else if (elapsedAnnouncementTime <= 2.0f){                       // remain at max alpha lvl for 1s
+        return 1.0f;                                          // 1.0f
+    }
+    else{                                                     // 2.0f < elapsedAnnouncementTime <= 3.0f
+        return (announcmentDuration - elapsedAnnouncementTime);      // 1.0f -> 0.0f
+    }
+}
+void Playing::announceWave(){
+        string waveText = TextFormat("WAVE  %0d", waveNum);
+        auto   fontSize = 90;
+        auto   posX     = (GetScreenWidth() /2 - MeasureText(waveText.c_str(), fontSize)/2);
+        auto   posY     = (GetScreenHeight()/2 - fontSize/2);
+
+        float alpha = getAlpha();
+        Color color = ColorAlpha(GOLD, alpha);
+
+        DrawText(waveText.c_str(), posX, posY, fontSize, color);
+}
+void Playing::updateWaveAnnouncement(){
+    elapsedAnnouncementTime += GetFrameTime();
+
+    if (elapsedAnnouncementTime >= announcmentDuration){
+        announcingWave   = false;
+        elapsedAnnouncementTime = 0.0f;
+    }
+}
+void Playing::startWaveAnnouncement(){
+    currWave       = waveNum;
+    announcingWave = true;
+
+    spaceShip.reset();
+}
+
+Playing::Playing(GameState &gameState, Settings &settings)
 : State(gameState)
-, spaceShip("1.png")
+, spaceShip("1.png") 
 , aliensLasers(aliens.getLasers())
 , spaceShipLasers(spaceShip.getLasers())
 , waveNum(aliens.getWaveNum())
+, currWave(waveNum)
 , movementMode(settings.getMovementMode())
 {}
 
@@ -53,18 +93,33 @@ void Playing::draw(){
     aliens.draw();
     motherShip.draw();
     // obstacles.draw();
+
+    if (announcingWave){
+        announceWave();
+    }
 }
 void Playing::update(){
+    if (!playerLivesRemaining){
+        gameState = GAMEOVER;
+        return;
+    }
+
     if (IsKeyPressed(KEY_P)){
         gameState = PAUSED;
+        return;
+    }
+
+    if (announcingWave){
+        updateWaveAnnouncement();
+        return;
+    }
+    else if (currWave != waveNum){
+        startWaveAnnouncement();
+        return;
     }
 
     spaceShip.update(movementMode, aliensLasers, playerLivesRemaining);
     aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
-
-    if (!playerLivesRemaining){
-        gameState = GAMEOVER;
-    }
 }
