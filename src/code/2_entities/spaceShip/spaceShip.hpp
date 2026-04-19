@@ -36,4 +36,5 @@ class SpaceShip{
 
         void reset();
         vector<Laser>& getLasers();
+        Texture&       getTexture();
 };

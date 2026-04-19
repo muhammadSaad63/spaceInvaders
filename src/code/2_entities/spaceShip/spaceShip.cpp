@@ -162,3 +162,6 @@ void SpaceShip::reset(){
 vector<Laser>& SpaceShip::getLasers(){
     return lasers;
 }
+Texture& SpaceShip::getTexture(){
+    return texture;
+}
