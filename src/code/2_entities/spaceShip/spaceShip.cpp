@@ -73,7 +73,7 @@ Rectangle SpaceShip::getSpaceShipRect(){
 }
 void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int& playerLivesRemaining){
     for (auto& laser : aliensLasers){
-        if (CheckCollisionRecs(getSpaceShipRect(), laser.getRect())){
+        if (laser.isActive() && CheckCollisionRecs(getSpaceShipRect(), laser.getRect())){
             laser.deActivate();
             playerLivesRemaining--;
             cout << "[Captain Saad] We lost a life! Only " << playerLivesRemaining << " remaining. :(\n"; 
