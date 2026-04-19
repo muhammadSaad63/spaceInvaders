@@ -24,7 +24,7 @@ void Playing::update(){
 
     spaceShip.update(movementMode, aliensLasers);
     aliens.update(spaceShipLasers, score, enemiesDefeated);
-    motherShip.update(spaceShipLasers, score);
+    motherShip.update(spaceShipLasers, score, enemiesDefeated);
     // obstacles.update();
 
 }

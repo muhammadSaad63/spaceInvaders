@@ -35,5 +35,5 @@ class MotherShip{
         ~MotherShip();
 
         void draw();
-        void update(vector<Laser>& lasers, int& score);
+        void update(vector<Laser>& lasers, int& score, int& enemiesDefeated);
 };
