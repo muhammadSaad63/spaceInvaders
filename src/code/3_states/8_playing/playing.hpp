@@ -59,4 +59,6 @@ class Playing : public State{
 
         void draw();
         void update();
+
+        void reset();
 };

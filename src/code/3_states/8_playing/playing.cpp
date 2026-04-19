@@ -156,3 +156,18 @@ void Playing::update(){
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
 }
+
+void Playing::reset(){
+    gameScore               = { 0 };
+    enemiesDefeated         = { 0 };
+    playerLivesRemaining    = { 3 };
+
+    playingCountdown        = { true };
+    elapsedCountdownTime    = { 0.0f };
+    announcingWave          = { true };
+    elapsedAnnouncementTime = { 0.0f };
+
+    spaceShip.reset();
+    // motherShip.reset();
+    // aliens.reset();
+}
