@@ -4,7 +4,7 @@
 
 // helper functions
 void Game::setFavicon(const string& fileName){
-    Image favicon = LoadImage(TextFormat("../../assets/graphics/ui/favicons/%s", fileName));
+    Image favicon = LoadImage(TextFormat("src/assets/graphics/ui/favicons/%s", fileName));
 
     if (favicon.data){
         SetWindowIcon(favicon);
@@ -15,7 +15,7 @@ void Game::playEndCredits(){
     double currTime     {GetTime()};
     double waitDuration {2.5};                  // in sec
     
-    Sound windowCloseSFX = LoadSound("../assets/sounds/sfx/windowClose.mp3");
+    Sound windowCloseSFX = LoadSound("src/assets/sounds/sfx/windowClose.mp3");
     PlaySound(windowCloseSFX);          // :D
     
     while ((currTime + waitDuration) >= GetTime()){

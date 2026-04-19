@@ -21,8 +21,8 @@ void Alien::draw(const Vector2& position, const float scale){
 }
 
 bool  Alien::isActive()         { return active;  }
-void  Alien::activate()         { if (!active) active = true;  }
-void  Alien::deActivate()       { if (active)  active = false; }
+void  Alien::activate()         { active = true;  }
+void  Alien::deActivate()       { active = false; }
 
 float Alien::getTextureWidth()  { return static_cast<float>(texture.width);  }
 float Alien::getTextureHeight() { return static_cast<float>(texture.height); }
