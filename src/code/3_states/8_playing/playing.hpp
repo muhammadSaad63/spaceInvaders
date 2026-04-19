@@ -24,7 +24,7 @@ class Playing : public State{
 
         bool           playingCountdown       {true};
         float          elapsedCountdownTime   {0.0f};
-        float          totalCountdownDuration {3.0f};
+        float          totalCountdownDuration {4.0f};           // 3, 2, 1; dunno y but 3.0f wasnt working
 
         bool           announcingWave          {true};
         float          announcmentDuration     {3.0f};         // 3 sec        
