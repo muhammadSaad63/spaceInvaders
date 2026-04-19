@@ -37,21 +37,43 @@ void Playing::drawUI(){
     drawSeperators();
     drawLivesRemaining();
 }
+float Playing::getAlpha(){
+    float alpha {};
+
+    if (announcmentTimer <= 1.0f){                            // fade in at start
+        return announcmentTimer;                              // 0.0f -> 1.0f
+    }
+    else if (announcmentTimer <= 2.0f){                       // remain at max alpha lvl for 1s
+        return 1.0f;                                          // 1.0f
+    }
+    else{                                                     // 2.0f < announcmentTimer <= 3.0f
+        return (announcmentDuration - announcmentTimer);      // 1.0f -> 0.0f
+    }
+}
 void Playing::announceWave(){
-        string waveText = TextFormat("WAVE  %d", waveNum);
-        int   fontSize = 90;
-        int   x = GetScreenWidth()  / 2 - MeasureText(waveText.c_str(), fontSize) / 2;
-        int   y = GetScreenHeight() / 2 - fontSize / 2;
+        string waveText = TextFormat("WAVE  %0d", waveNum);
+        auto   fontSize = 90;
+        auto   posX     = (GetScreenWidth() /2 - MeasureText(waveText.c_str(), fontSize)/2);
+        auto   posY     = (GetScreenHeight()/2 - fontSize/2);
 
-        // pulsing alpha based on remaining time (fades in from 0, stays, fades out)
-        float alpha = (announcmentTimer > 1.5f)
-                    ? (announcmentDuration - announcmentTimer) / 0.5f   // fade in  (2.0 → 1.5s)
-                    : (announcmentTimer / 1.5f);          // fade out (1.5 → 0s)
-        alpha = (alpha < 0.0f)? 0.0f : alpha;
-        if (alpha > 1.0f) alpha = 1.0f;
+        float alpha = getAlpha();
+        Color color = ColorAlpha(GOLD, alpha);
 
-        Color c = ColorAlpha(GOLD, alpha);
-        DrawText(waveText.c_str(), x, y, fontSize, c);
+        DrawText(waveText.c_str(), posX, posY, fontSize, color);
+}
+void Playing::updateWaveAnnouncement(){
+    announcmentTimer += GetFrameTime();
+
+    if (announcmentTimer >= announcmentDuration){
+        announcingWave   = false;
+        announcmentTimer = 0.0f;
+    }
+}
+void Playing::startWaveAnnouncement(){
+    currWave       = waveNum;
+    announcingWave = true;
+
+    spaceShip.reset();
 }
 
 Playing::Playing(GameState &gameState, Settings &settings)
@@ -88,21 +110,11 @@ void Playing::update(){
     }
 
     if (announcingWave){
-        announcmentTimer += GetFrameTime();
-
-        if (announcmentTimer >= announcmentDuration){
-            announcingWave   = false;
-            announcmentTimer = 0.0f;
-        }
-
+        updateWaveAnnouncement();
         return;
     }
     else if (currWave != waveNum){
-        currWave       = waveNum;
-        announcingWave = true;
-
-        spaceShip.reset();
-
+        startWaveAnnouncement();
         return;
     }
 
