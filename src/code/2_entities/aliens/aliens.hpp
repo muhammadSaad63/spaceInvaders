@@ -42,7 +42,7 @@ class Aliens{
 
         // drawing constants
         int                                   alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
-        int                                   rowSpacing     { 70   };                                              // vertical gap between each row in the swarm
+        int                                   rowSpacing     { 51   };                                              // vertical gap between each row in the swarm
         int                                   edgePadding    { 63   };                                              // the horizontal padding on each side of the screen
         float                                 textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
         
