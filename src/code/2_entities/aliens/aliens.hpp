@@ -37,7 +37,7 @@ class Aliens{
     
         // swarm formation
         const static int                      numRows        { 3 };                                                 // the total num of rows of aliens in the swarm; dunno y but it wasnt working witout static;
-        const static int                      numCols        { 5 };                                                 // the num of aliens in each row of the swarm
+        const static int                      numCols        { 7 };                                                 // the num of aliens in each row of the swarm
         array<array<Alien, numCols>, numRows> aliens;                                                               // a 2d static array of Alien(s)
 
         // drawing constants
@@ -55,7 +55,7 @@ class Aliens{
         // swarm speed
         const float                           baseSpeed      { 0.5f      };                                         // ie the min poss speed of each alien
         float                                 currSpeed      { baseSpeed };                                         // speed of each alien in the swarm in the current wave
-        const float                           acceleration   { 0.15f     };                                         // ie the speed increase of each alien per wave       
+        const float                           acceleration   { 0.25f     };                                         // ie the speed increase of each alien per wave       
         
         // lasers info
         vector<Laser>                         lasers         {      };                                              // a vector to store the index of active aliens in a row
