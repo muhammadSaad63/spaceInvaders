@@ -12,11 +12,10 @@ class MotherShip{
         Texture motherShip;
 
         Vector2 position;           // using instead of posX, posY
-        int     speed;              // speed by which to update position.x
+        float   speed;              // speed by which to update position.x
         float   scale;
 
         double  lastSpawned;
-        double  spawnDuration;
         bool    currentlySpawned;
         double  randomSpawnPause;   // duration after which to spawn the mothership
         bool    spawnFromLeft;      // will be randomly decided;
@@ -28,12 +27,13 @@ class MotherShip{
         Rectangle getMotherShipRect();
         void      spawnMotherShip();
         void      despawnMotherShip();
-        void      updateMotherShip();
+        void      checkForHits(vector<Laser> spaceShipLasers, int& gameScore, int& enemiesDefeated);
+        void      updateMotherShipPosition();
 
     public:
         MotherShip();
         ~MotherShip();
 
         void draw();
-        void update(vector<Laser>& lasers, int& score, int& enemiesDefeated);
+        void update(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated);
 };

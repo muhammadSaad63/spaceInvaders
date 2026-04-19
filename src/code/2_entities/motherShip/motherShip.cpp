@@ -22,7 +22,27 @@ void MotherShip::despawnMotherShip(){
     randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
     lastSpawned = GetTime();
 }
-void MotherShip::updateMotherShip(){
+void MotherShip::checkForHits(vector<Laser> spaceShipLasers, int& gameScore, int& enemiesDefeated){
+    for (auto& laser : spaceShipLasers){
+        if (laser.isActive() && CheckCollisionRecs(laser.getRect(), getMotherShipRect())){
+            laser.deActivate();
+            hits++;
+
+            if (hits >= maxPossibleHits){
+                despawnMotherShip();
+
+                gameScore += scoreBoost;
+                enemiesDefeated++;
+
+                cout << "[Game] motherShip Destructed\n";
+                // playsound
+
+                return;
+            }
+        }
+    }
+}
+void MotherShip::updateMotherShipPosition(){
     if (spawnFromLeft){
         position.x += speed;
 
@@ -42,7 +62,6 @@ void MotherShip::updateMotherShip(){
 // construcor & destructor
 MotherShip::MotherShip() 
 : lastSpawned(0)                                                // time when the ship last spawned; initialized with the 0/getTime()
-, spawnDuration(15)                                             // will appear for a duration of 15s
 , currentlySpawned(false)                                       // is the motherShip currently spawned            
 , hits(0)                                                       // number of hits currently sustained by the motherShip
 , maxPossibleHits(7)                                            // max number of hits to defeat/destruct the motherShip
@@ -51,7 +70,7 @@ MotherShip::MotherShip()
 , position({0.0f, 50})
 , scale(0.15f)
 , randomSpawnPause(30)                                          // 30s
-, speed(2)
+, speed(1.5f)
 , spawnFromLeft(true)
 {}
 MotherShip::~MotherShip(){
@@ -66,11 +85,11 @@ void MotherShip::draw(){
         DrawText(TextFormat("%d", maxPossibleHits - hits), position.x + (motherShip.width * scale)/2 - 5, position.y, 20 , GOLD);
     }
 }
-void MotherShip::update(vector<Laser>& lasers, int& score, int& enemiesDefeated){
+void MotherShip::update(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated){
     if (currentlySpawned)
     {
         // despawning if it has spawned for >= spawnDuration time
-        if (GetTime() >= (lastSpawned + spawnDuration)){            
+        if ((position.x + (motherShip.width * scale)) >= GetScreenWidth()){            
             despawnMotherShip();
 
             cout << "[Game] Despawning motherShip (time over)\n";
@@ -80,26 +99,10 @@ void MotherShip::update(vector<Laser>& lasers, int& score, int& enemiesDefeated)
         }
 
         // checking for hits
-        for (auto& laser : lasers){
-            if (laser.isActive() && CheckCollisionRecs(laser.getRect(), getMotherShipRect())){
-                laser.deActivate();
-                hits++;
-
-                if (hits >= maxPossibleHits){
-                    despawnMotherShip();
-
-                    score += scoreBoost;
-                    enemiesDefeated++;
-                    cout << "[Game] motherShip Destructed\n";
-                    // playsound
-
-                    return;
-                }
-            }
-        }
+        checkForHits(spaceShipLasers, gameScore, enemiesDefeated);
 
         // updating position
-        updateMotherShip();
+        updateMotherShipPosition();
     }
 
     else
