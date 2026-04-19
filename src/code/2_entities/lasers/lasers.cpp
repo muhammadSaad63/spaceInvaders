@@ -15,6 +15,15 @@ void Laser::updateAlienLaser(){
         deActivate();
     }
 }
+void Laser::drawExplosion(){
+    auto minRadius   = 1.0f;
+    auto maxRadius   = 5.0f;
+    auto scale       = ((GetTime() - explosionStartTime)/explosionDuration);          // 0.0f -> 1.0f
+    auto outerRadius = (minRadius + (maxRadius * scale)); 
+
+    DrawCircle((posX + width/2), posY, outerRadius, GOLD);                            // a larger, outer circle
+    DrawCircle((posX + width/2), posY, minRadius, RAYWHITE);                          // a small inner circle
+}
 
 // constructor
 Laser::Laser(const int posX, const int posY) 
@@ -45,15 +54,12 @@ void Laser::update(Player playerType){
 }
 void Laser::draw(){
     if (exploding){
-        DrawCircle((posX + width/2), posY, 10.0f, GOLD);          // a larger, outer circle
-        DrawCircle((posX + width/2), posY, 5.0f, RAYWHITE);            // a small inner circle
-
+        drawExplosion();
         return;
     }
 
     if (active){
         DrawRectangle(posX, posY, width, height, ORANGE);
-
         return;
     }
 }
@@ -71,6 +77,7 @@ bool Laser::isActive(){
 void Laser::deActivate(){
     active = false;
 
+    // remove below code to disable explosions
     if ((posY > 0) && ((posY + height) < GetScreenHeight())){              // laser will explode only if the laser did not reach the screen edge
         exploding          = true;
         explosionStartTime = GetTime();

@@ -22,6 +22,7 @@ class Laser{
         // helper functions
         void updatePlayerLaser();
         void updateAlienLaser();
+        void drawExplosion();
 
     public:
         Laser(const int posX, const int posY);
