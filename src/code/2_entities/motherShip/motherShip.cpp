@@ -68,7 +68,7 @@ MotherShip::MotherShip()
 , scoreBoost(1000)                                              // 1000 extra points on destruction
 , motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
 , position({0.0f, 23})
-, scale(0.15f)
+, scale(0.125f)
 , randomSpawnPause(30)                                          // 30s
 , speed(1.25f)
 , spawnFromLeft(true)
