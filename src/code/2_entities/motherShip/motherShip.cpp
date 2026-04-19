@@ -22,7 +22,7 @@ void MotherShip::despawnMotherShip(){
     randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
     lastSpawned = GetTime();
 }
-void MotherShip::checkForHits(vector<Laser> spaceShipLasers, int& gameScore, int& enemiesDefeated){
+void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated){
     for (auto& laser : spaceShipLasers){
         if (laser.isActive() && CheckCollisionRecs(laser.getRect(), getMotherShipRect())){
             laser.deActivate();
@@ -67,7 +67,7 @@ MotherShip::MotherShip()
 , maxPossibleHits(7)                                            // max number of hits to defeat/destruct the motherShip
 , scoreBoost(1000)                                              // 1000 extra points on destruction
 , motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
-, position({0.0f, 50})
+, position({0.0f, 23})
 , scale(0.15f)
 , randomSpawnPause(30)                                          // 30s
 , speed(1.5f)
@@ -88,7 +88,7 @@ void MotherShip::draw(){
 void MotherShip::update(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated){
     if (currentlySpawned)
     {
-        // despawning if it has spawned for >= spawnDuration time
+        // despawning if it has reached the edge
         if ((position.x + (motherShip.width * scale)) >= GetScreenWidth()){            
             despawnMotherShip();
 

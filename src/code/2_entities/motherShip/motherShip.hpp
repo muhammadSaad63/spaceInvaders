@@ -27,7 +27,7 @@ class MotherShip{
         Rectangle getMotherShipRect();
         void      spawnMotherShip();
         void      despawnMotherShip();
-        void      checkForHits(vector<Laser> spaceShipLasers, int& gameScore, int& enemiesDefeated);
+        void      checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated);
         void      updateMotherShipPosition();
 
     public:
