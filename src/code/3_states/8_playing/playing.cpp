@@ -37,12 +37,30 @@ void Playing::drawUI(){
     drawSeperators();
     drawLivesRemaining();
 }
-Playing::Playing(GameState& gameState, Settings& settings) 
+void Playing::announceWave(){
+        string waveText = TextFormat("WAVE  %d", waveNum);
+        int   fontSize = 90;
+        int   x = GetScreenWidth()  / 2 - MeasureText(waveText.c_str(), fontSize) / 2;
+        int   y = GetScreenHeight() / 2 - fontSize / 2;
+
+        // pulsing alpha based on remaining time (fades in from 0, stays, fades out)
+        float alpha = (announcmentTimer > 1.5f)
+                    ? (announcmentDuration - announcmentTimer) / 0.5f   // fade in  (2.0 → 1.5s)
+                    : (announcmentTimer / 1.5f);          // fade out (1.5 → 0s)
+        alpha = (alpha < 0.0f)? 0.0f : alpha;
+        if (alpha > 1.0f) alpha = 1.0f;
+
+        Color c = ColorAlpha(GOLD, alpha);
+        DrawText(waveText.c_str(), x, y, fontSize, c);
+}
+
+Playing::Playing(GameState &gameState, Settings &settings)
 : State(gameState)
-, spaceShip("1.png")
+, spaceShip("1.png") 
 , aliensLasers(aliens.getLasers())
 , spaceShipLasers(spaceShip.getLasers())
 , waveNum(aliens.getWaveNum())
+, currWave(waveNum)
 , movementMode(settings.getMovementMode())
 {}
 
@@ -53,18 +71,43 @@ void Playing::draw(){
     aliens.draw();
     motherShip.draw();
     // obstacles.draw();
+
+    if (announcingWave){
+        announceWave();
+    }
 }
 void Playing::update(){
+    if (!playerLivesRemaining){
+        gameState = GAMEOVER;
+        return;
+    }
+
     if (IsKeyPressed(KEY_P)){
         gameState = PAUSED;
+        return;
+    }
+
+    if (announcingWave){
+        announcmentTimer += GetFrameTime();
+
+        if (announcmentTimer >= announcmentDuration){
+            announcingWave   = false;
+            announcmentTimer = 0.0f;
+        }
+
+        return;
+    }
+    else if (currWave != waveNum){
+        currWave       = waveNum;
+        announcingWave = true;
+
+        spaceShip.reset();
+
+        return;
     }
 
     spaceShip.update(movementMode, aliensLasers, playerLivesRemaining);
     aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
-
-    if (!playerLivesRemaining){
-        gameState = GAMEOVER;
-    }
 }
