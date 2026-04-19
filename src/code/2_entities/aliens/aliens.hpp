@@ -82,7 +82,7 @@ class Aliens{
         Aliens();
 
         void draw();
-        void update(vector<Laser>& spaceShipLasers, int& score);
+        void update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefeated);
 
         int            getWaveNum();                                                                                // getter for waveNum
         vector<Laser>& getLasers();                                                                                 // getter for the lasers vector

@@ -66,7 +66,7 @@ void MotherShip::draw(){
         DrawText(TextFormat("%d", maxPossibleHits - hits), position.x + (motherShip.width * scale)/2 - 5, position.y, 20 , GOLD);
     }
 }
-void MotherShip::update(vector<Laser>& lasers, int& score){
+void MotherShip::update(vector<Laser>& lasers, int& score, int& enemiesDefeated){
     if (currentlySpawned)
     {
         // despawning if it has spawned for >= spawnDuration time
@@ -89,6 +89,7 @@ void MotherShip::update(vector<Laser>& lasers, int& score){
                     despawnMotherShip();
 
                     score += scoreBoost;
+                    enemiesDefeated++;
                     cout << "[Game] motherShip Destructed\n";
                     // playsound
 

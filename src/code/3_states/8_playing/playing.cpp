@@ -4,11 +4,9 @@
 Playing::Playing(GameState& gameState, Settings& settings) 
 : State(gameState)
 , spaceShip("1.png")
-, score(0) 
-, enemiesDefeated(0)
-, movementMode(settings.getMovementMode())
-, spaceShipLasers(spaceShip.getLasers())
 , aliensLasers(aliens.getLasers())
+, spaceShipLasers(spaceShip.getLasers())
+, movementMode(settings.getMovementMode())
 {}
 
 void Playing::draw(){
@@ -22,9 +20,8 @@ void Playing::update(){
         gameState = PAUSED;
     }
 
-    spaceShip.update(movementMode, aliensLasers);
-    aliens.update(spaceShipLasers, score);
-    motherShip.update(spaceShipLasers, score);
+    spaceShip.update(movementMode, aliensLasers, playerLivesRemaining);
+    aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
+    motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
-
 }
