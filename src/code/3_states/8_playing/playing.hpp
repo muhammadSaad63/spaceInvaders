@@ -24,13 +24,11 @@ class Playing : public State{
 
         bool           playingCountdown          {true};
         float          elapsedCountdownTime      {0.0f};
-        float          totalCountdownDuration    {4.0f};           // 3, 2, 1; dunno y but 3.0f wasnt working
+        float          totalCountdownDuration    {3.0f};    // 3, 2, 1;
 
         bool           announcingWave            {true};
         float          elapsedAnnouncementTime   {0.0f};
-        float          totalAnnouncementDuration {3.0f};         // 3 sec        
-
-        // implement starting countdown, laser particle effects, alien proper edge bounce logic, gameOver logic, lasers should not pass thru menuButtons even when one is selected
+        float          totalAnnouncementDuration {3.0f};    // 3 sec        
 
         int&           waveNum;
         int            currWave;
