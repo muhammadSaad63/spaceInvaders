@@ -193,7 +193,7 @@ int Aliens::checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers){
 
     for (auto& laser : spaceShipLasers){
         if (checkSpaceShipLaserCollision(laser)){
-            aliensDefeated++;;
+            aliensDefeated++;
         }
     }
 
