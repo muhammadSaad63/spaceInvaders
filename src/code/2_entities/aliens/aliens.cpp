@@ -24,8 +24,15 @@ bool  Alien::isActive()         { return active;  }
 void  Alien::activate()         { active = true;  }
 void  Alien::deActivate()       { active = false; }
 
-float Alien::getTextureWidth()  { return static_cast<float>(texture.width);  }
-float Alien::getTextureHeight() { return static_cast<float>(texture.height); }
+void Alien::loadAlien(const string& fileName){
+    texture = LoadTexture(TextFormat("src/assets/graphics/enemies/aliens/%s", fileName.c_str()));
+}
+float Alien::getTextureWidth(){ 
+    return static_cast<float>(texture.width);  
+}
+float Alien::getTextureHeight(){ 
+    return static_cast<float>(texture.height); 
+}
 Rectangle Alien::getRect(const Vector2& position, const float scale){
     return Rectangle{
         position.x,

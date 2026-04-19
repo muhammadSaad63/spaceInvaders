@@ -3,9 +3,10 @@
 
 #include <array>
 #include <vector>
+#include <string>
 #include <raylib.h>
 #include "../lasers/lasers.hpp"
-using std::array, std::vector;
+using std::array, std::string, std::vector;
 
 
 class Alien{
@@ -23,6 +24,7 @@ class Alien{
         void      activate();
         void      deActivate();
 
+        void      loadAlien(const string& fileName);
         float     getTextureWidth();
         float     getTextureHeight();
         Rectangle getRect(const Vector2& position, const float scale);
