@@ -24,4 +24,8 @@ void Playing::update(){
     aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
+
+    if (!playerLivesRemaining){
+        gameState = GAMEOVER;
+    }
 }
