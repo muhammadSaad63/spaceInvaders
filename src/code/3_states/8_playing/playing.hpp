@@ -22,13 +22,13 @@ class Playing : public State{
         vector<Laser>& aliensLasers;                        // reference of laser vector from aliens
         vector<Laser>& spaceShipLasers;                     // for storing reference of lasers from spaceShip
 
-        bool           playingCountdown       {true};
-        float          elapsedCountdownTime   {0.0f};
-        float          totalCountdownDuration {4.0f};           // 3, 2, 1; dunno y but 3.0f wasnt working
+        bool           playingCountdown          {true};
+        float          elapsedCountdownTime      {0.0f};
+        float          totalCountdownDuration    {4.0f};           // 3, 2, 1; dunno y but 3.0f wasnt working
 
-        bool           announcingWave          {true};
-        float          announcmentDuration     {3.0f};         // 3 sec        
-        float          elapsedAnnouncementTime {0.0f};
+        bool           announcingWave            {true};
+        float          elapsedAnnouncementTime   {0.0f};
+        float          totalAnnouncementDuration {3.0f};         // 3 sec        
 
         // implement starting countdown, laser particle effects, alien proper edge bounce logic, gameOver logic, lasers should not pass thru menuButtons even when one is selected
 

@@ -69,7 +69,7 @@ float Playing::getAlpha(){
         return 1.0f;                                          // 1.0f
     }
     else{                                                     // 2.0f < elapsedAnnouncementTime <= 3.0f
-        return (announcmentDuration - elapsedAnnouncementTime);      // 1.0f -> 0.0f
+        return (totalAnnouncementDuration - elapsedAnnouncementTime);      // 1.0f -> 0.0f
     }
 }
 void Playing::announceWave(){
@@ -86,7 +86,7 @@ void Playing::announceWave(){
 void Playing::updateWaveAnnouncement(){
     elapsedAnnouncementTime += GetFrameTime();
 
-    if (elapsedAnnouncementTime >= announcmentDuration){
+    if (elapsedAnnouncementTime >= totalAnnouncementDuration){
         announcingWave   = false;
         elapsedAnnouncementTime = 0.0f;
     }
