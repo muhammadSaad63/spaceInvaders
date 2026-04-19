@@ -32,12 +32,15 @@ class Playing : public State{
         float          announcmentTimer     {0.0f};
         float          announcmentDuration  {3.0f};         // 3 sec        
 
-        void drawScore();
-        void drawWaveNum();
-        void drawSeperators();
-        void drawLivesRemaining();
-        void drawUI();
-        void announceWave();
+        void  drawScore();
+        void  drawWaveNum();
+        void  drawSeperators();
+        void  drawLivesRemaining();
+        void  drawUI();
+        float getAlpha();
+        void  announceWave();
+        void  updateWaveAnnouncement();
+        void  startWaveAnnouncement();
 
     public:
         Playing(GameState& gameState, Settings& settings);
