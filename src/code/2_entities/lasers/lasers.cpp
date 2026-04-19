@@ -18,15 +18,25 @@ void Laser::updateAlienLaser(){
 
 // constructor
 Laser::Laser(const int posX, const int posY) 
-: posX(posX)
-, posY(posY)
-, width(5)
-, height(25)
-, speed(9)
-, active(true)
-{}
+    : posX(posX)
+    , posY(posY)
+    , width(5)
+    , height(25)
+    , speed(9)
+    , active(true)
+    , exploding(false)
+    , explosionDuration(0.5f)
+    {}
 
 void Laser::update(Player playerType){
+    if (exploding){
+        if ((GetTime() - explosionStartTime) >= explosionDuration){
+            exploding = false;
+        }
+
+        return;
+    }
+
     switch (playerType)
     {
         case USER:  { updatePlayerLaser(); break; }    
@@ -34,16 +44,35 @@ void Laser::update(Player playerType){
     }
 }
 void Laser::draw(){
-    DrawRectangle(posX, posY, width, height, ORANGE);
+    if (exploding){
+        DrawCircle((posX + width/2), posY, 10.0f, GOLD);          // a larger, outer circle
+        DrawCircle((posX + width/2), posY, 5.0f, RAYWHITE);            // a small inner circle
+
+        return;
+    }
+
+    if (active){
+        DrawRectangle(posX, posY, width, height, ORANGE);
+
+        return;
+    }
 }
 
 // utility functions
 Rectangle Laser::getRect(){
     return Rectangle{posX, posY, width, height};
 }
+bool Laser::isAlive(){
+    return (active || exploding);
+}
 bool Laser::isActive(){
-    return active;
+    return (active && !exploding);
 }
 void Laser::deActivate(){
     active = false;
+
+    if ((posY > 0) && ((posY + height) < GetScreenHeight())){              // laser will explode only if the laser did not reach the screen edge
+        exploding          = true;
+        explosionStartTime = GetTime();
+    }
 }

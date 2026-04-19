@@ -55,7 +55,7 @@ void SpaceShip::moveMouse(const int screenWidth){
 }
 void SpaceShip::updateLasers(){
     for (auto it = lasers.begin(); it != lasers.end();){              // it = iterator; its similar to ptrs
-        if (it->isActive()){                                          // updating laser if they active
+        if (it->isAlive()){                                          // updating laser if they active
             it->update(USER);
             ++it;
         }
@@ -108,7 +108,7 @@ void SpaceShip::draw(){
     DrawTextureEx(texture, Vector2{(float) position.x, (float) position.y}, 0.0f, textureScale, WHITE);
 
     for (auto &laser : lasers){
-        if (laser.isActive()){
+        if (laser.isAlive()){
             laser.draw(); 
         }
     }
