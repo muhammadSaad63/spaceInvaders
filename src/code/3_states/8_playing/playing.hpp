@@ -14,17 +14,17 @@
 
 class Playing : public State{
     private:
-        Aliens         aliens;                       // composition of aliens (swarm of alien)
-        SpaceShip      spaceShip;                    // composition of spaceship
-        MotherShip     motherShip;                   // composition of mothership
+        Aliens         aliens;                              // composition of aliens (swarm of alien)
+        SpaceShip      spaceShip;                           // composition of spaceship
+        MotherShip     motherShip;                          // composition of mothership
 
-        InputMode&     movementMode;                 // for storing reference of playerInputMode from settings
-        vector<Laser>& aliensLasers;                 // reference of laser vector from aliens
-        vector<Laser>& spaceShipLasers;              // for storing reference of lasers from spaceShip
+        InputMode&     movementMode;                        // for storing reference of playerInputMode from settings
+        vector<Laser>& aliensLasers;                        // reference of laser vector from aliens
+        vector<Laser>& spaceShipLasers;                     // for storing reference of lasers from spaceShip
         
-        int            gameScore       {0};          // score reached in the game session
-        int            enemiesDefeated {0};          // total number of enemies defeated
-        int            livesRemaining  {3};          // the number of player/spaceShip lives remaining
+        int            gameScore            {0};            // score reached in the game session
+        int            enemiesDefeated      {0};            // total number of enemies defeated
+        int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
 
     public:
         Playing(GameState& gameState, Settings& settings);
