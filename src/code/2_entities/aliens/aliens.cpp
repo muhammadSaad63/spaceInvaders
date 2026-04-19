@@ -1,6 +1,7 @@
 #include <utility>
 #include <iostream>
 #include "aliens.hpp"
+#include "../../1_core/macros/ansiColorCodes.hpp"
 using std::cout, std::pair;
 
 
@@ -82,7 +83,6 @@ bool Aliens::isSwarmDestroyed(){
         }
     }
 
-    cout << "[Captain Saad] Wave Cleared Successfully :D\n";
     return true;
 }
 void Aliens::loadNextWave(){
@@ -194,7 +194,7 @@ int Aliens::checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers){
 
     for (auto& laser : spaceShipLasers){
         if (checkSpaceShipLaserCollision(laser)){
-            aliensDefeated++;;
+            aliensDefeated++;
         }
     }
 
@@ -233,6 +233,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
     if (isSwarmDestroyed()){
         loadNextWave();
 
+        cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "Alien Swarm #" << waveNum << " was successfully vanquished :D" << ANSI_RESET << "\n";
         return;
     }
 
