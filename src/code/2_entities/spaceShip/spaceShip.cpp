@@ -77,7 +77,7 @@ void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int&
         if (laser.isActive() && CheckCollisionRecs(getSpaceShipRect(), laser.getRect())){
             laser.deActivate();
             playerLivesRemaining--;
-            cout << "[Captain Saad] We lost a life! Only " << playerLivesRemaining << " remaining. :(\n"; 
+            cout << "[Captain Saad] " << ANSI_BRIGHT_RED << "We lost a life! Only " << playerLivesRemaining << " remaining. :(" << ANSI_RESET << "\n"; 
 
             if (!playerLivesRemaining){                 // ie all lives lost (reached 0)
                 return;

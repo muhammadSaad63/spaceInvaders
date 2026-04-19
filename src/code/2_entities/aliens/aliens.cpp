@@ -233,7 +233,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
     if (isSwarmDestroyed()){
         loadNextWave();
 
-        cout << "[Captain Saad] Alien Swarm - " << waveNum << " was successfully vanquished :D\n";
+        cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "Alien Swarm #" << waveNum << " was successfully vanquished :D" << ANSI_RESET << "\n";
         return;
     }
 

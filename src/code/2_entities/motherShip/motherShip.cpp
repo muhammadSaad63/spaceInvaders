@@ -45,7 +45,7 @@ void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, in
                 gameScore += scoreBoost;
                 enemiesDefeated++;
 
-                cout << "[Captain Saad] The MotherShip has been blown to smithereens! :D\n";
+                cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "The MotherShip has been blown to smithereens! :D" << ANSI_RESET << "\n";
                 // playsound
 
                 return;
@@ -75,7 +75,7 @@ MotherShip::MotherShip()
 : lastSpawned(0)                                                // time when the ship last spawned; initialized with the 0/getTime()
 , currentlySpawned(false)                                       // is the motherShip currently spawned            
 , hits(0)                                                       // number of hits currently sustained by the motherShip
-, maxPossibleHits(7)                                            // max number of hits to defeat/destruct the motherShip
+, maxPossibleHits(9)                                            // max number of hits to defeat/destruct the motherShip
 , scoreBoost(1000)                                              // 1000 extra points on destruction
 , motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
 , position({0.0f, 23})
@@ -103,7 +103,7 @@ void MotherShip::update(vector<Laser>& spaceShipLasers, int& gameScore, int& ene
         if (reachedEdge()){            
             despawnMotherShip();
 
-            cout << "[Captain Saad] The MotherShip has warped into the cosmos :(\n";
+            cout << "[Captain Saad] " << ANSI_BRIGHT_RED << "The MotherShip has warped into the cosmos :(" << ANSI_RESET << "\n";
             // playsound...
 
             return;
@@ -121,7 +121,7 @@ void MotherShip::update(vector<Laser>& spaceShipLasers, int& gameScore, int& ene
         if (GetTime() >= (lastSpawned + randomSpawnPause)){
             spawnMotherShip();
             
-            cout << "[Captain Saad] An alien motherShip has warped into our space! :O\n";
+            cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "An alien motherShip has warped into our space! :D" << ANSI_RESET << "\n";
             // playsound...
         }
     }
