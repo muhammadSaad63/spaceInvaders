@@ -4,7 +4,7 @@
 
 // helper functions
 void Game::setFavicon(const string& fileName){
-    Image favicon = LoadImage(TextFormat("src/assets/graphics/ui/favicons/%s", fileName));
+    Image favicon = LoadImage(TextFormat("src/assets/graphics/ui/favicons/%s", fileName.c_str()));
 
     if (favicon.data){
         SetWindowIcon(favicon);

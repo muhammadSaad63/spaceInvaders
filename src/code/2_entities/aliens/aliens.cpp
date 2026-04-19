@@ -1,12 +1,13 @@
 #include <utility>
+#include <iostream>
 #include "aliens.hpp"
-using std::pair;
+using std::cout, std::pair;
 
 
 Alien::Alien() 
 : active(true)
 {
-    texture = LoadTexture("src/assets/graphics/aliens/1.png");
+    texture = {};
 }
 Alien::~Alien(){
     if (texture.id){
@@ -24,8 +25,15 @@ bool  Alien::isActive()         { return active;  }
 void  Alien::activate()         { active = true;  }
 void  Alien::deActivate()       { active = false; }
 
-float Alien::getTextureWidth()  { return static_cast<float>(texture.width);  }
-float Alien::getTextureHeight() { return static_cast<float>(texture.height); }
+void Alien::loadAlien(const string& fileName){
+    texture = LoadTexture(TextFormat("src/assets/graphics/enemies/aliens/%s", fileName.c_str()));
+}
+float Alien::getTextureWidth(){ 
+    return static_cast<float>(texture.width);  
+}
+float Alien::getTextureHeight(){ 
+    return static_cast<float>(texture.height); 
+}
 Rectangle Alien::getRect(const Vector2& position, const float scale){
     return Rectangle{
         position.x,
@@ -44,6 +52,13 @@ bool Aliens::hittingRightEdge(){
     return ((swarmPosition.x + swarmWidth) >= (GetScreenWidth() - edgePadding));
 }
 
+void Aliens::loadAliens(const string &fileName){
+    for (auto& row : aliens){
+        for (auto& alien : row){
+            alien.loadAlien(fileName);
+        }
+    }
+}
 void Aliens::centerSwarm(){
     swarmPosition.x = static_cast<float>((GetScreenWidth() - swarmWidth) / 2);
     swarmPosition.y = 63.0f;
@@ -67,14 +82,19 @@ bool Aliens::isSwarmDestroyed(){
         }
     }
 
+    cout << "[Captain Saad] Wave Cleared Successfully :D\n";
     return true;
 }
 void Aliens::loadNextWave(){
     waveNum++;
-    currSpeed = calcSwarmSpeed();
+    
+    if (waveNum == 1){
+        loadAliens("1.png");
+    }
 
     activateSwarm();
     centerSwarm();
+    currSpeed = calcSwarmSpeed();
 
     lasers.clear();
     shootTimer    = 0.0f;

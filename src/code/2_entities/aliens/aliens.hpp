@@ -3,9 +3,10 @@
 
 #include <array>
 #include <vector>
+#include <string>
 #include <raylib.h>
 #include "../lasers/lasers.hpp"
-using std::array, std::vector;
+using std::array, std::string, std::vector;
 
 
 class Alien{
@@ -23,6 +24,7 @@ class Alien{
         void      activate();
         void      deActivate();
 
+        void      loadAlien(const string& fileName);
         float     getTextureWidth();
         float     getTextureHeight();
         Rectangle getRect(const Vector2& position, const float scale);
@@ -35,9 +37,15 @@ class Aliens{
     
         // swarm formation
         const static int                      numRows        { 3 };                                                 // the total num of rows of aliens in the swarm; dunno y but it wasnt working witout static;
-        const static int                      numCols        { 5 };                                                 // the num of aliens in each row of the swarm
+        const static int                      numCols        { 7 };                                                 // the num of aliens in each row of the swarm
         array<array<Alien, numCols>, numRows> aliens;                                                               // a 2d static array of Alien(s)
 
+        // drawing constants
+        int                                   alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
+        int                                   rowSpacing     { 70   };                                              // vertical gap between each row in the swarm
+        int                                   edgePadding    { 63   };                                              // the horizontal padding on each side of the screen
+        float                                 textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
+        
         // swarm info
         Vector2                               swarmPosition  { 0, 0 };                                              // a tuple containing the (x, y) coor of the top-left point of the swarm
         int                                   swarmDirection { 1    };                                              // unit vector represeting direction of speed: 1 right, -1 left
@@ -47,13 +55,7 @@ class Aliens{
         // swarm speed
         const float                           baseSpeed      { 0.5f      };                                         // ie the min poss speed of each alien
         float                                 currSpeed      { baseSpeed };                                         // speed of each alien in the swarm in the current wave
-        const float                           acceleration   { 0.15f     };                                         // ie the speed increase of each alien per wave
-        
-        // drawing constants
-        int                                   alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
-        int                                   rowSpacing     { 70   };                                              // vertical gap between each row in the swarm
-        int                                   edgePadding    { 63   };                                              // the horizontal padding on each side of the screen
-        float                                 textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
+        const float                           acceleration   { 0.25f     };                                         // ie the speed increase of each alien per wave       
         
         // lasers info
         vector<Laser>                         lasers         {      };                                              // a vector to store the index of active aliens in a row
@@ -64,9 +66,10 @@ class Aliens{
         bool  hittingLeftEdge();                                                                                    // returns true if the left end of the swarm is hitting the left edge of the screen
         bool  hittingRightEdge();                                                                                   // returns true if the right end of the swarm is hitting the right edge of the screen                                                                  
 
+        void  loadAliens(const string& fileName);
         void  centerSwarm();                                                                                        // positions the swarm at the centre of the window (for the start of each wave)
-        float calcSwarmSpeed();                                                                                     // calculates and returns the swarmSpeed for the current waveNum
         void  activateSwarm();                                                                                      // sets all the aliens in the swarm to active
+        float calcSwarmSpeed();                                                                                     // calculates and returns the swarmSpeed for the current waveNum
         void  loadNextWave();                                                                                       // makes use of the above 3 helper methods to bring about the next wave
         bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
 
