@@ -2,24 +2,22 @@
 #include "dataBase.hpp"
 
 
-// SQLITE::DataBase DataBase::db("assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-
 // helper functions
-void DataBase::createTable_players(){
-    db.exec(
-        "CREATE TABLE IF NOT EXISTS players" 
-        "("
-            "playerID INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "playerName TEXT UNIQUE NOT NULL"
-        ")"
-    );
-}
+// void DataBase::createTable_players(){
+//     db.exec(
+//         "CREATE TABLE IF NOT EXISTS players" 
+//         "("
+//             "playerID INTEGER PRIMARY KEY AUTOINCREMENT,"
+//             "playerName TEXT UNIQUE NOT NULL"
+//         ")"
+//     );
+// }
 void DataBase::createTable_games(){
     db.exec(
         "CREATE TABLE IF NOT EXISTS games"
         "("
             "gameID INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "playerID INTEGER NOT NULL,"
+            // "playerID INTEGER NOT NULL,"
             
             "score INTEGER NOT NULL DEFAULT 0,"                     // min poss value = 0
             "enemiesDefeated INTEGER NOT NULL DEFAULT 0,"           // min poss value = 0
@@ -29,31 +27,31 @@ void DataBase::createTable_games(){
             "timeEnded DATETIME NOT NULL,"
             "timePlayed INTEGER NOT NULL,"
 
-            "FOREIGN KEY (playerID) REFERENCES players(playerID)"
+            // "FOREIGN KEY (playerID) REFERENCES players(playerID)"
         ")"
     );
 }
-void DataBase::initTable_players(){
-    db.exec(
-        "INSERT OR IGNORE INTO players (playerID, playerName) VALUES " 
-            "('1', 'Ebbi'),"
-            "('2', 'Saad'),"
-            "('3', 'Umair')"
-    );
-}
-void DataBase::upperCaseStr(string& playerName){
-    for (auto& c : playerName){
-        if (std::isalpha(c) && std::islower(c)){
-            c = std::toupper(c);
-        }
-    }  
-}
-int DataBase::getNumUniquePlayersInGames(){
-    SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
-    query.executeStep();
+// void DataBase::initTable_players(){
+//     db.exec(
+//         "INSERT OR IGNORE INTO players (playerID, playerName) VALUES " 
+//             "('1', 'Ebbi'),"
+//             "('2', 'Saad'),"
+//             "('3', 'Umair')"
+//     );
+// }
+// void DataBase::upperCaseStr(string& playerName){
+//     for (auto& c : playerName){
+//         if (std::isalpha(c) && std::islower(c)){
+//             c = std::toupper(c);
+//         }
+//     }  
+// }
+// int DataBase::getNumUniquePlayersInGames(){
+//     SQLite::Statement query(db, "SELECT COUNT( DISTINCT playerID ) FROM games");
+//     query.executeStep();
 
-    return (query.getColumn(0).getInt());
-}
+//     return (query.getColumn(0).getInt());
+// }
 int DataBase::getTotalGames(){
     SQLite::Statement query(db, "SELECT COUNT(*) FROM games");
     query.executeStep();
@@ -61,54 +59,38 @@ int DataBase::getTotalGames(){
     return (query.getColumn(0).getInt());
 }
 
-// init
-// void DataBase::init()
-// {
-//     SQLite::Database instance("../../assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-
-//     db = &instance;
-//     // creating table 'players' to store players' data
-//     createTable_players();
-
-//     // creating table 'games' to store data about individual games
-//     createTable_games();
-
-//     // :>
-//     initTable_players();
-// }
-
 DataBase::DataBase()
 : db("src/assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
     // creating table 'players' to store players' data
-    createTable_players();
+    // createTable_players();
 
     // creating table 'games' to store data about individual games
     createTable_games();
 
     // :>
-    initTable_players();
+    // initTable_players();
 }
 
 // writing/adding data
-void DataBase::addPlayer(string& playerName){
-    // uppercasing playerName
-    upperCaseStr(playerName);
+// void DataBase::addPlayer(string& playerName){
+//     // uppercasing playerName
+//     upperCaseStr(playerName);
 
-    SQLite::Statement query(db, "INSERT OR IGNORE INTO players (playerName) VALUES (?)");         // will only insert if the name does not already exist in players (due to defined schema); will ignore if it alr exists
+//     SQLite::Statement query(db, "INSERT OR IGNORE INTO players (playerName) VALUES (?)");         // will only insert if the name does not already exist in players (due to defined schema); will ignore if it alr exists
 
-    query.bind(1, playerName);             // binding playerName to (the 1st & only) ?
-    query.exec();                          // executing the query
-}
+//     query.bind(1, playerName);             // binding playerName to (the 1st & only) ?
+//     query.exec();                          // executing the query
+// }
 void DataBase::addGame(GameData& gameData){
-    SQLite::Statement query(db, "INSERT INTO games (playerID, score, enemiesDefeated, waveReached, timeEnded, timePlayed) VALUES (?, ?, ?, ?, ?, ?)");         
+    SQLite::Statement query(db, "INSERT INTO games (score, enemiesDefeated, waveReached, timeStarted, timeEnded, timePlayed) VALUES (?, ?, ?, ?, ?, ?)");         
 
     // binding data from gameData to their respective ?
-    query.bind(1, gameData.playerID);
-    query.bind(2, gameData.score);
-    query.bind(3, gameData.enemiesDefeated);
-    query.bind(4, gameData.waveReached);
-    query.bind(5, 2);   
+    query.bind(1, gameData.score);
+    query.bind(2, gameData.enemiesDefeated);
+    query.bind(3, gameData.waveReached);
+    query.bind(4, gameData.timeStarted);   
+    query.bind(5, gameData.timeEnded);   
     query.bind(6, gameData.timePlayed);             
 
     query.exec();                               // executing the query
@@ -127,11 +109,10 @@ vector<GameData> DataBase::getHistory(int numEntries){
 
     {
         SQLite::Statement query(db, 
-                                    "SELECT g.gameID, g.playerID, p.playerName, g.score, g.enemiesDefeated, "
-                                    "g.waveReached, g.timeStarted, g.timeEnded, g.timePlayed "
-                                    "FROM games AS g "
-                                    "JOIN players AS p ON g.playerID = p.playerID "
-                                    "ORDER BY g.gameID DESC LIMIT (?)"
+                                    "SELECT gameID, score, enemiesDefeated, "
+                                    "waveReached, timeStarted, timeEnded, timePlayed "
+                                    "FROM games " 
+                                    "ORDER BY gameID DESC LIMIT (?)"
                                 );
         query.bind(1, numEntries);
 
@@ -140,14 +121,14 @@ vector<GameData> DataBase::getHistory(int numEntries){
             history.push_back(
                 GameData{ 
                     query.getColumn(0).getInt(),            // gameID
-                    query.getColumn(1).getInt(),            // playerID
-                    query.getColumn(2).getString(),         // playerName
-                    query.getColumn(3).getInt(),            // score
-                    query.getColumn(4).getInt(),            // enemiesDefeated
-                    query.getColumn(5).getInt(),            // waveReached
-                    query.getColumn(6).getString(),         // timeStarted
-                    query.getColumn(7).getString(),         // timeEnded
-                    query.getColumn(8).getInt(),            // timePlayed
+                    // query.getColumn(1).getInt(),            // playerID
+                    // query.getColumn(2).getString(),         // playerName
+                    query.getColumn(1).getInt(),            // score
+                    query.getColumn(2).getInt(),            // enemiesDefeated
+                    query.getColumn(3).getInt(),            // waveReached
+                    query.getColumn(4).getString(),         // timeStarted
+                    query.getColumn(5).getString(),         // timeEnded
+                    query.getColumn(6).getInt(),            // timePlayed
                 }
             );
         }
@@ -155,44 +136,44 @@ vector<GameData> DataBase::getHistory(int numEntries){
 
     return history;
 }
-vector<GameData> DataBase::getLeaderBoards(int numEntries){
-    vector<GameData> leaderBoards;
+// vector<GameData> DataBase::getLeaderBoards(int numEntries){
+//     vector<GameData> leaderBoards;
 
-    {                                                                       // y? dil cheh rha teh :>
-        auto totalEntries = getNumUniquePlayersInGames();
-        numEntries = ((totalEntries < numEntries)? totalEntries : numEntries);
+//     {                                                                       // y? dil cheh rha teh :>
+//         auto totalEntries = getNumUniquePlayersInGames();
+//         numEntries = ((totalEntries < numEntries)? totalEntries : numEntries);
 
-        leaderBoards.reserve(numEntries);
-    }
+//         leaderBoards.reserve(numEntries);
+//     }
 
-    {
-        SQLite::Statement query(db, 
-                                    "SELECT games.playerID, players.playerName, MAX(games.score) "
-                                    "FROM games "
-                                    "JOIN players ON games.playerID = players.playerID "
-                                    "GROUP BY playerID "
-                                    "ORDER BY Max(score) DESC "
-                                    "LIMIT (?)"
-                                );
-        query.bind(1, numEntries);
+//     {
+//         SQLite::Statement query(db, 
+//                                     "SELECT games.playerID, players.playerName, MAX(games.score) "
+//                                     "FROM games "
+//                                     "JOIN players ON games.playerID = players.playerID "
+//                                     "GROUP BY playerID "
+//                                     "ORDER BY Max(score) DESC "
+//                                     "LIMIT (?)"
+//                                 );
+//         query.bind(1, numEntries);
 
-        while (query.executeStep())
-        {
-            leaderBoards.push_back(
-                GameData{ 
-                    -1,                                     // gameID
-                    query.getColumn(0).getInt(),            // playerID
-                    query.getColumn(1).getString(),         // playerName
-                    query.getColumn(2).getInt(),            // score
-                    -1,                                     // enemiesDefeated
-                    -1,                                     // waveReached
-                    "N/A",                                  // timeStarted
-                    "N/A",                                  // timeEnded
-                    -1,                                     // timePlayed
-                }
-            );
-        }
-    }
+//         while (query.executeStep())
+//         {
+//             leaderBoards.push_back(
+//                 GameData{ 
+//                     -1,                                     // gameID
+//                     query.getColumn(0).getInt(),            // playerID
+//                     query.getColumn(1).getString(),         // playerName
+//                     query.getColumn(2).getInt(),            // score
+//                     -1,                                     // enemiesDefeated
+//                     -1,                                     // waveReached
+//                     "N/A",                                  // timeStarted
+//                     "N/A",                                  // timeEnded
+//                     -1,                                     // timePlayed
+//                 }
+//             );
+//         }
+//     }
 
-    return leaderBoards;
-}
+//     return leaderBoards;
+// }
