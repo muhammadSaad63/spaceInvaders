@@ -66,5 +66,5 @@ class DataBase{
         // fetching/reading data
         vector<GameData> getHistory(int numEntries);
         // vector<GameData> getLeaderBoards(int numEntries);
-        void             getStatistics(StatData& stats);
+        StatData         getStatistics();
 };

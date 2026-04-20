@@ -178,7 +178,7 @@ vector<GameData> DataBase::getHistory(int numEntries){
 //     return leaderBoards;
 // }
 
-void DataBase::getStatistics(StatData& stats){
+StatData DataBase::getStatistics(){
     SQLite::Statement query(db, 
                                 "SELECT SUM(score), MAX(score), AVG(score)                              , "
                                 "       SUM(enemiesDefeated), MAX(enemiesDefeated), AVG(enemiesDefeated), "
@@ -186,7 +186,8 @@ void DataBase::getStatistics(StatData& stats){
                                 "       SUM(timePlayed), MAX(timePlayed), AVG(timePlayed)                 "
                                 "FROM games "
                             );
-            
+
+    StatData stats;
 
     if (query.executeStep()){
         // Score Statistics
@@ -209,4 +210,6 @@ void DataBase::getStatistics(StatData& stats){
         stats.maxTimePlayedPerGame      = query.getColumn(10).getInt();
         stats.avgTimePlayedPerGame      = query.getColumn(11).getInt();
     }
+
+    return stats;
 }
