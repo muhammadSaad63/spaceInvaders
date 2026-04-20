@@ -44,13 +44,44 @@ Rectangle Alien::getRect(const Vector2& position, const float scale){
     };
 }
 
-
+int Aliens::calcPosX(const int colIndex){
+    return (swarmPosition.x + (colIndex * alienSpacing));
+}
+int Aliens::calcPosY(const int rowIndex){
+    return (swarmPosition.y + (rowIndex * rowSpacing));
+}
 // aliens internal, helper methods
+int Aliens::getIndexOfFirstColFromLeftWithActiveAliens(){
+    for (auto col {0}; col < numCols; ++col){
+        for (auto row {0}; row < numRows; ++row){
+            if (aliens[row][col].isActive()){
+                return col;
+            }
+        }
+    }
+
+    return -1;          // wont reach here, but just in case
+}
+int Aliens::getIndexOfFirstColFromRightWithActiveAliens(){
+    for (auto col {numCols - 1}; col >= 0; --col){
+        for (auto row {0}; row < numRows; ++row){
+            if (aliens[row][col].isActive()){
+                return col;
+            }
+        }
+    }
+
+    return -1;          // wont reach here, but just in case
+}
 bool Aliens::hittingLeftEdge(){
-    return (swarmPosition.x <= edgePadding);
+    auto colIndex = getIndexOfFirstColFromLeftWithActiveAliens();
+
+    return (calcPosX(colIndex) <= edgePadding);
 }
 bool Aliens::hittingRightEdge(){
-    return ((swarmPosition.x + swarmWidth) >= (GetScreenWidth() - edgePadding));
+    auto colIndex = getIndexOfFirstColFromRightWithActiveAliens();
+
+    return ((calcPosX(colIndex) + alienSpacing) >= (GetScreenWidth() - edgePadding));
 }
 
 void Aliens::loadAliens(const string &fileName){
@@ -65,7 +96,13 @@ void Aliens::centerSwarm(){
     swarmPosition.y = 123.0f;
 }
 float Aliens::calcSwarmSpeed(){
-    return (baseSpeed + ((waveNum - 1) * acceleration));
+    auto waveNumBoost   = ((waveNum - 1) * acceleration);
+    auto lowActiveBoost = ((getActiveAliensCount() <= 7)? (2 * acceleration) : 0);
+
+    return (baseSpeed + waveNumBoost + lowActiveBoost);
+}
+void Aliens::updateSwarmSpeed(){
+    currSpeed = calcSwarmSpeed();
 }
 void Aliens::activateSwarm(){
     for (auto& row : aliens){
@@ -94,11 +131,24 @@ void Aliens::loadNextWave(){
 
     activateSwarm();
     centerSwarm();
-    currSpeed = calcSwarmSpeed();
+    updateSwarmSpeed();
 
     lasers.clear();
     shootTimer    = 0.0f;
     shootInterval = 2.0f;
+}
+int Aliens::getActiveAliensCount(){
+    auto count {0};
+
+    for (auto& row : aliens){
+        for (auto& alien : row){
+            if (alien.isActive()){
+                count++;
+            }
+        }
+    }
+
+    return count;
 }
 
 bool Aliens::getRandomActiveAlien(int& outRow, int& outCol){
@@ -142,11 +192,9 @@ void Aliens::shootALaser(){
     }
 
     // xpawning laser from the bottom-centre of the chosen alien
-    float laserX = swarmPosition.x
-                 + (col * alienSpacing)
+    float laserX = calcPosX(col)
                  + ((aliens[row][col].getTextureWidth() * textureScale) / 2.0f);                            // add half the width of texture
-    float laserY = swarmPosition.y
-                 + (row * rowSpacing)
+    float laserY = calcPosY(row)
                  + (aliens[row][col].getTextureHeight() * textureScale);                                    // add full height of texture
 
     lasers.push_back(Laser{ static_cast<int>(laserX), static_cast<int>(laserY) });
@@ -163,10 +211,10 @@ void Aliens::updateLasers(){
     }
 }
 
-Rectangle Aliens::getAlienRect(int row, int col){
+Rectangle Aliens::getAlienRect(const int row, const int col){
     Vector2 position{
-        swarmPosition.x + (col * alienSpacing),
-        swarmPosition.y + (row * rowSpacing)
+        static_cast<float>( calcPosX(col) ),
+        static_cast<float>( calcPosY(row) )
     };
 
     return aliens[row][col].getRect(position, textureScale);
@@ -180,9 +228,10 @@ bool Aliens::checkSpaceShipLaserCollision(Laser& spaceShipLaser){
 
             if (CheckCollisionRecs(spaceShipLaser.getRect(), getAlienRect(row, col))){
                 aliens[row][col].deActivate();
+                updateSwarmSpeed();                    // update curr speed when another alien ded
                 spaceShipLaser.deActivate();
 
-                return true;                // one laser can only hit one alien
+                return true;                           // one laser can only hit one alien
             }
         }
     }
@@ -212,8 +261,8 @@ void Aliens::draw(){
     for (int row = 0; row < numRows; ++row){
         for (int col = 0; col < numCols; ++col){
             if (aliens[row][col].isActive()){
-                position.x = (swarmPosition.x + (col * alienSpacing));
-                position.y = (swarmPosition.y + (row * rowSpacing  ));
+                position.x = calcPosX(col);
+                position.y = calcPosY(row);
 
                 aliens[row][col].draw(position, textureScale);
             }
