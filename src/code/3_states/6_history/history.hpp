@@ -2,7 +2,6 @@
 
 
 #include <vector>
-#include <raylib.h>
 #include "../1_state/state.hpp"
 #include "../../1_core/dataBase/dataBase.hpp"
 
@@ -15,29 +14,11 @@ class History : public State{
         bool             entriesLoaded;
         int              maxEntriesToFetch;
 
-        void loadHistory(){
-            if (!entriesLoaded){
-                entriesLoaded = true;
-                entries       = dataBase.getHistory(maxEntriesToFetch);
-            }
-        }
+        void loadHistory();
 
     public:
-        History(GameState& gameState, DataBase& dataBase)
-        : State(gameState), dataBase(dataBase)
-        {}
+        History(GameState& gameState, DataBase& dataBase);
 
-        void draw(){
-            //
-        }
-
-        void update(){
-            loadHistory();
-
-            // exiting from history state
-            if (IsKeyPressed(KEY_ENTER)){
-                entriesLoaded    = false;               // so that entries will be reloaded when state again entered
-                gameState        = MENU;                // return  to menu effectively
-            }
-        }
+        void draw();
+        void update();
 };
