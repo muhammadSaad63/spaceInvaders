@@ -45,6 +45,12 @@ Rectangle Alien::getRect(const Vector2& position, const float scale){
 }
 
 
+int Aliens::calcPosX(const int & colIndex){
+    return (swarmPosition.x + (colIndex * alienSpacing));
+}
+int Aliens::calcPosY(const int & rowIndex){
+    return (swarmPosition.y + (rowIndex * rowSpacing));
+}
 // aliens internal, helper methods
 int Aliens::getIndexOfFirstColFromLeftWithActiveAliens(){
     for (auto col {0}; col < numCols; ++col){
@@ -66,7 +72,7 @@ int Aliens::getIndexOfFirstColFromRightWithActiveAliens(){
 }
 bool Aliens::hittingLeftEdge(){
     auto index = getIndexOfFirstColFromLeftWithActiveAliens();
-    
+
     return (swarmPosition.x <= edgePadding);
 }
 bool Aliens::hittingRightEdge(){
@@ -162,11 +168,9 @@ void Aliens::shootALaser(){
     }
 
     // xpawning laser from the bottom-centre of the chosen alien
-    float laserX = swarmPosition.x
-                 + (col * alienSpacing)
+    float laserX = calcPosX(col)
                  + ((aliens[row][col].getTextureWidth() * textureScale) / 2.0f);                            // add half the width of texture
-    float laserY = swarmPosition.y
-                 + (row * rowSpacing)
+    float laserY = calcPosY(row)
                  + (aliens[row][col].getTextureHeight() * textureScale);                                    // add full height of texture
 
     lasers.push_back(Laser{ static_cast<int>(laserX), static_cast<int>(laserY) });
@@ -185,8 +189,8 @@ void Aliens::updateLasers(){
 
 Rectangle Aliens::getAlienRect(int row, int col){
     Vector2 position{
-        swarmPosition.x + (col * alienSpacing),
-        swarmPosition.y + (row * rowSpacing)
+        calcPosX(col),
+        calcPosY(row)
     };
 
     return aliens[row][col].getRect(position, textureScale);
@@ -232,8 +236,8 @@ void Aliens::draw(){
     for (int row = 0; row < numRows; ++row){
         for (int col = 0; col < numCols; ++col){
             if (aliens[row][col].isActive()){
-                position.x = (swarmPosition.x + (col * alienSpacing));
-                position.y = (swarmPosition.y + (row * rowSpacing  ));
+                position.x = calcPosX(col);
+                position.y = calcPosY(row);
 
                 aliens[row][col].draw(position, textureScale);
             }

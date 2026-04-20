@@ -63,6 +63,9 @@ class Aliens{
         float                                 shootInterval  { 2.0f };                                              // the time interval/duration bw each consecutive laser firing
 
         // internal, helper methods
+        int   calcPosX(const int& colIndex);
+        int   calcPosY(const int& rowIndex);
+
         int   getIndexOfFirstColFromLeftWithActiveAliens();
         int   getIndexOfFirstColFromRightWithActiveAliens();
         bool  hittingLeftEdge();                                                                                    // returns true if the left end of the swarm is hitting the left edge of the screen
