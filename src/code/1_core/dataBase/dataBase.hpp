@@ -45,4 +45,8 @@ class DataBase{
         // fetching/reading data
         vector<GameData> getHistory(int numEntries);
         // vector<GameData> getLeaderBoards(int numEntries);
+        void            getStatistics(int& totalScore, int& maxScorePerGame, int& avgScorePerGame, 
+                                    int& totalEnemiesDefeated, int& maxEnemiesDefeatedPerGame, int& avgEnemiesDefeatedPerGame, 
+                                    int& totalWavesCleared, int& maxWavesClearedPerGame, int& avgWavesClearedPerGame, 
+                                    int& totalTimePlayed, int& maxTimePlayedPerGame, int& avgTimePlayedPerGame);
 };

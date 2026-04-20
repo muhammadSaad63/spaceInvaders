@@ -137,7 +137,7 @@ vector<GameData> DataBase::getHistory(int numEntries){
     return history;
 }
 // vector<GameData> DataBase::getLeaderBoards(int numEntries){
-//     vector<GameData> leaderBoards;
+    //     vector<GameData> leaderBoards;
 
 //     {                                                                       // y? dil cheh rha teh :>
 //         auto totalEntries = getNumUniquePlayersInGames();
@@ -177,3 +177,25 @@ vector<GameData> DataBase::getHistory(int numEntries){
 
 //     return leaderBoards;
 // }
+
+void DataBase::getStatistics(int& totalScore, int& maxScorePerGame, int& avgScorePerGame, 
+                            int& totalEnemiesDefeated, int& maxEnemiesDefeatedPerGame, int& avgEnemiesDefeatedPerGame, 
+                            int& totalWavesCleared, int& maxWavesClearedPerGame, int& avgWavesClearedPerGame, 
+                            int& totalTimePlayed, int& maxTimePlayedPerGame, int& avgTimePlayedPerGame){
+    SQLite::Statement query(db, 
+                                "SELECT SUM(score), MAX(score), AVG(score)                              , "
+                                "       SUM(enemiesDefeated), MAX(enemiesDefeated), AVG(enemiesDefeated), "
+                                "       SUM(waveReached), MAX(waveReached), AVG(waveReached)            , "
+                                "       SUM(timePlayed), MAX(timePlayed), AVG(timePlayed)                 "
+                                "FROM games "
+                            );
+            
+    query.exec();
+
+    maxScore = query.getColumn(0).getInt();
+    avgScorePerGame = query.getColumn(0).getInt();
+    totalEnemiesDefeated = query.getColumn(0).getInt();
+    avgEnemiesDefeatedPerGame = query.getColumn(0).getInt();
+    maxWaveReached = query.getColumn(0).getInt();
+    avgTimePlayedPerGame = query.getColumn(0).getInt();
+}
