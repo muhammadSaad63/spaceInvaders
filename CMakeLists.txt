@@ -152,6 +152,7 @@ target_include_directories(spaceInvaders PRIVATE
     ${CMAKE_SOURCE_DIR}/src/code/1_core/backGround
     ${CMAKE_SOURCE_DIR}/src/code/1_core/dataBase
     ${CMAKE_SOURCE_DIR}/src/code/1_core/enums
+    ${CMAKE_SOURCE_DIR}/src/code/1_core/macros
 
     # 2_entities
     ${CMAKE_SOURCE_DIR}/src/code/2_entities/aliens
