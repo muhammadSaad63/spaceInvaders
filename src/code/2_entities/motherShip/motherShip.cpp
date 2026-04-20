@@ -71,7 +71,7 @@ void MotherShip::updateMotherShipPosition(){
 }
 
 // construcor & destructor
-MotherShip::MotherShip() 
+MotherShip::MotherShip(int& waveNum) 
 : lastSpawned(0)                                                // time when the ship last spawned; initialized with the 0/getTime()
 , currentlySpawned(false)                                       // is the motherShip currently spawned            
 , hits(0)                                                       // number of hits currently sustained by the motherShip
@@ -83,6 +83,7 @@ MotherShip::MotherShip()
 , randomSpawnPause(30)                                          // 30s
 , speed(1.25f)
 , spawnFromLeft(true)
+, waveNum(waveNum)
 {}
 MotherShip::~MotherShip(){
     if (IsTextureValid(motherShip))                             // this check is redundant tho...

@@ -1,6 +1,6 @@
 #include "playing.hpp"
 #include <cmath>
-using std::ceilf;
+using std::ceilf, std::fmodf;
 
 
 void Playing::drawCountdown(){
@@ -100,10 +100,11 @@ void Playing::startWaveAnnouncement(){
 
 Playing::Playing(GameState &gameState, Settings &settings)
 : State(gameState)
-, spaceShip("1.png") 
+, spaceShip("1.png")
 , aliensLasers(aliens.getLasers())
 , spaceShipLasers(spaceShip.getLasers())
 , waveNum(aliens.getWaveNum())
+, motherShip(waveNum)
 , currWave(waveNum)
 , movementMode(settings.getMovementMode())
 {}
