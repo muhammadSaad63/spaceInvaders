@@ -45,10 +45,10 @@ Rectangle Alien::getRect(const Vector2& position, const float scale){
 }
 
 
-int Aliens::calcPosX(const int & colIndex){
+int Aliens::calcPosX(const int& colIndex){
     return (swarmPosition.x + (colIndex * alienSpacing));
 }
-int Aliens::calcPosY(const int & rowIndex){
+int Aliens::calcPosY(const int& rowIndex){
     return (swarmPosition.y + (rowIndex * rowSpacing));
 }
 // aliens internal, helper methods
@@ -71,12 +71,14 @@ int Aliens::getIndexOfFirstColFromRightWithActiveAliens(){
     }
 }
 bool Aliens::hittingLeftEdge(){
-    auto index = getIndexOfFirstColFromLeftWithActiveAliens();
+    auto colIndex = getIndexOfFirstColFromLeftWithActiveAliens();
 
-    return (swarmPosition.x <= edgePadding);
+    return (calcPosX(colIndex) <= edgePadding);
 }
 bool Aliens::hittingRightEdge(){
-    return ((swarmPosition.x + swarmWidth) >= (GetScreenWidth() - edgePadding));
+    auto colIndex = getIndexOfFirstColFromRightWithActiveAliens();
+
+    return (calcPosX(colIndex) >= (GetScreenWidth() - edgePadding));
 }
 
 void Aliens::loadAliens(const string &fileName){
