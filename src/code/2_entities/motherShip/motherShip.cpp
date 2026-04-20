@@ -30,7 +30,7 @@ bool MotherShip::reachedEdge()
 void MotherShip::despawnMotherShip()
 {
     currentlySpawned = false;
-    randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+    randomSpawnPause = GetRandomValue(40, 60);              // will spawn after a random n seconds (n > 40, < 60)
     lastSpawned = GetTime();
 }
 void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated){
@@ -80,7 +80,7 @@ MotherShip::MotherShip(int& waveNum)
 , motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
 , position({0, 85})
 , scale(0.13f)
-, randomSpawnPause(30)                                          // 30s
+, randomSpawnPause(40)                                          // 40s
 , speed(1.25f)
 , spawnFromLeft(true)
 , waveNum(waveNum)
