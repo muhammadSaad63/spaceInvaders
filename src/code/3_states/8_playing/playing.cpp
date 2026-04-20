@@ -15,7 +15,7 @@ void Playing::drawCountdown(){
     DrawText(text, (GetScreenWidth()/2 - MeasureText(text, fontSize)/2), (GetScreenHeight()/2 - fontSize/2), fontSize, ColorAlpha(baseColor, alpha));
 }
 void Playing::drawScore(){
-    auto color = ((gameScore < 2000)? RED : (gameScore < 5000)? YELLOW : GREEN);
+    auto color = ((gameScore < 10000)? RED : (gameScore < 50000)? YELLOW : GREEN);
 
     DrawText("SCORE", 50, 20, 20, RAYWHITE);
     DrawText(TextFormat("%05d", gameScore), 50, 45, 20, color);
