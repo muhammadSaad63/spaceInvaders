@@ -122,6 +122,12 @@ bool Aliens::isSwarmDestroyed(){
 
     return true;
 }
+void Aliens::updateScore(int& score, const int aliensDefeated){
+    auto scoreBoost         = (baseScoreBoost * waveNum);
+    auto totalScoreIncrease = (aliensDefeated * scoreBoost);
+
+    score += totalScoreIncrease;
+}
 void Aliens::loadNextWave(){
     waveNum++;
     
@@ -302,7 +308,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
     // checking for collision with spaceship's lasers
     auto aliensDefeated = checkSpaceShipLasersCollision(spaceShipLasers);
     enemiesDefeated += aliensDefeated;
-    score += (aliensDefeated * scoreBoost);
+    updateScore(score, aliensDefeated);
 }
 
 vector<Laser>& Aliens::getLasers(){
