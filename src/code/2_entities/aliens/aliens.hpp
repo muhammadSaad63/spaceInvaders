@@ -74,7 +74,8 @@ class Aliens{
         void  loadAliens(const string& fileName);
         void  centerSwarm();                                                                                        // positions the swarm at the centre of the window (for the start of each wave)
         void  activateSwarm();                                                                                      // sets all the aliens in the swarm to active
-        float calcSwarmSpeed();                                                                                     // calculates and returns the swarmSpeed for the current waveNum
+        float calcSwarmSpeed();
+        void  updateSwarmSpeed();                                                                                     // calculates and returns the swarmSpeed for the current waveNum
         void  loadNextWave();                                                                                       // makes use of the above 3 helper methods to bring about the next wave
         int   getActiveAliensCount();
         bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
