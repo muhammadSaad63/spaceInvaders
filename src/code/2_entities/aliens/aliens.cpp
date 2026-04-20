@@ -59,6 +59,8 @@ int Aliens::getIndexOfFirstColFromLeftWithActiveAliens(){
             }
         }
     }
+
+    return -1;          // wont reach here, but just in case
 }
 int Aliens::getIndexOfFirstColFromRightWithActiveAliens(){
     for (auto col {numCols - 1}; col >= 0; --col){
@@ -68,6 +70,8 @@ int Aliens::getIndexOfFirstColFromRightWithActiveAliens(){
             }
         }
     }
+
+    return -1;          // wont reach here, but just in case
 }
 bool Aliens::hittingLeftEdge(){
     auto colIndex = getIndexOfFirstColFromLeftWithActiveAliens();
@@ -190,8 +194,8 @@ void Aliens::updateLasers(){
 
 Rectangle Aliens::getAlienRect(int row, int col){
     Vector2 position{
-        calcPosX(col),
-        calcPosY(row)
+        static_cast<float>( calcPosX(col) ),
+        static_cast<float>( calcPosY(row) )
     };
 
     return aliens[row][col].getRect(position, textureScale);
