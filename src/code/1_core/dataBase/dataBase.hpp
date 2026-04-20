@@ -22,6 +22,27 @@ struct GameData{
     string timeEnded;
     int    timePlayed;
 };
+struct StatData{
+    // Score Statistics
+    int totalScore;
+    int maxScorePerGame;
+    int avgScorePerGame;
+
+    // Enemy Statistics
+    int totalEnemiesDefeated;
+    int maxEnemiesDefeatedPerGame;
+    int avgEnemiesDefeatedPerGame;
+
+    // Wave Statistics
+    int totalWavesCleared;
+    int maxWavesClearedPerGame;
+    int avgWavesClearedPerGame;
+
+    // Time Statistics
+    int totalTimePlayed;
+    int maxTimePlayedPerGame;
+    int avgTimePlayedPerGame;
+};
 
 class DataBase{
     private:
