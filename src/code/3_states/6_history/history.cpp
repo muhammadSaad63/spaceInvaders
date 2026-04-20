@@ -1,37 +1,28 @@
+#include <raylib.h>
 #include "history.hpp"
 
 
-class History : public State{
-    private:
-        DataBase&        dataBase;
+// helpers
+void History::loadHistory(){
+    if (!entriesLoaded){
+        entriesLoaded = true;
+        entries       = dataBase.getHistory(maxEntriesToFetch);
+    }
+}
 
-        vector<GameData> entries;
-        bool             entriesLoaded;
-        int              maxEntriesToFetch;
+History::History(GameState& gameState, DataBase& dataBase)
+: State(gameState), dataBase(dataBase)
+{}
 
-        void loadHistory(){
-            if (!entriesLoaded){
-                entriesLoaded = true;
-                entries       = dataBase.getHistory(maxEntriesToFetch);
-            }
-        }
+void History::draw(){
+    //
+}
+void History::update(){
+    loadHistory();
 
-    public:
-        History(GameState& gameState, DataBase& dataBase)
-        : State(gameState), dataBase(dataBase)
-        {}
-
-        void draw(){
-            //
-        }
-
-        void update(){
-            loadHistory();
-
-            // exiting from history state
-            if (IsKeyPressed(KEY_ENTER)){
-                entriesLoaded    = false;               // so that entries will be reloaded when state again entered
-                gameState        = MENU;                // return  to menu effectively
-            }
-        }
-};
+    // exiting from history state
+    if (IsKeyPressed(KEY_ENTER)){
+        entriesLoaded    = false;               // so that entries will be reloaded when state again entered
+        gameState        = MENU;                // return  to menu effectively
+    }
+}

@@ -22,6 +22,27 @@ struct GameData{
     string timeEnded;
     int    timePlayed;
 };
+struct StatData{
+    // Score Statistics
+    int totalScore;
+    int maxScorePerGame;
+    int avgScorePerGame;
+
+    // Enemy Statistics
+    int totalEnemiesDefeated;
+    int maxEnemiesDefeatedPerGame;
+    int avgEnemiesDefeatedPerGame;
+
+    // Wave Statistics
+    int totalWavesCleared;
+    int maxWavesClearedPerGame;
+    int avgWavesClearedPerGame;
+
+    // Time Statistics
+    int totalTimePlayed;
+    int maxTimePlayedPerGame;
+    int avgTimePlayedPerGame;
+};
 
 class DataBase{
     private:
@@ -45,8 +66,5 @@ class DataBase{
         // fetching/reading data
         vector<GameData> getHistory(int numEntries);
         // vector<GameData> getLeaderBoards(int numEntries);
-        void            getStatistics(int& totalScore, int& maxScorePerGame, int& avgScorePerGame, 
-                                    int& totalEnemiesDefeated, int& maxEnemiesDefeatedPerGame, int& avgEnemiesDefeatedPerGame, 
-                                    int& totalWavesCleared, int& maxWavesClearedPerGame, int& avgWavesClearedPerGame, 
-                                    int& totalTimePlayed, int& maxTimePlayedPerGame, int& avgTimePlayedPerGame);
+        StatData         getStatistics();
 };

@@ -178,10 +178,7 @@ vector<GameData> DataBase::getHistory(int numEntries){
 //     return leaderBoards;
 // }
 
-void DataBase::getStatistics(int& totalScore, int& maxScorePerGame, int& avgScorePerGame, 
-                            int& totalEnemiesDefeated, int& maxEnemiesDefeatedPerGame, int& avgEnemiesDefeatedPerGame, 
-                            int& totalWavesCleared, int& maxWavesClearedPerGame, int& avgWavesClearedPerGame, 
-                            int& totalTimePlayed, int& maxTimePlayedPerGame, int& avgTimePlayedPerGame){
+StatData DataBase::getStatistics(){
     SQLite::Statement query(db, 
                                 "SELECT SUM(score), MAX(score), AVG(score)                              , "
                                 "       SUM(enemiesDefeated), MAX(enemiesDefeated), AVG(enemiesDefeated), "
@@ -189,27 +186,30 @@ void DataBase::getStatistics(int& totalScore, int& maxScorePerGame, int& avgScor
                                 "       SUM(timePlayed), MAX(timePlayed), AVG(timePlayed)                 "
                                 "FROM games "
                             );
-            
+
+    StatData stats;
 
     if (query.executeStep()){
         // Score Statistics
-        totalScore                = query.getColumn(0).getInt();
-        maxScorePerGame           = query.getColumn(1).getInt();
-        avgScorePerGame           = query.getColumn(2).getInt();
+        stats.totalScore                = query.getColumn(0).getInt();
+        stats.maxScorePerGame           = query.getColumn(1).getInt();
+        stats.avgScorePerGame           = query.getColumn(2).getInt();
 
         // Enemy Statistics
-        totalEnemiesDefeated      = query.getColumn(3).getInt();
-        maxEnemiesDefeatedPerGame = query.getColumn(4).getInt();
-        avgEnemiesDefeatedPerGame = query.getColumn(5).getInt();
+        stats.totalEnemiesDefeated      = query.getColumn(3).getInt();
+        stats.maxEnemiesDefeatedPerGame = query.getColumn(4).getInt();
+        stats.avgEnemiesDefeatedPerGame = query.getColumn(5).getInt();
 
         // Wave Statistics
-        totalWavesCleared         = query.getColumn(6).getInt();
-        maxWavesClearedPerGame    = query.getColumn(7).getInt();
-        avgWavesClearedPerGame    = query.getColumn(8).getInt();
+        stats.totalWavesCleared         = query.getColumn(6).getInt();
+        stats.maxWavesClearedPerGame    = query.getColumn(7).getInt();
+        stats.avgWavesClearedPerGame    = query.getColumn(8).getInt();
 
         // Time Statistics
-        totalTimePlayed           = query.getColumn(9).getInt();
-        maxTimePlayedPerGame      = query.getColumn(10).getInt();
-        avgTimePlayedPerGame      = query.getColumn(11).getInt();
+        stats.totalTimePlayed           = query.getColumn(9).getInt();
+        stats.maxTimePlayedPerGame      = query.getColumn(10).getInt();
+        stats.avgTimePlayedPerGame      = query.getColumn(11).getInt();
     }
+
+    return stats;
 }
