@@ -131,6 +131,19 @@ void Aliens::loadNextWave(){
     shootTimer    = 0.0f;
     shootInterval = 2.0f;
 }
+int Aliens::getActiveAliensCount(){
+    auto count {0};
+
+    for (auto& row : aliens){
+        for (auto& alien : row){
+            if (alien.isActive()){
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
 
 bool Aliens::getRandomActiveAlien(int& outRow, int& outCol){
     vector<pair<int,int>> candidates;

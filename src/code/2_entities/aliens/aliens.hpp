@@ -76,6 +76,7 @@ class Aliens{
         void  activateSwarm();                                                                                      // sets all the aliens in the swarm to active
         float calcSwarmSpeed();                                                                                     // calculates and returns the swarmSpeed for the current waveNum
         void  loadNextWave();                                                                                       // makes use of the above 3 helper methods to bring about the next wave
+        int   getActiveAliensCount();
         bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
 
         bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
