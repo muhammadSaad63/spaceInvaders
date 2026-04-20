@@ -96,7 +96,10 @@ void Aliens::centerSwarm(){
     swarmPosition.y = 123.0f;
 }
 float Aliens::calcSwarmSpeed(){
-    return (baseSpeed + ((waveNum - 1) * acceleration));
+    auto waveNumBoost   = ((waveNum - 1) * acceleration);
+    auto lowActiveBoost = ((getActiveAliensCount() <= 7)? (2 * acceleration) : 0);
+
+    return (baseSpeed + waveNumBoost + lowActiveBoost);
 }
 void Aliens::activateSwarm(){
     for (auto& row : aliens){
@@ -222,6 +225,7 @@ bool Aliens::checkSpaceShipLaserCollision(Laser& spaceShipLaser){
 
             if (CheckCollisionRecs(spaceShipLaser.getRect(), getAlienRect(row, col))){
                 aliens[row][col].deActivate();
+                currSpeed = calcSwarmSpeed();           // update curr speed when another alien ded
                 spaceShipLaser.deActivate();
 
                 return true;                // one laser can only hit one alien
