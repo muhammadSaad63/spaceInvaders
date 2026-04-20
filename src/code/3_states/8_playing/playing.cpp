@@ -8,7 +8,7 @@ void Playing::drawCountdown(){
     auto  displayNum     = static_cast<int>( ceilf(totalCountdownDuration - elapsedCountdownTime) );
     auto  fontSize       = static_cast<int>( 350 - (150.0f * secondProgress) );             // font size shrinks as each seconds passes and then maximizes
     auto  alpha          = static_cast<float>(  1.0f - (secondProgress * 0.35f) );         // 1.0 → 0.65
-    Color baseColor      = ((displayNum == 3)? RED : (displayNum == 2)? YELLOW : GREEN);
+    Color baseColor      = ((displayNum  == 3)? RED : (displayNum == 2)? YELLOW : GREEN);
     auto  text           = TextFormat("%d", displayNum);
 
 
@@ -18,7 +18,7 @@ void Playing::drawScore(){
     auto color = ((gameScore < 10000)? RED : (gameScore < 50000)? YELLOW : GREEN);
 
     DrawText("SCORE", 50, 20, 20, RAYWHITE);
-    DrawText(TextFormat("%05d", gameScore), 50, 45, 20, color);
+    DrawText(TextFormat("%06d", gameScore), 50, 45, 20, color);
 }
 void Playing::drawWaveNum(){
     auto color = ((waveNum < 10)? GREEN : waveNum < 20 ? YELLOW : RED);
