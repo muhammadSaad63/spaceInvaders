@@ -96,10 +96,12 @@ void Aliens::centerSwarm(){
     swarmPosition.y = 123.0f;
 }
 float Aliens::calcSwarmSpeed(){
-    auto waveNumBoost   = ((waveNum - 1) * acceleration);
-    auto lowActiveBoost = ((getActiveAliensCount() <= 7)? (2 * acceleration) : 0);
+    auto waveNumBoost          = ((waveNum - 1) * acceleration);
 
-    return (baseSpeed + waveNumBoost + lowActiveBoost);
+    auto numActiveAliens       = getActiveAliensCount();
+    auto lowActiveAliensBoost  = ((numActiveAliens <= 7)? (2 * acceleration) : ((numActiveAliens <= 14)? acceleration : 0));
+
+    return (baseSpeed + waveNumBoost + lowActiveAliensBoost);
 }
 void Aliens::updateSwarmSpeed(){
     currSpeed = calcSwarmSpeed();
