@@ -211,7 +211,7 @@ void Aliens::updateLasers(){
     }
 }
 
-Rectangle Aliens::getAlienRect(int row, int col){
+Rectangle Aliens::getAlienRect(const int row, const int col){
     Vector2 position{
         static_cast<float>( calcPosX(col) ),
         static_cast<float>( calcPosY(row) )

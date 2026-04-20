@@ -84,7 +84,7 @@ class Aliens{
         void  shootALaser();         
         void  updateLasers();                                                                               // shoots a laser from an active alien in the swarm
 
-        Rectangle getAlienRect(int row, int col);
+        Rectangle getAlienRect(const int row, const int col);
         bool      checkSpaceShipLaserCollision(Laser& laser);
         int       checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers);
 
