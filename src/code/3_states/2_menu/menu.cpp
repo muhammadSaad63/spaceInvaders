@@ -14,27 +14,33 @@ MenuIcons::MenuIcons() : selected(false), selectedDelay(3)
 };
 void MenuIcons::draw(){
     for (const auto& icon : icons){
-        if (selected && (icon.gameState == selectedState)){
+        if (selected){                                              // if an icon is/was already selected
             auto timePassed = (GetTime() - selectedTime);
-            auto alpha      = fmodf(timePassed, 0.6f);           // 3.0f / 0.6f -> 5x pulses
+            auto alpha      = fmodf(timePassed, 1.0f);              // 3.0f / 0.6f -> 5x pulses
             auto inc        = 23;
-            DrawRectangleGradientH(icon.rect.x - inc*alpha, icon.rect.y-inc*alpha, icon.rect.width+2*inc*alpha, icon.rect.height+2*inc*alpha, GOLD, RED);
+    
+            if (icon.gameState == selectedState){                   // if the curr icon is the selected one
+                // DrawRectangleGradientH(icon.rect.x - inc*alpha, icon.rect.y-inc*alpha, icon.rect.width+2*inc*alpha, icon.rect.height+2*inc*alpha, GOLD, RED);
+                // DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
+                // DrawRectangleGradientH(icon.rect.x - (inc * alpha), icon.rect.y - (inc * alpha), icon.rect.width + (2 * inc * alpha), icon.rect.height + (2 * inc * alpha), ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
+                DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
+            }
+            else{
+                // DrawRectangleGradientH(icon.rect.x + (inc * alpha), icon.rect.y + (inc * alpha), icon.rect.width - (2 * inc * alpha), icon.rect.height - (2 * inc * alpha), GOLD, RED);
+                // DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
+                // DrawRectangleGradientH(icon.rect.x + inc/2, icon.rect.y + inc/2, icon.rect.width - inc, icon.rect.height - inc, GOLD, RED);
+                DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, GOLD, RED);
+            }
         }
-        else{
+        else{                                                   // no icon was previously selected
             DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, GOLD, RED);
         }
-
-        // a light black rectangular overlay over button
-        DrawRectangle(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(BLACK, 0.1f));
         
         // centre text inside rect
         int   textWidth = MeasureText(icon.text.c_str(), icon.textSize);
         float textX     = icon.rect.x + (icon.rect.width  - textWidth) / 2;
         float textY     = icon.rect.y + (icon.rect.height - icon.textSize ) / 2;
-        DrawText(icon.text.c_str(), textX, textY, icon.textSize, WHITE);
-        
-        // if (selected && (icon.gameState == selectedState)) 
-        // DrawRectangleRoundedLinesEx(icon.rect, 0.1f, 10, 5, RAYWHITE);
+        DrawText(icon.text.c_str(), textX, textY, icon.textSize, RAYWHITE);
     }
 }
 GameState MenuIcons::update(SpaceShip& spaceShip){
