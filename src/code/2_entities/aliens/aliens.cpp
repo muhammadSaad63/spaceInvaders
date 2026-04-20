@@ -295,7 +295,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
     // move aliens' swarm
     if (hittingLeftEdge() || hittingRightEdge()){
         swarmDirection  *= -1;                                                  // reversing direc
-        swarmPosition.y += static_cast<float>(rowSpacing) / 3.0f;               // moving down when hit edge
+        swarmPosition.y += (static_cast<float>(rowSpacing) / 3.0f + waveNum);   // moving down when hit edge
     }
     swarmPosition.x += currSpeed * swarmDirection;
 
