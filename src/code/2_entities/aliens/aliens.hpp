@@ -50,7 +50,7 @@ class Aliens{
         Vector2                               swarmPosition  { 0, 0 };                                              // a tuple containing the (x, y) coor of the top-left point of the swarm
         int                                   swarmDirection { 1    };                                              // unit vector represeting direction of speed: 1 right, -1 left
         const int                             swarmWidth     { (alienSpacing * (numCols - 1)) + (alienSpacing) };   // the total width/length of the swarm
-        const int                             scoreBoost     { 10   };                                              // the increment in the session's score upon defeating a alien
+        const int                             baseScoreBoost { 10   };                                              // the increment in the session's score upon defeating a alien
 
         // swarm speed
         const float                           baseSpeed      { 0.5f      };                                         // ie the min poss speed of each alien
@@ -79,6 +79,7 @@ class Aliens{
         void  loadNextWave();                                                                                       // makes use of the above 3 helper methods to bring about the next wave
         int   getActiveAliensCount();
         bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
+        void  updateScore(int& score, const int aliensDefeated);
 
         bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
         void  shootALaser();         

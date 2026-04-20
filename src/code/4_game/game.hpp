@@ -12,7 +12,7 @@
 #include "../3_states/2_menu/menu.hpp"
 #include "../3_states/3_play/play.hpp"
 #include "../3_states/4_shop/shop.hpp"
-#include "../3_states/5_leaderBoards/leaderBoards.hpp"
+#include "../3_states/5_statistics/statistics.hpp"
 #include "../3_states/6_history/history.hpp"
 #include "../3_states/7_settings/settings.hpp"
 #include "../3_states/8_playing/playing.hpp"
@@ -32,7 +32,7 @@ class Game{
         Play         play;
         Shop         shop;
         History      history;
-        LeaderBoards leaderBoards;
+        Statistics   statistics;
 
         Playing      playing;
         Paused       paused;

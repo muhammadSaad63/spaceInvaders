@@ -4,12 +4,12 @@
 #include "../1_state/state.hpp"
 
 
-class LeaderBoards : public State{
+class Statistics : public State{
     private:
         //
 
     public:
-        LeaderBoards(GameState& gameState);
+        Statistics(GameState& gameState);
 
         void draw();
         void update();

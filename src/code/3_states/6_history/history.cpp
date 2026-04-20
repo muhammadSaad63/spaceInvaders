@@ -1,11 +1,37 @@
 #include "history.hpp"
 
 
-History::History(GameState& gameState) : State(gameState) {}
+class History : public State{
+    private:
+        DataBase&        dataBase;
 
-void History::draw(){
+        vector<GameData> entries;
+        bool             entriesLoaded;
+        int              maxEntriesToFetch;
 
-}
-void History::update(){
+        void loadHistory(){
+            if (!entriesLoaded){
+                entriesLoaded = true;
+                entries       = dataBase.getHistory(maxEntriesToFetch);
+            }
+        }
 
-}
+    public:
+        History(GameState& gameState, DataBase& dataBase)
+        : State(gameState), dataBase(dataBase)
+        {}
+
+        void draw(){
+            //
+        }
+
+        void update(){
+            loadHistory();
+
+            // exiting from history state
+            if (IsKeyPressed(KEY_ENTER)){
+                entriesLoaded    = false;               // so that entries will be reloaded when state again entered
+                gameState        = MENU;                // return  to menu effectively
+            }
+        }
+};
