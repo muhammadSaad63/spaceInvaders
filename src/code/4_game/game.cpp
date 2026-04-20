@@ -40,8 +40,8 @@ Game::Game()                        // overRiding default constructor
 , menu(gameState, settings)
 , play(gameState)
 , shop(gameState) 
-, history(gameState)
-, leaderBoards(gameState)
+, history(gameState, dataBase)
+, statistics(gameState)
 , playing(gameState, settings)
 , paused(gameState, playing)
 , gameOver(gameState, dataBase)
@@ -66,7 +66,7 @@ void Game::draw(){                                                    // draws b
         case PLAY:         { play.draw();         break; }
         case SHOP:         { shop.draw();         break; }
         case HISTORY:      { history.draw();      break; }
-        case LEADERBOARDS: { leaderBoards.draw(); break; }
+        case STATISTICS:   { statistics.draw();   break; }
         case SETTINGS:     { settings.draw();     break; }
         case PLAYING:      { playing.draw();      break; }
         case PAUSED:       { paused.draw();       break; }
@@ -84,7 +84,7 @@ void Game::update(){
         case PLAY:         { play.update();         break; }
         case SHOP:         { shop.update();         break; }
         case HISTORY:      { history.update();      break; }
-        case LEADERBOARDS: { leaderBoards.update(); break; }
+        case STATISTICS:   { statistics.update();   break; }
         case SETTINGS:     { settings.update();     break; }
         case PLAYING:      { playing.update();      break; }
         case PAUSED:       { paused.update();       break; }
