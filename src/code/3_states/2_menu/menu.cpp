@@ -1,8 +1,10 @@
+#include <cmath>
 #include "menu.hpp"
 #include "../../2_entities/lasers/lasers.hpp"
+using std::fmodf;
 
 
-MenuIcons::MenuIcons() : selected(false), selectedDelay(1.5) 
+MenuIcons::MenuIcons() : selected(false), selectedDelay(3) 
 {
     icons[0] = MenuIcon{Rectangle{390, 50,  300, 120}, "Play",         75, PLAYING     };      // Play
     icons[1] = MenuIcon{Rectangle{180, 180, 200, 80 }, "LeaderBoards", 25, LEADERBOARDS};      // LeaderBoards
@@ -12,8 +14,16 @@ MenuIcons::MenuIcons() : selected(false), selectedDelay(1.5)
 };
 void MenuIcons::draw(){
     for (const auto& icon : icons){
-        DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, GOLD, RED);
-        
+        if (selected && (icon.gameState == selectedState)){
+            auto timePassed = (GetTime() - selectedTime);
+            auto alpha      = fmodf(timePassed, 0.6f);           // 3.0f / 0.6f -> 5x pulses
+            auto inc        = 23;
+            DrawRectangleGradientH(icon.rect.x - inc*alpha, icon.rect.y-inc*alpha, icon.rect.width+2*inc*alpha, icon.rect.height+2*inc*alpha, GOLD, RED);
+        }
+        else{
+            DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, GOLD, RED);
+        }
+
         // a light black rectangular overlay over button
         DrawRectangle(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(BLACK, 0.1f));
         
@@ -23,8 +33,8 @@ void MenuIcons::draw(){
         float textY     = icon.rect.y + (icon.rect.height - icon.textSize ) / 2;
         DrawText(icon.text.c_str(), textX, textY, icon.textSize, WHITE);
         
-        if (selected && (icon.gameState == selectedState)) 
-        DrawRectangleRoundedLinesEx(icon.rect, 0.1f, 10, 5, RAYWHITE);
+        // if (selected && (icon.gameState == selectedState)) 
+        // DrawRectangleRoundedLinesEx(icon.rect, 0.1f, 10, 5, RAYWHITE);
     }
 }
 GameState MenuIcons::update(SpaceShip& spaceShip){
