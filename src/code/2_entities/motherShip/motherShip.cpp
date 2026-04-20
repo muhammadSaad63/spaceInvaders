@@ -42,7 +42,7 @@ void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, in
             if (hits >= maxPossibleHits){
                 despawnMotherShip();
 
-                gameScore += scoreBoost;
+                gameScore += (baseScoreBoost * waveNum);
                 enemiesDefeated++;
 
                 cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "The MotherShip has been blown to smithereens! :D" << ANSI_RESET << "\n";
@@ -76,7 +76,7 @@ MotherShip::MotherShip(int& waveNum)
 , currentlySpawned(false)                                       // is the motherShip currently spawned            
 , hits(0)                                                       // number of hits currently sustained by the motherShip
 , maxPossibleHits(9)                                            // max number of hits to defeat/destruct the motherShip
-, scoreBoost(1000)                                              // 1000 extra points on destruction
+, baseScoreBoost(1000)                                          // 1000+ extra points on destruction
 , motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
 , position({0, 85})
 , scale(0.13f)

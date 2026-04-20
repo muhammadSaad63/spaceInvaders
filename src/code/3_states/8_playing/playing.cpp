@@ -104,7 +104,7 @@ Playing::Playing(GameState &gameState, Settings &settings)
 , aliensLasers(aliens.getLasers())
 , spaceShipLasers(spaceShip.getLasers())
 , waveNum(aliens.getWaveNum())
-, motherShip(waveNum)
+, motherShip(aliens.getWaveNum())
 , currWave(waveNum)
 , movementMode(settings.getMovementMode())
 {}

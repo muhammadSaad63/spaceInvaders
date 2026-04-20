@@ -24,7 +24,7 @@ class MotherShip{
 
         int     hits;
         int     maxPossibleHits;
-        int     scoreBoost;
+        int     baseScoreBoost;
 
         Rectangle getMotherShipRect();
         void      spawnMotherShip();
