@@ -46,7 +46,27 @@ Rectangle Alien::getRect(const Vector2& position, const float scale){
 
 
 // aliens internal, helper methods
+int Aliens::getIndexOfFirstColFromLeftWithActiveAliens(){
+    for (auto col {0}; col < numCols; ++col){
+        for (auto row {0}; row < numRows; ++row){
+            if (aliens[row][col].isActive()){
+                return col;
+            }
+        }
+    }
+}
+int Aliens::getIndexOfFirstColFromRightWithActiveAliens(){
+    for (auto col {numCols - 1}; col >= 0; --col){
+        for (auto row {0}; row < numRows; ++row){
+            if (aliens[row][col].isActive()){
+                return col;
+            }
+        }
+    }
+}
 bool Aliens::hittingLeftEdge(){
+    auto index = getIndexOfFirstColFromLeftWithActiveAliens();
+    
     return (swarmPosition.x <= edgePadding);
 }
 bool Aliens::hittingRightEdge(){
