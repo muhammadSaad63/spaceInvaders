@@ -37,7 +37,7 @@ class History : public State{
             // exiting from history state
             if (IsKeyPressed(KEY_ENTER)){
                 entriesLoaded    = false;               // so that entries will be reloaded when state again entered
-                gameState        = MENU;
+                gameState        = MENU;                // return  to menu effectively
             }
         }
 };

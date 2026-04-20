@@ -7,7 +7,7 @@ using std::fmodf;
 MenuIcons::MenuIcons() : selected(false), selectedDelay(3) 
 {
     icons[0] = MenuIcon{Rectangle{390, 50,  300, 120}, "Play",         75, PLAYING     };      // Play
-    icons[1] = MenuIcon{Rectangle{180, 180, 200, 80 }, "LeaderBoards", 25, LEADERBOARDS};      // LeaderBoards
+    icons[1] = MenuIcon{Rectangle{180, 180, 200, 80 }, "LeaderBoards", 25, STATISTICS  };      // LeaderBoards
     icons[2] = MenuIcon{Rectangle{700, 180, 200, 80 }, "Shop",         25, SHOP        };      // Shop
     icons[3] = MenuIcon{Rectangle{50,  280, 150, 60 }, "History",      20, HISTORY     };      // History
     icons[4] = MenuIcon{Rectangle{880, 280, 150, 60 }, "Settings",     20, SETTINGS    };      // Settings

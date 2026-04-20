@@ -117,7 +117,7 @@ set(SOURCES
     src/code/3_states/2_menu/menu.cpp                       # Main menu screen
     src/code/3_states/3_play/play.cpp                       # Play screen wrapper
     src/code/3_states/4_shop/shop.cpp                       # Shop screen
-    src/code/3_states/5_leaderBoards/leaderBoards.cpp       # Leaderboard screen
+    src/code/3_states/5_statistics/statistics.cpp           # Leaderboard screen
     src/code/3_states/6_history/history.cpp                 # Match history screen
     src/code/3_states/7_settings/settings.cpp               # Settings screen
     src/code/3_states/8_playing/playing.cpp                 # Active gameplay state
@@ -164,7 +164,7 @@ target_include_directories(spaceInvaders PRIVATE
     ${CMAKE_SOURCE_DIR}/src/code/3_states/2_menu
     ${CMAKE_SOURCE_DIR}/src/code/3_states/3_play
     ${CMAKE_SOURCE_DIR}/src/code/3_states/4_shop
-    ${CMAKE_SOURCE_DIR}/src/code/3_states/5_leaderBoards
+    ${CMAKE_SOURCE_DIR}/src/code/3_states/5_statistics
     ${CMAKE_SOURCE_DIR}/src/code/3_states/6_history
     ${CMAKE_SOURCE_DIR}/src/code/3_states/7_settings
     ${CMAKE_SOURCE_DIR}/src/code/3_states/8_playing
