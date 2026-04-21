@@ -9,7 +9,7 @@ using std::string;
 
 
 class Settings : public State{
-    // copied from your Mr.Pong game - ebbi
+    // copied from your Mr.Pong game  - ebbi
 
     private:
         bool         enableFullScreen {false};         // setwindowstate(FLAG_BORDERLESS_WINDOWED_MODE); ClearWindowState(); SetWindowSize();
