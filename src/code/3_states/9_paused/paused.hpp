@@ -10,7 +10,7 @@ class Paused : public State{
         Playing& playing;
         Sound    gameResumedSFX;
         Sound    gameStoppedSFX;
-        int      textSize { 50 };
+        int      textSize { 83 };
 
     public:
         Paused(GameState& gameState, Playing& playing);

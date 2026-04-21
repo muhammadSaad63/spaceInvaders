@@ -17,7 +17,7 @@ void Paused::draw(){
     int cx = GetScreenWidth()  / 2;
     int cy = GetScreenHeight() / 2;
 
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.55f));
+    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.23f));         // a translucent black overlay 
 
     DrawText("PAUSED",
                 cx - MeasureText("PAUSED", textSize) / 2,
@@ -26,10 +26,10 @@ void Paused::draw(){
     DrawText(TextFormat("Score:  %06d", playing.getScore()),   cx - 130, cy - 5,  26, RAYWHITE);
     DrawText(TextFormat("Wave:   %02d", playing.getWaveNum()), cx - 130, cy + 30, 26, RAYWHITE);
 
-    DrawLineEx({30, (float)(cy + 65)}, {(float)(GetScreenWidth() - 30), (float)(cy + 65)}, 1, DARKGRAY);
+    DrawLineEx({30, (float)(cy + 83)}, {(float)(GetScreenWidth() - 30), (float)(cy + 83)}, 1, DARKGRAY);
 
-    DrawText("P  -  Resume",       cx - MeasureText("P  -  Resume",       26) / 2, cy + 80,  26, GREEN);
-    DrawText("X  -  Quit to Menu", cx - MeasureText("X  -  Quit to Menu", 26) / 2, cy + 116, 26, RED);
+    DrawText("P  -  Resume",       cx - MeasureText("P  -  Resume",       26) / 2, cy + 163, 26, GREEN);
+    DrawText("X  -  Quit to Menu", cx - MeasureText("X  -  Quit to Menu", 26) / 2, cy + 193, 26, RED);
 }
 
 void Paused::update(){
