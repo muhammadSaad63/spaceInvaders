@@ -130,6 +130,18 @@ void Aliens::updateScore(int& score, const int aliensDefeated){
 
     score += totalScoreIncrease;
 }
+int Aliens::getLowestRowNumWithActiveAliens(){
+    for (auto row {numRows - 1}; row >= 0; --row){
+        for (auto col {0}; col < numCols; ++col){
+            if (aliens[row][col].isActive()){
+                return row;
+            }
+        }
+    }
+
+    return -1;                      // wont reach here but just in case
+}
+
 void Aliens::loadNextWave(){
     waveNum++;
     
