@@ -17,6 +17,7 @@ class GameOver : public State{
 
     public:
         GameOver(GameState& gameState, DataBase& dataBase, Playing& playing);
+        ~GameOver();
 
         void draw();
         void update();
