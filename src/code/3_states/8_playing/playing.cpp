@@ -4,10 +4,10 @@ using std::ceilf, std::fmodf;
 
 
 void Playing::loadSounds(){
-    countDown321SFX = LoadSound("src/assets/sounds/sfx/active/countDown321.mp3");
-    // newWaveSFX      = loadSound("src/assets/sounds/sfx/active/newWave.mp3");
-    gamePausedSFX   = LoadSound("src/assets/sounds/sfx/active/gamePaused.mp3");
-    gameOverSFX     = LoadSound("src/assets/sounds/sfx/active/gameOver.mp3");
+    countDown321SFX = LoadSound("src/assets/sounds/sfx/countDown321.mp3");
+    // newWaveSFX      = loadSound("src/assets/sounds/sfx/newWave.mp3");
+    gamePausedSFX   = LoadSound("src/assets/sounds/sfx/gamePaused.mp3");
+    gameOverSFX     = LoadSound("src/assets/sounds/sfx/gameOver.mp3");
 }
 void Playing::unloadSounds(){
     UnloadSound(countDown321SFX);

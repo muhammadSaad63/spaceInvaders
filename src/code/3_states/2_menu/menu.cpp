@@ -12,7 +12,7 @@ MenuIcons::MenuIcons() : selected(false), selectedDelay(3)
     icons[3] = MenuIcon{Rectangle{50,  280, 150, 60 }, "History",      20, HISTORY     };      // History
     icons[4] = MenuIcon{Rectangle{880, 280, 150, 60 }, "Settings",     20, SETTINGS    };      // Settings
 
-    iconSelectedSFX = LoadSound("src/assets/sounds/sfx/active/iconSelected.mp3");
+    iconSelectedSFX = LoadSound("src/assets/sounds/sfx/iconSelected.mp3");
 };
 MenuIcons::~MenuIcons(){
     UnloadSound(iconSelectedSFX);

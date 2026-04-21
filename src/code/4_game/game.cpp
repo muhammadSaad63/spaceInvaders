@@ -15,7 +15,7 @@ void Game::playEndCredits(){
     double currTime     {GetTime()};
     double waitDuration {2.5};                  // in sec
     
-    Sound windowCloseSFX = LoadSound("src/assets/sounds/sfx/active/windowClosed.mp3");
+    Sound windowCloseSFX = LoadSound("src/assets/sounds/sfx/windowClosed.mp3");
     PlaySound(windowCloseSFX);          // :D
     
     while ((currTime + waitDuration) >= GetTime()){

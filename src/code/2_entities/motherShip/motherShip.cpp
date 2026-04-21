@@ -85,7 +85,7 @@ MotherShip::MotherShip(int& waveNum)
 , spawnFromLeft(true)
 , waveNum(waveNum)
 {
-    motherShipDestroyedSFX = LoadSound("src/assets/sounds/sfx/active/motherShipDestroyed.mp3");
+    motherShipDestroyedSFX = LoadSound("src/assets/sounds/sfx/motherShipDestroyed.mp3");
 }
 MotherShip::~MotherShip(){
     if (IsTextureValid(motherShip))                             // this check is redundant tho...

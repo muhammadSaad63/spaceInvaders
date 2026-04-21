@@ -284,7 +284,7 @@ int Aliens::checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers){
 Aliens::Aliens(){
     loadNextWave();
 
-    alienDestroyedSFX = LoadSound("src/assets/sounds/sfx/active/alienDestroyed.mp3");
+    alienDestroyedSFX = LoadSound("src/assets/sounds/sfx/alienDestroyed.mp3");
     SetSoundVolume(alienDestroyedSFX, 0.35f);
 }
 Aliens::~Aliens(){
