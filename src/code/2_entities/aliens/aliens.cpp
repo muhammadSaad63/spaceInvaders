@@ -286,9 +286,11 @@ Aliens::Aliens(){
 
     alienDestroyedSFX = LoadSound("src/assets/sounds/sfx/alienDestroyed.mp3");
     SetSoundVolume(alienDestroyedSFX, 0.35f);
+    waveClearedSFX = LoadSound("src/assets/sounds/sfx/waveCleared.mp3");
 }
 Aliens::~Aliens(){
     UnloadSound(alienDestroyedSFX);
+    UnloadSound(waveClearedSFX);
 }
 
 void Aliens::draw(){
@@ -318,6 +320,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
 {
     if (isSwarmDestroyed()){
         cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "Alien Swarm #" << waveNum << " was successfully vanquished :D" << ANSI_RESET << "\n";
+        PlaySound(waveClearedSFX);
         loadNextWave();
 
         return;

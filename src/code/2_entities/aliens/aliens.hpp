@@ -63,6 +63,7 @@ class Aliens{
         float                                 shootInterval  { 2.0f };                                              // the time interval/duration bw each consecutive laser firing
 
         Sound                                 alienDestroyedSFX;
+        Sound                                 waveClearedSFX;
 
         // internal, helper methods
         int   calcPosX(const int colIndex);
