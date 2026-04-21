@@ -25,7 +25,7 @@ class Settings : public State{
         const int    textSize         {35};
         const int    offSet           {100};           // gap between text/heading and option/toggler
         const Color  color            {GOLD};
-        const string texts[6]         {"   > enableFullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
+        const string texts[6]         {"   > FullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
 
         Sound settingModifiedSFX;
 
