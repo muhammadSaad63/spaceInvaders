@@ -36,8 +36,13 @@ class Playing : public State{
         int            enemiesDefeated      {0};            // total number of enemies defeated
         int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
 
+        Sound          countDown321;
+
 
         // draw helpers
+        void  loadSounds();
+        void  unloadSounds();
+
         void  drawCountdown();
         void  drawScore();
         void  drawWaveNum();
@@ -54,6 +59,7 @@ class Playing : public State{
 
     public:
         Playing(GameState& gameState, Settings& settings);
+        ~Playing();
 
         void draw();
         void update();
