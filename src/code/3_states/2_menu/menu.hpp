@@ -25,9 +25,11 @@ class MenuIcons{
         double    selectedTime;
         double    selectedDelay;                    // in sec
         GameState selectedState;
+        Sound      iconSelectedSFX;
 
     public:
         MenuIcons();
+        ~MenuIcons();
 
         void draw();
         GameState update(SpaceShip& spaceShip);

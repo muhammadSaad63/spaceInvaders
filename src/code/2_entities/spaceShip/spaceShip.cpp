@@ -99,6 +99,7 @@ SpaceShip::SpaceShip(const string& fileName){
     horizontalSpeed = 5;
 
     laserFiredSFX = LoadSound("src/assets/sounds/sfx/active/laserFired.mp3");
+    SetSoundVolume(laserFiredSFX, 0.30f);
 }
 SpaceShip::~SpaceShip(){
     UnloadTexture(texture);

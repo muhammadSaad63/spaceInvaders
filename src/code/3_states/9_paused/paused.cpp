@@ -5,8 +5,8 @@ Paused::Paused(GameState& gameState, Playing& playing)
 : State(gameState)
 , playing(playing) 
 {
-    gameResumedSFX = LoadSound("../../../assets/sounds/sfx/gameResumed.mp3");
-    gameStoppedSFX = LoadSound("../../../assets/sounds/sfx/gameStopped.mp3");
+    gameResumedSFX  = LoadSound("src/assets/sounds/sfx/active/gameResumed.mp3");
+    gameStoppedSFX  = LoadSound("src/assets/sounds/sfx/active/gameStopped.mp3");
 }
 Paused::~Paused(){
     UnloadSound(gameResumedSFX);
@@ -27,7 +27,7 @@ void Paused::update(){
 
     if (IsKeyPressed(KEY_X)){
         PlaySound(gameStoppedSFX);
-        
+
         gameState = MENU;
         // playing.resetAll();
     }

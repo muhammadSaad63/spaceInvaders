@@ -6,17 +6,13 @@ using std::ceilf, std::fmodf;
 void Playing::loadSounds(){
     countDown321SFX = LoadSound("src/assets/sounds/sfx/active/countDown321.mp3");
     // newWaveSFX      = loadSound("src/assets/sounds/sfx/active/newWave.mp3");
-    gameResumedSFX  = LoadSound("src/assets/sounds/sfx/active/gameResumed.mp3");
     gamePausedSFX   = LoadSound("src/assets/sounds/sfx/active/gamePaused.mp3");
-    gameStoppedSFX  = LoadSound("src/assets/sounds/sfx/active/gameStopped.mp3");
     gameOverSFX     = LoadSound("src/assets/sounds/sfx/active/gameOver.mp3");
 }
 void Playing::unloadSounds(){
     UnloadSound(countDown321SFX);
     UnloadSound(newWaveSFX);
-    UnloadSound(gameResumedSFX);
     UnloadSound(gamePausedSFX);
-    UnloadSound(gameStoppedSFX);
     UnloadSound(gameOverSFX);
 }
 
@@ -161,6 +157,8 @@ void Playing::update(){
     
     if (IsKeyPressed(KEY_P)){
         gameState = PAUSED;
+        PlaySound(gamePausedSFX);
+
         return;
     }
 
