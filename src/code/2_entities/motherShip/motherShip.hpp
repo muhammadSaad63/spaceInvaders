@@ -26,6 +26,8 @@ class MotherShip{
         int     maxPossibleHits;
         int     baseScoreBoost;
 
+        Sound   motherShipDestroyedSFX;
+
         Rectangle getMotherShipRect();
         void      spawnMotherShip();
         bool      reachedEdge();

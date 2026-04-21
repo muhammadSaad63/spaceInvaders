@@ -152,6 +152,8 @@ void Playing::draw(){
 void Playing::update(){
     if (!playerLivesRemaining){
         gameState = GAMEOVER;
+        PlaySound(gameOverSFX);
+
         return;
     }
     

@@ -46,7 +46,7 @@ void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, in
                 enemiesDefeated++;
 
                 cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "The MotherShip has been blown to smithereens! :D" << ANSI_RESET << "\n";
-                // playsound
+                PlaySound(motherShipDestroyedSFX);
 
                 return;
             }
@@ -84,10 +84,14 @@ MotherShip::MotherShip(int& waveNum)
 , speed(1.25f)
 , spawnFromLeft(true)
 , waveNum(waveNum)
-{}
+{
+    motherShipDestroyedSFX = LoadSound("src/assets/sounds/sfx/active/motherShipDestroyed.mp3");
+}
 MotherShip::~MotherShip(){
     if (IsTextureValid(motherShip))                             // this check is redundant tho...
     { UnloadTexture(motherShip);  }
+
+    UnloadSound(motherShipDestroyedSFX);
 }
 
 // exposed methods
