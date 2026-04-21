@@ -13,6 +13,8 @@ class GameOver : public State{
         Playing&  playing;
         float     timer;
 
+        Sound     stateChangedSFX;
+
     public:
         GameOver(GameState& gameState, DataBase& dataBase, Playing& playing);
 

@@ -7,7 +7,12 @@ GameOver::GameOver(GameState& gameState, DataBase& dataBase, Playing& playing)
         , dataBase(dataBase)
         , playing(playing)
         , timer(0)
-        {}
+        {
+            stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
+        }
+GameOver::~GameOver(){
+    UnloadSound(stateChangedSFX);
+}
 
 void GameOver::draw(){
     int cx = GetScreenWidth()  / 2;
@@ -30,6 +35,18 @@ void GameOver::update(){
     timer += GetFrameTime();
     if (timer < 1.5f) return;
 
-    if (IsKeyPressed(KEY_R)){ timer = 0; playing.reset(); gameState = PLAYING; }
-    if (IsKeyPressed(KEY_M)){ timer = 0; playing.reset(); gameState = MENU;    }
+    if (IsKeyPressed(KEY_R)){ 
+        timer = 0; 
+        playing.reset(); 
+
+        gameState = PLAYING; 
+    }
+
+    if (IsKeyPressed(KEY_M)){ 
+        timer = 0; 
+        playing.reset(); 
+        PlaySound(stateChangedSFX);
+
+        gameState = MENU;    
+    }
 }
