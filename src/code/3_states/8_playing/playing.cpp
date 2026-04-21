@@ -3,6 +3,13 @@
 using std::ceilf, std::fmodf;
 
 
+void Playing::loadSounds(){
+    countDown321 = LoadSound("src/assets/sounds/sfx/countDown321.mp3");
+}
+void Playing::unloadSounds(){
+    UnloadSound(countDown321);
+}
+
 void Playing::drawCountdown(){
     auto  secondProgress = fmodf(elapsedCountdownTime, 1.0f);                        // how much of the corr second has passed
     auto  displayNum     = static_cast<int>( ceilf(totalCountdownDuration - elapsedCountdownTime) );
@@ -99,15 +106,20 @@ void Playing::startWaveAnnouncement(){
 }
 
 Playing::Playing(GameState &gameState, Settings &settings)
-: State(gameState)
-, spaceShip("1.png")
-, aliensLasers(aliens.getLasers())
-, spaceShipLasers(spaceShip.getLasers())
-, waveNum(aliens.getWaveNum())
-, motherShip(aliens.getWaveNum())
-, currWave(waveNum)
-, movementMode(settings.getMovementMode())
-{}
+        : State(gameState)
+        , spaceShip("1.png")
+        , aliensLasers(aliens.getLasers())
+        , spaceShipLasers(spaceShip.getLasers())
+        , waveNum(aliens.getWaveNum())
+        , motherShip(aliens.getWaveNum())
+        , currWave(waveNum)
+        , movementMode(settings.getMovementMode())
+{
+    loadSounds();
+}
+Playing::~Playing(){
+    unloadSounds();
+}
 
 void Playing::draw(){
     if (playingCountdown){
