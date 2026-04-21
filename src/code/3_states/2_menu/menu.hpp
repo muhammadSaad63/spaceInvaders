@@ -25,7 +25,9 @@ class MenuIcons{
         double    selectedTime;
         double    selectedDelay;                    // in sec
         GameState selectedState;
-        Sound      iconSelectedSFX;
+
+        Sound     iconSelectedSFX;
+        Sound     stateChangedSFX;
 
     public:
         MenuIcons();

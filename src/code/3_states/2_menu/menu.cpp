@@ -13,9 +13,11 @@ MenuIcons::MenuIcons() : selected(false), selectedDelay(3)
     icons[4] = MenuIcon{Rectangle{880, 280, 150, 60 }, "Settings",     20, SETTINGS    };      // Settings
 
     iconSelectedSFX = LoadSound("src/assets/sounds/sfx/iconSelected.mp3");
+    stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
 };
 MenuIcons::~MenuIcons(){
     UnloadSound(iconSelectedSFX);
+    UnloadSound(stateChangedSFX);
 }
 void MenuIcons::draw(){
     for (const auto& icon : icons){
@@ -53,9 +55,10 @@ GameState MenuIcons::update(SpaceShip& spaceShip){
 
     // if an icon was previously successfuly selected
     if (selected){
-        if ((selectedTime + selectedDelay) <= GetTime()){
+        if (GetTime() >= (selectedTime + selectedDelay)){
             spaceShip.reset();
             selected = false;
+            PlaySound(stateChangedSFX);
 
             return selectedState;
         }
