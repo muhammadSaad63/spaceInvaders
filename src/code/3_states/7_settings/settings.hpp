@@ -22,7 +22,7 @@ class Settings : public State{
         const int    posX             {23};
         const int    initPosY         {23};            // the y value at which to start drawing
         int          posY             {};
-        const int    textSize         {35};
+        const int    textSize         {30};
         const int    offSet           {100};           // gap between text/heading and option/toggler
         const Color  color            {GOLD};
         const string texts[6]         {"   > FullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
