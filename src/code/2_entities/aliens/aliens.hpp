@@ -62,6 +62,8 @@ class Aliens{
         float                                 shootTimer     { 0.0f };                                              // the time passed (in s) after the last laser was shot
         float                                 shootInterval  { 2.0f };                                              // the time interval/duration bw each consecutive laser firing
 
+        Sound                                 alienDestroyedSFX;
+
         // internal, helper methods
         int   calcPosX(const int colIndex);
         int   calcPosY(const int rowIndex);
@@ -93,6 +95,7 @@ class Aliens{
 
     public:
         Aliens();
+        ~Aliens();
 
         void draw();
         void update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefeated);

@@ -260,6 +260,8 @@ bool Aliens::checkSpaceShipLaserCollision(Laser& spaceShipLaser){
                 updateSwarmSpeed();                    // update curr speed when another alien ded
                 spaceShipLaser.deActivate();
 
+                PlaySound(alienDestroyedSFX);
+
                 return true;                           // one laser can only hit one alien
             }
         }
@@ -271,16 +273,22 @@ int Aliens::checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers){
     auto aliensDefeated {0};
 
     for (auto& laser : spaceShipLasers){
-        if (checkSpaceShipLaserCollision(laser)){
+        if (checkSpaceShipLaserCollision(laser)){               // returns true if there a successful collision
             aliensDefeated++;
         }
     }
 
-    return aliensDefeated;                      // no alien died; yayyyyyyyyy
+    return aliensDefeated;
 }
 
 Aliens::Aliens(){
     loadNextWave();
+
+    alienDestroyedSFX = LoadSound("src/assets/sounds/sfx/active/alienDestroyed.mp3");
+    SetSoundVolume(alienDestroyedSFX, 0.35f);
+}
+Aliens::~Aliens(){
+    UnloadSound(alienDestroyedSFX);
 }
 
 void Aliens::draw(){
