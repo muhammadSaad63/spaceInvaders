@@ -141,6 +141,15 @@ int Aliens::getLowestRowNumWithActiveAliens(){
 
     return -1;                      // wont reach here but just in case
 }
+bool Aliens::aliensTouchingSpaceship(){
+    auto rowNumOfMostBottomAlien = getLowestRowNumWithActiveAliens();
+    auto posYOfAlien             = calcPosY(rowNumOfMostBottomAlien);
+    auto lowerEndPosYOfAlien     = (posYOfAlien + aliens[0][0].getTextureHeight());      // since the aliens are all same in the swarm            
+
+    auto posYOfSpaceShip         = (GetScreenHeight() - 130);                            // me dont wanna make a sep getter for this
+
+    return (lowerEndPosYOfAlien >= posYOfAlien);
+}
 
 void Aliens::loadNextWave(){
     waveNum++;
