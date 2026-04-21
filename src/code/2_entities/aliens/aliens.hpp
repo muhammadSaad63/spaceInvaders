@@ -80,6 +80,8 @@ class Aliens{
         int   getActiveAliensCount();
         bool  isSwarmDestroyed();                                                                                   // returns true if all the aliens in the swarm in the current wave are destroyed
         void  updateScore(int& score, const int aliensDefeated);
+        int   getLowestRowNumWithActiveAliens();
+        bool  aliensTouchingSpaceship();
 
         bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
         void  shootALaser();         

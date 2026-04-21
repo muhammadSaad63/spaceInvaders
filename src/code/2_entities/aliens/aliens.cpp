@@ -96,10 +96,12 @@ void Aliens::centerSwarm(){
     swarmPosition.y = 123.0f;
 }
 float Aliens::calcSwarmSpeed(){
-    auto waveNumBoost   = ((waveNum - 1) * acceleration);
-    auto lowActiveBoost = ((getActiveAliensCount() <= 7)? (2 * acceleration) : 0);
+    auto waveNumBoost          = ((waveNum - 1) * acceleration);
 
-    return (baseSpeed + waveNumBoost + lowActiveBoost);
+    auto numActiveAliens       = getActiveAliensCount();
+    auto lowActiveAliensBoost  = ((numActiveAliens <= 7)? (2 * acceleration) : ((numActiveAliens <= 14)? acceleration : 0));
+
+    return (baseSpeed + waveNumBoost + lowActiveAliensBoost);
 }
 void Aliens::updateSwarmSpeed(){
     currSpeed = calcSwarmSpeed();
@@ -128,6 +130,27 @@ void Aliens::updateScore(int& score, const int aliensDefeated){
 
     score += totalScoreIncrease;
 }
+int Aliens::getLowestRowNumWithActiveAliens(){
+    for (auto row {numRows - 1}; row >= 0; --row){
+        for (auto col {0}; col < numCols; ++col){
+            if (aliens[row][col].isActive()){
+                return row;
+            }
+        }
+    }
+
+    return -1;                      // wont reach here but just in case
+}
+bool Aliens::aliensTouchingSpaceship(){
+    auto rowNumOfMostBottomAlien = getLowestRowNumWithActiveAliens();
+    auto posYOfAlien             = calcPosY(rowNumOfMostBottomAlien);
+    auto lowerEndPosYOfAlien     = (posYOfAlien + aliens[0][0].getTextureHeight());      // since the aliens are all same in the swarm            
+
+    auto posYOfSpaceShip         = (GetScreenHeight() - 130);                            // me dont wanna make a sep getter for this
+
+    return (lowerEndPosYOfAlien >= posYOfAlien);
+}
+
 void Aliens::loadNextWave(){
     waveNum++;
     
@@ -295,7 +318,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
     // move aliens' swarm
     if (hittingLeftEdge() || hittingRightEdge()){
         swarmDirection  *= -1;                                                  // reversing direc
-        swarmPosition.y += static_cast<float>(rowSpacing) / 3.0f;               // moving down when hit edge
+        swarmPosition.y += (static_cast<float>(rowSpacing) / 3.0f + waveNum);   // moving down when hit edge
     }
     swarmPosition.x += currSpeed * swarmDirection;
 

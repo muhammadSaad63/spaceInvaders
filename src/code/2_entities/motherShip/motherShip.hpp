@@ -9,6 +9,7 @@ using std::vector;
 
 class MotherShip{
     private:
+        int&    waveNum;
         Texture motherShip;
 
         Vector2 position;           // using instead of posX, posY
@@ -23,7 +24,7 @@ class MotherShip{
 
         int     hits;
         int     maxPossibleHits;
-        int     scoreBoost;
+        int     baseScoreBoost;
 
         Rectangle getMotherShipRect();
         void      spawnMotherShip();
@@ -33,7 +34,7 @@ class MotherShip{
         void      updateMotherShipPosition();
 
     public:
-        MotherShip();
+        MotherShip(int& waveNum);
         ~MotherShip();
 
         void draw();

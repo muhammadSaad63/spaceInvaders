@@ -30,7 +30,7 @@ bool MotherShip::reachedEdge()
 void MotherShip::despawnMotherShip()
 {
     currentlySpawned = false;
-    randomSpawnPause = GetRandomValue(20, 40);              // will spawn after a random n seconds (n > 20, < 40)
+    randomSpawnPause = GetRandomValue(40, 60);              // will spawn after a random n seconds (n > 40, < 60)
     lastSpawned = GetTime();
 }
 void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated){
@@ -42,7 +42,7 @@ void MotherShip::checkForHits(vector<Laser>& spaceShipLasers, int& gameScore, in
             if (hits >= maxPossibleHits){
                 despawnMotherShip();
 
-                gameScore += scoreBoost;
+                gameScore += (baseScoreBoost * waveNum);
                 enemiesDefeated++;
 
                 cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "The MotherShip has been blown to smithereens! :D" << ANSI_RESET << "\n";
@@ -71,18 +71,19 @@ void MotherShip::updateMotherShipPosition(){
 }
 
 // construcor & destructor
-MotherShip::MotherShip() 
+MotherShip::MotherShip(int& waveNum) 
 : lastSpawned(0)                                                // time when the ship last spawned; initialized with the 0/getTime()
 , currentlySpawned(false)                                       // is the motherShip currently spawned            
 , hits(0)                                                       // number of hits currently sustained by the motherShip
 , maxPossibleHits(9)                                            // max number of hits to defeat/destruct the motherShip
-, scoreBoost(1000)                                              // 1000 extra points on destruction
+, baseScoreBoost(1000)                                          // 1000+ extra points on destruction
 , motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
 , position({0, 85})
 , scale(0.13f)
-, randomSpawnPause(30)                                          // 30s
+, randomSpawnPause(40)                                          // 40s
 , speed(1.25f)
 , spawnFromLeft(true)
+, waveNum(waveNum)
 {}
 MotherShip::~MotherShip(){
     if (IsTextureValid(motherShip))                             // this check is redundant tho...

@@ -25,7 +25,7 @@ void DataBase::createTable_games(){
             
             "timeStarted DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,"          // Current_timestamp is a func which returns the timestamp when the row was written
             "timeEnded DATETIME NOT NULL,"
-            "timePlayed INTEGER NOT NULL,"
+            "timePlayed INTEGER NOT NULL"
 
             // "FOREIGN KEY (playerID) REFERENCES players(playerID)"
         ")"
