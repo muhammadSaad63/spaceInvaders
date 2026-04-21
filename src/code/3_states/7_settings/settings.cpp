@@ -68,7 +68,7 @@ void Settings::updateFullScreen(const int& index){
             SetWindowSize(1080, 720);
         }
 
-        PlaySound(settingModifySFX);
+        PlaySound(settingModifiedSFX);
     }
 }
 void Settings::updateGrid(const int& index){
@@ -77,7 +77,7 @@ void Settings::updateGrid(const int& index){
     if (CheckCollisionPointRec(GetMousePosition(), Rectangle{(float) posX + MeasureText(texts[1].c_str(), textSize) + offSet, (float) posY, (float) MeasureText("Disabled", textSize), (float) textSize}) && (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || GetMouseWheelMove()))
     {
         enableGrid = !enableGrid;
-        PlaySound(settingModifySFX);
+        PlaySound(settingModifiedSFX);
     }
 }
 void Settings::updateFrameRate(const int& index){
@@ -98,7 +98,7 @@ void Settings::updateFrameRate(const int& index){
         // frameRate = ((frameRate == 20)? 40 : (frameRate == 40)? 60 : (frameRate == 60)? 120 : 20);          // y these values? simple: me like em :)
         
         SetTargetFPS(frameRate);
-        PlaySound(settingModifySFX);
+        PlaySound(settingModifiedSFX);
     }
 }
 void Settings::updateWindowOpacity(const int& index){
@@ -112,7 +112,7 @@ void Settings::updateWindowOpacity(const int& index){
         }
         
         SetWindowOpacity(windowOpacity);
-        PlaySound(settingModifySFX);
+        PlaySound(settingModifiedSFX);
     }
 }
 void Settings::updateMasterVolume(const int& index){
@@ -126,7 +126,7 @@ void Settings::updateMasterVolume(const int& index){
         }
         
         SetMasterVolume(masterVolume);
-        PlaySound(settingModifySFX);             // to test modified vol
+        PlaySound(settingModifiedSFX);             // to test modified vol
     }
 }
 void Settings::updateInputMode(const int& index){
@@ -136,15 +136,15 @@ void Settings::updateInputMode(const int& index){
     {
         playerInputMode = ((playerInputMode == WASD)? ARROW : (playerInputMode == ARROW)? MOUSE : WASD);
         
-        PlaySound(settingModifySFX);
+        PlaySound(settingModifiedSFX);
     }
 }
 
 Settings::Settings(GameState& gameState) : State(gameState) {
-    settingModifySFX = LoadSound("../../../assets/sounds/sfx/settingModify.mp3");
+    settingModifiedSFX = LoadSound("src/assets/sounds/sfx/active/settingModified.mp3");
 }
 Settings::~Settings(){
-    UnloadSound(settingModifySFX);
+    UnloadSound(settingModifiedSFX);
 }
 
 void Settings::draw(){

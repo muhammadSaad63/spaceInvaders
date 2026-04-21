@@ -78,6 +78,7 @@ void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int&
             laser.deActivate();
             playerLivesRemaining--;
             cout << "[Captain Saad] " << ANSI_BRIGHT_RED << "We lost a life! Only " << playerLivesRemaining << " remaining. :(" << ANSI_RESET << "\n"; 
+            PlaySound(lifeLostSFX);
 
             if (!playerLivesRemaining){                 // ie all lives lost (reached 0)
                 return;
@@ -100,10 +101,13 @@ SpaceShip::SpaceShip(const string& fileName){
 
     laserFiredSFX = LoadSound("src/assets/sounds/sfx/active/laserFired.mp3");
     SetSoundVolume(laserFiredSFX, 0.30f);
+    lifeLostSFX   = LoadSound("src/assets/sounds/sfx/active/lifeLost.mp3");
 }
 SpaceShip::~SpaceShip(){
     UnloadTexture(texture);
+
     UnloadSound(laserFiredSFX);
+    UnloadSound(lifeLostSFX);
 }
 
 // exposed methods

@@ -27,7 +27,7 @@ class Settings : public State{
         const Color  color            {GOLD};
         const string texts[6]         {"   > enableFullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
 
-        Sound settingModifySFX;
+        Sound settingModifiedSFX;
 
         // internal, helper functions
         int getPosY(const int& index);
