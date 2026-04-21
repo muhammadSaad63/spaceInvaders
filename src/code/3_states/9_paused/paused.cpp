@@ -5,8 +5,8 @@
 Paused::Paused(GameState& gameState, Playing& playing)
 : State(gameState), playing(playing)
 {
-    gameResumedSFX = LoadSound("src/assets/sounds/sfx/active/gameResumed.mp3");
-    gameStoppedSFX = LoadSound("src/assets/sounds/sfx/active/gameStopped.mp3");
+    gameResumedSFX = LoadSound("src/assets/sounds/sfx/gameResumed.mp3");
+    gameStoppedSFX = LoadSound("src/assets/sounds/sfx/gameStopped.mp3");
 }
 Paused::~Paused(){
     UnloadSound(gameResumedSFX);
@@ -28,8 +28,8 @@ void Paused::draw(){
 
     DrawLineEx({30, (float)(cy + 83)}, {(float)(GetScreenWidth() - 30), (float)(cy + 83)}, 1, DARKGRAY);
 
-    DrawText("P  -  Resume",       cx - MeasureText("P  -  Resume",       26) / 2, cy + 163, 26, GREEN);
-    DrawText("X  -  Quit to Menu", cx - MeasureText("X  -  Quit to Menu", 26) / 2, cy + 193, 26, RED);
+    DrawText("P  -  Resume",       cx - MeasureText("P  -  Resume",       26) / 2, cy + 133, 26, GREEN);
+    DrawText("X  -  Quit to Menu", cx - MeasureText("X  -  Quit to Menu", 26) / 2, cy + 163, 26, RED);
 }
 
 void Paused::update(){
