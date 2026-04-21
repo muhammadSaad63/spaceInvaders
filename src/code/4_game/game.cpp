@@ -44,7 +44,7 @@ Game::Game()                        // overRiding default constructor
 , statistics(gameState, dataBase)
 , playing(gameState, settings)
 , paused(gameState, playing)
-, gameOver(gameState, dataBase)
+, gameOver(gameState, dataBase, playing)
 , closeGame(gameState) 
 {}
 

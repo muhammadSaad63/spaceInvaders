@@ -35,6 +35,7 @@ class Playing : public State{
         int            gameScore            {0};            // score reached in the game session
         int            enemiesDefeated      {0};            // total number of enemies defeated
         int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
+        int            timePlayed           {0};
 
         Sound          countDown321SFX;
         bool           played_countDown321SFX {false};
@@ -72,4 +73,9 @@ class Playing : public State{
         void update();
 
         void reset();
+        
+        int  getScore(); 
+        int  getEnemiesDefeated();
+        int  getWaveNum();
+        int  getTimePlayed()      ;
 };
