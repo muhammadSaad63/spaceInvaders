@@ -97,9 +97,12 @@ SpaceShip::SpaceShip(const string& fileName){
     position.y = (GetScreenHeight()    - (texture.height * textureScale) - bottomOffset); 
 
     horizontalSpeed = 5;
+
+    laserFiredSFX = LoadSound("src/assets/sounds/sfx/active/laserFired.mp3");
 }
 SpaceShip::~SpaceShip(){
     UnloadTexture(texture);
+    UnloadSound(laserFiredSFX);
 }
 
 // exposed methods
@@ -127,6 +130,7 @@ void SpaceShip::update(InputMode inputMode){
     // firing lasers
     if (IsKeyPressed(KEY_SPACE)){
         lasers.push_back(Laser{(int) (position.x + (texture.width * textureScale)/2), (int) position.y});
+        PlaySound(laserFiredSFX);
     }
 
     // updating lasers
@@ -146,6 +150,7 @@ void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLasers, int& pl
     // firing lasers
     if (IsKeyPressed(KEY_SPACE)){
         lasers.push_back(Laser{(int) (position.x + (texture.width * textureScale)/2), (int) position.y});
+        PlaySound(laserFiredSFX);
     }
 
     // updating lasers

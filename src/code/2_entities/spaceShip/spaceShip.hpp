@@ -15,6 +15,7 @@ class SpaceShip{
         float   textureScale;                                                                                  // the scale by which to shrink the spaceShip texture; default 0.1f
         int     bottomOffset;                                                                                  // the value by which to offset/raise the ship from the bottom of the screen; default 50
         float   horizontalSpeed;
+        Sound   laserFiredSFX;
 
         vector<Laser>  lasers;
 

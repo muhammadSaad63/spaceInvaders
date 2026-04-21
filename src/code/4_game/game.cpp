@@ -52,7 +52,7 @@ void Game::init(){
     SetWindowOpacity(0.9);
     SetExitKey(KEY_ESCAPE);
     SetTargetFPS(60); // why would you set it to 63 what is wrong with you
-    InitAudioDevice();
+    // InitAudioDevice();
 
     setFavicon("1.png");
 }

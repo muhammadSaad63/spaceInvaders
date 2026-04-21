@@ -36,7 +36,14 @@ class Playing : public State{
         int            enemiesDefeated      {0};            // total number of enemies defeated
         int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
 
-        Sound          countDown321;
+        Sound          countDown321SFX;
+        bool           played_countDown321SFX {false};
+        Sound          newWaveSFX;
+        bool           played_newWaveSFX      {false};
+        Sound          gameResumedSFX;
+        Sound          gamePausedSFX;
+        Sound          gameStoppedSFX;
+        Sound          gameOverSFX;
 
 
         // draw helpers

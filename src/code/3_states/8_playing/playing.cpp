@@ -1,13 +1,23 @@
-#include "playing.hpp"
 #include <cmath>
+#include "playing.hpp"
 using std::ceilf, std::fmodf;
 
 
 void Playing::loadSounds(){
-    countDown321 = LoadSound("src/assets/sounds/sfx/countDown321.mp3");
+    countDown321SFX = LoadSound("src/assets/sounds/sfx/active/countDown321.mp3");
+    // newWaveSFX      = loadSound("src/assets/sounds/sfx/active/newWave.mp3");
+    gameResumedSFX  = LoadSound("src/assets/sounds/sfx/active/gameResumed.mp3");
+    gamePausedSFX   = LoadSound("src/assets/sounds/sfx/active/gamePaused.mp3");
+    gameStoppedSFX  = LoadSound("src/assets/sounds/sfx/active/gameStopped.mp3");
+    gameOverSFX     = LoadSound("src/assets/sounds/sfx/active/gameOver.mp3");
 }
 void Playing::unloadSounds(){
-    UnloadSound(countDown321);
+    UnloadSound(countDown321SFX);
+    UnloadSound(newWaveSFX);
+    UnloadSound(gameResumedSFX);
+    UnloadSound(gamePausedSFX);
+    UnloadSound(gameStoppedSFX);
+    UnloadSound(gameOverSFX);
 }
 
 void Playing::drawCountdown(){
@@ -59,6 +69,10 @@ void Playing::drawUI(){
 }
 
 void Playing::updateCountdown(){
+    if (!played_countDown321SFX){
+        PlaySound(countDown321SFX);
+        played_countDown321SFX = true;
+    }
     elapsedCountdownTime += GetFrameTime();
 
     if (elapsedCountdownTime >= totalCountdownDuration){
@@ -179,6 +193,9 @@ void Playing::reset(){
     elapsedCountdownTime    = { 0.0f };
     announcingWave          = { true };
     elapsedAnnouncementTime = { 0.0f };
+
+    played_countDown321SFX = { false };
+    played_newWaveSFX      = { false };
 
     spaceShip.reset();
     // motherShip.reset();

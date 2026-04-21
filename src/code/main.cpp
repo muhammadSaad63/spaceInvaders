@@ -20,7 +20,8 @@ int main()
     auto windowHeight {720};
     auto windowName   {"Space Invaders 👾"};
     InitWindow(windowWidth, windowHeight, windowName);                 // must have this before Game game or else errors due to no openGL context
-    
+    InitAudioDevice();
+
     // init game
     Game game;
     game.init();
