@@ -13,7 +13,12 @@ Statistics::Statistics(GameState& gameState, DataBase& dataBase)
         : State(gameState)
         , dataBase(dataBase)
         , statsLoaded(false)
-        {}
+        {
+            stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
+        }
+Statistics::~Statistics(){
+    UnloadSound(stateChangedSFX);
+}
 
 void Statistics::draw(){
     int posY = initPosY;  
@@ -116,6 +121,8 @@ void Statistics::update(){
 
     if (IsKeyPressed(KEY_ENTER)){
         statsLoaded = false;
+        PlaySound(stateChangedSFX);
+
         gameState   = MENU;
     }
 } 

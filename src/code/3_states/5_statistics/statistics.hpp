@@ -25,6 +25,7 @@ class Statistics : public State{
 
     public:
         Statistics(GameState& gameState, DataBase& dataBase);
+        ~Statistics();
 
         void draw();
         void update();
