@@ -213,7 +213,9 @@ void Aliens::shootALaser(){
     }
 
     shootTimer    = 0.0f;
-    shootInterval = (static_cast<float>(GetRandomValue(100, 400)) / 100.0f);      // a random float bw 1.0 – 4.0 s
+    auto minSpawnTime = (50 - waveNum);                  // max = 0.5s; will break after 49 waves;
+    auto maxSpawnTime = (400 - (waveNum * 6));           // max = 4s; min: 1s approx (min will break then)
+    shootInterval = (static_cast<float>( GetRandomValue(minSpawnTime, maxSpawnTime) )/100.0f);      // a random float bw 1.0 – 4.0 s
 
     int row, col;
     if (!getRandomActiveAlien(row, col)){
