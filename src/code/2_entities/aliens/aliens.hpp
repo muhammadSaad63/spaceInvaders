@@ -89,6 +89,7 @@ class Aliens{
         bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
         void  shootALaser();         
         void  updateLasers();                                                                               // shoots a laser from an active alien in the swarm
+        void  checkSpaceShipAndAliensLasersCollisions(vector<Laser>& spaceShipLasers);
 
         Rectangle getAlienRect(const int row, const int col);
         bool      checkSpaceShipLaserCollision(Laser& laser);

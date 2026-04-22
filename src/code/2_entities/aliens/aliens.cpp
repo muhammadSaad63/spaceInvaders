@@ -241,6 +241,16 @@ void Aliens::updateLasers(){
         }
     }
 }
+void Aliens::checkSpaceShipAndAliensLasersCollisions(vector<Laser>& spaceShipLasers){
+    for (auto& spaceShiplaser : spaceShipLasers){
+        for (auto& alienLaser : lasers){
+            if (CheckCollisionRecs(spaceShiplaser.getRect(), alienLaser.getRect())){
+                alienLaser.deActivate();
+                spaceShiplaser.deActivate();
+            }
+        }
+    }
+}
 
 Rectangle Aliens::getAlienRect(const int row, const int col){
     Vector2 position{
@@ -345,6 +355,8 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
     auto aliensDefeated = checkSpaceShipLasersCollision(spaceShipLasers);
     enemiesDefeated += aliensDefeated;
     updateScore(score, aliensDefeated);
+
+    checkSpaceShipAndAliensLasersCollisions(spaceShipLasers);
 }
 
 vector<Laser>& Aliens::getLasers(){
