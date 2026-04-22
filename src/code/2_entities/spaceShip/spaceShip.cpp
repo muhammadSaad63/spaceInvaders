@@ -177,3 +177,19 @@ vector<Laser>& SpaceShip::getLasers(){
 Texture& SpaceShip::getTexture(){
     return texture;
 }
+// bool SpaceShip::operator++(){
+//     if (lives != 3){
+//         lives++;
+//         return true;
+//     }
+
+//     return false;
+// }
+// bool SpaceShip::operator--(){
+//     if (lives){
+//         lives--;
+//         return true;
+//     }
+
+//     return false;
+// }
