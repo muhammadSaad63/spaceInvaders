@@ -19,6 +19,8 @@ class Statistics : public State{
         const int textSize { 30  };
         const int offset   { 450 };   // gap between label and value 
 
+        Sound     stateChangedSFX;
+
         void loadStats();
 
     public:
