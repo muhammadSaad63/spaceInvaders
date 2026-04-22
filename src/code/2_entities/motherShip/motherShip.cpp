@@ -131,3 +131,12 @@ void MotherShip::update(vector<Laser>& spaceShipLasers, int& gameScore, int& ene
         }
     }
 }
+
+void MotherShip::reset(){
+    lastSpawned      = GetTime();                                                // time when the ship last spawned; initialized with the 0/getTime()
+    currentlySpawned = false;                                       // is the motherShip currently spawned            
+    hits             = 0;                                                      // number of hits currently sustained by the motherShip
+    position         = Vector2{0, 85};
+    randomSpawnPause = 40;                                          // 40s
+    spawnFromLeft    = true;
+}

@@ -200,7 +200,7 @@ void Playing::reset(){
     played_newWaveSFX      = { false };
 
     spaceShip.reset();
-    // motherShip.reset();
+    motherShip.reset();
     aliens.reset();
 }
 int Playing::getScore()           { return gameScore;       }

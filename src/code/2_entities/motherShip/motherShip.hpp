@@ -41,4 +41,6 @@ class MotherShip{
 
         void draw();
         void update(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated);
+
+        void reset();
 };
