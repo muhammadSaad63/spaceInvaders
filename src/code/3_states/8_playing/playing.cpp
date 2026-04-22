@@ -201,7 +201,7 @@ void Playing::reset(){
 
     spaceShip.reset();
     // motherShip.reset();
-    // aliens.reset();
+    aliens.reset();
 }
 int Playing::getScore()           { return gameScore;       }
 int Playing::getEnemiesDefeated() { return enemiesDefeated; }

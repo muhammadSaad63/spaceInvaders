@@ -348,4 +348,8 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
 vector<Laser>& Aliens::getLasers(){
     return lasers;
 }
-int&  Aliens::getWaveNum()      { return waveNum; }
+int& Aliens::getWaveNum()      { return waveNum; }
+void Aliens::reset(){
+    waveNum = 0;
+    loadNextWave();
+}

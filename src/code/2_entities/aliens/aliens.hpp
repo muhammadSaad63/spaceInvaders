@@ -103,4 +103,5 @@ class Aliens{
 
         int&           getWaveNum();                                                                                // getter for waveNum
         vector<Laser>& getLasers();                                                                                 // getter for the lasers vector
+        void           reset();
 };

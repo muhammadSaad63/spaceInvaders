@@ -32,6 +32,7 @@ void Paused::draw(){
     DrawText("X  -  Quit to Menu", cx - MeasureText("X  -  Quit to Menu", 26) / 2, cy + 163, 26, RED);
 }
 
+/// @brief 
 void Paused::update(){
     if (IsKeyPressed(KEY_P)){
         PlaySound(gameResumedSFX);
