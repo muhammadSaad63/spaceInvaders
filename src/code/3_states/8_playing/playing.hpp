@@ -48,6 +48,8 @@ class Playing : public State{
         Sound          gameStoppedSFX;
         Sound          gameOverSFX;
 
+        Sound          countDown321;
+
 
         // draw helpers
         void  loadSounds();
