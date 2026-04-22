@@ -1,13 +1,19 @@
-#include "playing.hpp"
 #include <cmath>
+#include "playing.hpp"
 using std::ceilf, std::fmodf;
 
 
 void Playing::loadSounds(){
-    countDown321 = LoadSound("src/assets/sounds/sfx/countDown321.mp3");
+    countDown321SFX = LoadSound("src/assets/sounds/sfx/countDown321.mp3");
+    // newWaveSFX      = loadSound("src/assets/sounds/sfx/newWave.mp3");
+    gamePausedSFX   = LoadSound("src/assets/sounds/sfx/gamePaused.mp3");
+    gameOverSFX     = LoadSound("src/assets/sounds/sfx/gameOver.mp3");
 }
 void Playing::unloadSounds(){
-    UnloadSound(countDown321);
+    UnloadSound(countDown321SFX);
+    UnloadSound(newWaveSFX);
+    UnloadSound(gamePausedSFX);
+    UnloadSound(gameOverSFX);
 }
 
 void Playing::drawCountdown(){
@@ -59,6 +65,10 @@ void Playing::drawUI(){
 }
 
 void Playing::updateCountdown(){
+    if (!played_countDown321SFX){
+        PlaySound(countDown321SFX);
+        played_countDown321SFX = true;
+    }
     elapsedCountdownTime += GetFrameTime();
 
     if (elapsedCountdownTime >= totalCountdownDuration){
@@ -142,11 +152,15 @@ void Playing::draw(){
 void Playing::update(){
     if (!playerLivesRemaining){
         gameState = GAMEOVER;
+        PlaySound(gameOverSFX);
+
         return;
     }
     
     if (IsKeyPressed(KEY_P)){
         gameState = PAUSED;
+        PlaySound(gamePausedSFX);
+
         return;
     }
 
@@ -168,19 +182,28 @@ void Playing::update(){
     aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
+    timePlayed += GetTime();
 }
 
 void Playing::reset(){
     gameScore               = { 0 };
     enemiesDefeated         = { 0 };
     playerLivesRemaining    = { 3 };
+    timePlayed              = { 0 };
 
     playingCountdown        = { true };
     elapsedCountdownTime    = { 0.0f };
     announcingWave          = { true };
     elapsedAnnouncementTime = { 0.0f };
 
+    played_countDown321SFX = { false };
+    played_newWaveSFX      = { false };
+
     spaceShip.reset();
-    // motherShip.reset();
-    // aliens.reset();
+    motherShip.reset();
+    aliens.reset();
 }
+int Playing::getScore()           { return gameScore;       }
+int Playing::getEnemiesDefeated() { return enemiesDefeated; }
+int Playing::getWaveNum()         { return waveNum;         }
+int Playing::getTimePlayed()      { return timePlayed;      }

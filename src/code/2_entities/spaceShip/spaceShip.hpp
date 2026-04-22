@@ -16,6 +16,9 @@ class SpaceShip{
         int     bottomOffset;                                                                                  // the value by which to offset/raise the ship from the bottom of the screen; default 50
         float   horizontalSpeed;
 
+        Sound   laserFiredSFX;
+        Sound   lifeLostSFX;
+
         vector<Laser>  lasers;
 
         void      loadShip(const string& fileName);

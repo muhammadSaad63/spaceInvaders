@@ -26,6 +26,8 @@ class MotherShip{
         int     maxPossibleHits;
         int     baseScoreBoost;
 
+        Sound   motherShipDestroyedSFX;
+
         Rectangle getMotherShipRect();
         void      spawnMotherShip();
         bool      reachedEdge();
@@ -39,4 +41,6 @@ class MotherShip{
 
         void draw();
         void update(vector<Laser>& spaceShipLasers, int& gameScore, int& enemiesDefeated);
+
+        void reset();
 };

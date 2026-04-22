@@ -34,7 +34,19 @@ class Playing : public State{
         int            currWave;
         int            gameScore            {0};            // score reached in the game session
         int            enemiesDefeated      {0};            // total number of enemies defeated
-        int            playerLivesRemaining {3};            // the number of player/spaceShip lives remaining
+        int            timePlayed           {0};
+        
+        const int      maxPlayerLives       {3};
+        int            playerLivesRemaining {maxPlayerLives};            // the number of player/spaceShip lives remaining
+
+        Sound          countDown321SFX;
+        bool           played_countDown321SFX {false};
+        Sound          newWaveSFX;
+        bool           played_newWaveSFX      {false};
+        Sound          gameResumedSFX;
+        Sound          gamePausedSFX;
+        Sound          gameStoppedSFX;
+        Sound          gameOverSFX;
 
         Sound          countDown321;
 
@@ -65,4 +77,9 @@ class Playing : public State{
         void update();
 
         void reset();
+        
+        int  getScore(); 
+        int  getEnemiesDefeated();
+        int  getWaveNum();
+        int  getTimePlayed()      ;
 };

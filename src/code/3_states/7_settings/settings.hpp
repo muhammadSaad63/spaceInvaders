@@ -9,7 +9,7 @@ using std::string;
 
 
 class Settings : public State{
-    // copied from your Mr.Pong game - ebbi
+    // copied from your Mr.Pong game  - ebbi
 
     private:
         bool         enableFullScreen {false};         // setwindowstate(FLAG_BORDERLESS_WINDOWED_MODE); ClearWindowState(); SetWindowSize();
@@ -22,12 +22,12 @@ class Settings : public State{
         const int    posX             {23};
         const int    initPosY         {23};            // the y value at which to start drawing
         int          posY             {};
-        const int    textSize         {35};
+        const int    textSize         {30};
         const int    offSet           {100};           // gap between text/heading and option/toggler
         const Color  color            {GOLD};
-        const string texts[6]         {"   > enableFullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
+        const string texts[6]         {"   > FullScreen     ", "   > Grid              ", "   > FrameRate     ", "   > Window Opacity", "   > SFX Volume    ", "   > Input Mode    "};
 
-        Sound settingModifySFX;
+        Sound settingModifiedSFX;
 
         // internal, helper functions
         int getPosY(const int& index);

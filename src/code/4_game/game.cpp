@@ -15,7 +15,7 @@ void Game::playEndCredits(){
     double currTime     {GetTime()};
     double waitDuration {2.5};                  // in sec
     
-    Sound windowCloseSFX = LoadSound("src/assets/sounds/sfx/windowClose.mp3");
+    Sound windowCloseSFX = LoadSound("src/assets/sounds/sfx/windowClosed.mp3");
     PlaySound(windowCloseSFX);          // :D
     
     while ((currTime + waitDuration) >= GetTime()){
@@ -44,7 +44,7 @@ Game::Game()                        // overRiding default constructor
 , statistics(gameState, dataBase)
 , playing(gameState, settings)
 , paused(gameState, playing)
-, gameOver(gameState, dataBase)
+, gameOver(gameState, dataBase, playing)
 , closeGame(gameState) 
 {}
 
@@ -52,7 +52,7 @@ void Game::init(){
     SetWindowOpacity(0.9);
     SetExitKey(KEY_ESCAPE);
     SetTargetFPS(60); // why would you set it to 63 what is wrong with you
-    InitAudioDevice();
+    // InitAudioDevice();
 
     setFavicon("1.png");
 }

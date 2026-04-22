@@ -52,14 +52,14 @@ void Laser::update(Player playerType){
         case ALIEN: { updateAlienLaser();  break; }   
     }
 }
-void Laser::draw(){
+void Laser::draw(Player playerType){
     if (exploding){
         drawExplosion();
         return;
     }
 
     if (active){
-        DrawRectangle(posX, posY, width, height, ORANGE);
+        DrawRectangle(posX, posY, width, height, ((playerType == USER)? ORANGE : RED));
         return;
     }
 }

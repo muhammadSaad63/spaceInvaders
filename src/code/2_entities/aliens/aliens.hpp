@@ -62,6 +62,9 @@ class Aliens{
         float                                 shootTimer     { 0.0f };                                              // the time passed (in s) after the last laser was shot
         float                                 shootInterval  { 2.0f };                                              // the time interval/duration bw each consecutive laser firing
 
+        Sound                                 alienDestroyedSFX;
+        Sound                                 waveClearedSFX;
+
         // internal, helper methods
         int   calcPosX(const int colIndex);
         int   calcPosY(const int rowIndex);
@@ -86,6 +89,7 @@ class Aliens{
         bool  getRandomActiveAlien(int& outRow, int& outCol);                                                       // sets the arguments to the relevant data of the first alien in the swarm (bottom-up) which is active (to shoot lasers from)
         void  shootALaser();         
         void  updateLasers();                                                                               // shoots a laser from an active alien in the swarm
+        void  checkSpaceShipAndAliensLasersCollisions(vector<Laser>& spaceShipLasers);
 
         Rectangle getAlienRect(const int row, const int col);
         bool      checkSpaceShipLaserCollision(Laser& laser);
@@ -93,10 +97,12 @@ class Aliens{
 
     public:
         Aliens();
+        ~Aliens();
 
         void draw();
         void update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefeated);
 
         int&           getWaveNum();                                                                                // getter for waveNum
         vector<Laser>& getLasers();                                                                                 // getter for the lasers vector
+        void           reset();
 };

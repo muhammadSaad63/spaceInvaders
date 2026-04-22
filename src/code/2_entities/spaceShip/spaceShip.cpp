@@ -78,6 +78,7 @@ void SpaceShip::checkCollisionWithAliensLasers(vector<Laser>& aliensLasers, int&
             laser.deActivate();
             playerLivesRemaining--;
             cout << "[Captain Saad] " << ANSI_BRIGHT_RED << "We lost a life! Only " << playerLivesRemaining << " remaining. :(" << ANSI_RESET << "\n"; 
+            PlaySound(lifeLostSFX);
 
             if (!playerLivesRemaining){                 // ie all lives lost (reached 0)
                 return;
@@ -97,9 +98,16 @@ SpaceShip::SpaceShip(const string& fileName){
     position.y = (GetScreenHeight()    - (texture.height * textureScale) - bottomOffset); 
 
     horizontalSpeed = 5;
+
+    laserFiredSFX = LoadSound("src/assets/sounds/sfx/laserFired.mp3");
+    SetSoundVolume(laserFiredSFX, 0.23f);
+    lifeLostSFX   = LoadSound("src/assets/sounds/sfx/lifeLost.mp3");
 }
 SpaceShip::~SpaceShip(){
     UnloadTexture(texture);
+
+    UnloadSound(laserFiredSFX);
+    UnloadSound(lifeLostSFX);
 }
 
 // exposed methods
@@ -109,7 +117,7 @@ void SpaceShip::draw(){
 
     for (auto &laser : lasers){
         if (laser.isAlive()){
-            laser.draw(); 
+            laser.draw(USER); 
         }
     }
 }
@@ -127,6 +135,7 @@ void SpaceShip::update(InputMode inputMode){
     // firing lasers
     if (IsKeyPressed(KEY_SPACE)){
         lasers.push_back(Laser{(int) (position.x + (texture.width * textureScale)/2), (int) position.y});
+        PlaySound(laserFiredSFX);
     }
 
     // updating lasers
@@ -146,6 +155,7 @@ void SpaceShip::update(InputMode inputMode, vector<Laser>& aliensLasers, int& pl
     // firing lasers
     if (IsKeyPressed(KEY_SPACE)){
         lasers.push_back(Laser{(int) (position.x + (texture.width * textureScale)/2), (int) position.y});
+        PlaySound(laserFiredSFX);
     }
 
     // updating lasers
@@ -167,3 +177,19 @@ vector<Laser>& SpaceShip::getLasers(){
 Texture& SpaceShip::getTexture(){
     return texture;
 }
+// bool SpaceShip::operator++(){
+//     if (lives != 3){
+//         lives++;
+//         return true;
+//     }
+
+//     return false;
+// }
+// bool SpaceShip::operator--(){
+//     if (lives){
+//         lives--;
+//         return true;
+//     }
+
+//     return false;
+// }

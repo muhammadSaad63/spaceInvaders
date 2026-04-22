@@ -213,7 +213,9 @@ void Aliens::shootALaser(){
     }
 
     shootTimer    = 0.0f;
-    shootInterval = (static_cast<float>(GetRandomValue(100, 400)) / 100.0f);      // a random float bw 1.0 – 4.0 s
+    auto minSpawnTime = (50 - waveNum);                  // max = 0.5s; will break after 49 waves;
+    auto maxSpawnTime = (400 - (waveNum * 6));           // max = 4s; min: 1s approx (min will break then)
+    shootInterval = (static_cast<float>( GetRandomValue(minSpawnTime, maxSpawnTime) )/100.0f);      // a random float bw 1.0 – 4.0 s
 
     int row, col;
     if (!getRandomActiveAlien(row, col)){
@@ -239,6 +241,16 @@ void Aliens::updateLasers(){
         }
     }
 }
+void Aliens::checkSpaceShipAndAliensLasersCollisions(vector<Laser>& spaceShipLasers){
+    for (auto& spaceShiplaser : spaceShipLasers){
+        for (auto& alienLaser : lasers){
+            if (CheckCollisionRecs(spaceShiplaser.getRect(), alienLaser.getRect())){
+                alienLaser.deActivate();
+                spaceShiplaser.deActivate();
+            }
+        }
+    }
+}
 
 Rectangle Aliens::getAlienRect(const int row, const int col){
     Vector2 position{
@@ -260,6 +272,8 @@ bool Aliens::checkSpaceShipLaserCollision(Laser& spaceShipLaser){
                 updateSwarmSpeed();                    // update curr speed when another alien ded
                 spaceShipLaser.deActivate();
 
+                PlaySound(alienDestroyedSFX);
+
                 return true;                           // one laser can only hit one alien
             }
         }
@@ -271,16 +285,24 @@ int Aliens::checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers){
     auto aliensDefeated {0};
 
     for (auto& laser : spaceShipLasers){
-        if (checkSpaceShipLaserCollision(laser)){
+        if (checkSpaceShipLaserCollision(laser)){               // returns true if there a successful collision
             aliensDefeated++;
         }
     }
 
-    return aliensDefeated;                      // no alien died; yayyyyyyyyy
+    return aliensDefeated;
 }
 
 Aliens::Aliens(){
     loadNextWave();
+
+    alienDestroyedSFX = LoadSound("src/assets/sounds/sfx/alienDestroyed.mp3");
+    SetSoundVolume(alienDestroyedSFX, 0.35f);
+    waveClearedSFX = LoadSound("src/assets/sounds/sfx/waveCleared.mp3");
+}
+Aliens::~Aliens(){
+    UnloadSound(alienDestroyedSFX);
+    UnloadSound(waveClearedSFX);
 }
 
 void Aliens::draw(){
@@ -301,7 +323,7 @@ void Aliens::draw(){
     // Draw alien lasers
     for (auto& laser : lasers){
         if (laser.isAlive()){
-            laser.draw();
+            laser.draw(ALIEN);
         }
     }
 }
@@ -310,6 +332,7 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
 {
     if (isSwarmDestroyed()){
         cout << "[Captain Saad] " << ANSI_BRIGHT_GREEN << "Alien Swarm #" << waveNum << " was successfully vanquished :D" << ANSI_RESET << "\n";
+        PlaySound(waveClearedSFX);
         loadNextWave();
 
         return;
@@ -332,9 +355,15 @@ void Aliens::update(vector<Laser>& spaceShipLasers, int& score, int& enemiesDefe
     auto aliensDefeated = checkSpaceShipLasersCollision(spaceShipLasers);
     enemiesDefeated += aliensDefeated;
     updateScore(score, aliensDefeated);
+
+    checkSpaceShipAndAliensLasersCollisions(spaceShipLasers);
 }
 
 vector<Laser>& Aliens::getLasers(){
     return lasers;
 }
-int&  Aliens::getWaveNum()      { return waveNum; }
+int& Aliens::getWaveNum()      { return waveNum; }
+void Aliens::reset(){
+    waveNum = 0;
+    loadNextWave();
+}

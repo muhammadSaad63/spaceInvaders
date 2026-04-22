@@ -28,7 +28,7 @@ class Laser{
         Laser(const int posX, const int posY);
 
         void update(Player playerType);
-        void draw();
+        void draw(Player playerType);
 
         Rectangle getRect();
         bool      isAlive();
