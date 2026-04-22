@@ -313,7 +313,7 @@ void Aliens::draw(){
     // Draw alien lasers
     for (auto& laser : lasers){
         if (laser.isAlive()){
-            laser.draw();
+            laser.draw(ALIEN);
         }
     }
 }

@@ -117,7 +117,7 @@ void SpaceShip::draw(){
 
     for (auto &laser : lasers){
         if (laser.isAlive()){
-            laser.draw(); 
+            laser.draw(USER); 
         }
     }
 }
