@@ -21,8 +21,8 @@ void GameOver::draw(){
     string title = "GAME  OVER";
     DrawText(title.c_str(), cx - MeasureText(title.c_str(), 80)/2, cy - 120, 80, RED);
 
-    DrawText(TextFormat("Score:           %06d", playing.getScore()),           cx - 180, cy - 10, 26, GOLD);
-    DrawText(TextFormat("Wave Reached:        %02d", playing.getWaveNum()),         cx - 180, cy + 30, 26, SKYBLUE);
+    DrawText(TextFormat("Score:           %06d", playing.getScore()),               cx - 180, cy - 10, 26, GOLD);
+    DrawText(TextFormat("Wave Reached:      %02d", playing.getWaveNum()),           cx - 180, cy + 30, 26, SKYBLUE);
     DrawText(TextFormat("Enemies Killed:    %04d",   playing.getEnemiesDefeated()), cx - 180, cy + 70, 26, LIME);
 
     if (timer > 1.5f){
