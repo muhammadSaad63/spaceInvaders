@@ -26,7 +26,7 @@ void Statistics::draw(){
 
     // score
     {
-        DrawText("— SCORE",                               posX, posY, textSize, GOLD);
+        DrawText("Score",                               posX, posY, textSize, GOLD);
         posY += textSize + 5;
 
         DrawText("Total Score",                           posX, posY, textSize, RAYWHITE);
@@ -43,59 +43,71 @@ void Statistics::draw(){
     }
 
     // enemies
-    DrawText("— Enemies",                                  posX, posY, textSize, GOLD);
-    posY += textSize + 5;
-    DrawText("Total Defeated",                             posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%d", stats.totalEnemiesDefeated), posX + offset, posY, textSize, RED);
-    posY += textSize + 5;
-    DrawText("Most In One Game",                           posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%d", stats.maxEnemiesDefeatedPerGame), posX + offset, posY, textSize, RED);
-    posY += textSize + 5;
-    DrawText("Avg Defeated / Game",                        posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%d", stats.avgEnemiesDefeatedPerGame), posX + offset, posY, textSize, RED);
-    posY += textSize + 20;
+    {
+        DrawText("Enemies",                                  posX, posY, textSize, GOLD);
+        posY += textSize + 5;
+        
+        DrawText("Total Defeated",                             posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%d", stats.totalEnemiesDefeated), posX + offset, posY, textSize, RED);
+        posY += textSize + 5;
+        
+        DrawText("Most In One Game",                           posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%d", stats.maxEnemiesDefeatedPerGame), posX + offset, posY, textSize, RED);
+        posY += textSize + 5;
+        
+        DrawText("Avg Defeated / Game",                        posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%d", stats.avgEnemiesDefeatedPerGame), posX + offset, posY, textSize, RED);
+        posY += textSize + 20;
+    }
 
     // waves
-    DrawText("— Waves",                                    posX, posY, textSize, GOLD);
-    posY += textSize + 5;
-    DrawText("Total Waves Cleared",                        posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%d", stats.totalWavesCleared),    posX + offset, posY, textSize, SKYBLUE);
-    posY += textSize + 5;
-    DrawText("Best Wave Reached",                          posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%d", stats.maxWavesClearedPerGame), posX + offset, posY, textSize, SKYBLUE);
-    posY += textSize + 5;
-    DrawText("Avg Wave / Game",                            posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%d", stats.avgWavesClearedPerGame), posX + offset, posY, textSize, SKYBLUE);
-    posY += textSize + 20;
+    {
+        DrawText("Waves",                                    posX, posY, textSize, GOLD);
+        posY += textSize + 5;
+        
+        DrawText("Total Waves Cleared",                        posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%d", stats.totalWavesCleared),    posX + offset, posY, textSize, SKYBLUE);
+        posY += textSize + 5;
+
+        DrawText("Best Wave Reached",                          posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%d", stats.maxWavesClearedPerGame), posX + offset, posY, textSize, SKYBLUE);
+        posY += textSize + 5;
+        
+        DrawText("Avg Wave / Game",                            posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%d", stats.avgWavesClearedPerGame), posX + offset, posY, textSize, SKYBLUE);
+        posY += textSize + 20;
+    }
 
     // time
-    DrawText("— Time",                                     posX, posY, textSize, GOLD);
-    posY += textSize + 5;
-    DrawText("Total Time Played",                          posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", stats.totalTimePlayed / 60, stats.totalTimePlayed % 60),
-                                                           posX + offset, posY, textSize, LIME);
-    posY += textSize + 5;
-    DrawText("Longest Game",                               posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", stats.maxTimePlayedPerGame / 60, stats.maxTimePlayedPerGame % 60),
-                                                           posX + offset, posY, textSize, LIME);
-    posY += textSize + 5;
-    DrawText("Avg Time / Game",                            posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", stats.avgTimePlayedPerGame / 60, stats.avgTimePlayedPerGame % 60),
-                                                           posX + offset, posY, textSize, LIME);
-    posY += textSize + 25;
+    {
+        DrawText("Time",                                     posX, posY, textSize, GOLD);
+        posY += textSize + 5;
 
-    DrawLineEx({(float)posX, (float)posY}, {(float)GetScreenWidth() - posX, (float)posY}, 1, DARKGRAY);
-    posY += 15;
+        DrawText("Total Time Played",                          posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%dm %ds", stats.totalTimePlayed / 60, stats.totalTimePlayed % 60), posX + offset, posY, textSize, LIME);
+        posY += textSize + 5;
 
-    // exit hint — matches settings style
-    DrawText("   > Press ENTER to go back", posX, posY, textSize, DARKGRAY);
+        DrawText("Longest Game",                               posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%dm %ds", stats.maxTimePlayedPerGame / 60, stats.maxTimePlayedPerGame % 60), posX + offset, posY, textSize, LIME);
+        posY += textSize + 5;
 
-    // empty state
+        DrawText("Avg Time / Game",                            posX, posY, textSize, RAYWHITE);
+        DrawText(TextFormat("%dm %ds", stats.avgTimePlayedPerGame / 60, stats.avgTimePlayedPerGame % 60), posX + offset, posY, textSize, LIME);
+        posY += textSize + 25;
+
+        DrawLineEx({(float)posX, (float)posY}, {(float)GetScreenWidth() - posX, (float)posY}, 1, DARKGRAY);
+        posY += 15;
+    }
+
+    // exit hint matches settings style
+    DrawText("   > Press ENTER to go back", posX, posY, textSize, GOLD);
+
+    // making a dark black rectangular overlay over screen if no stats there
     if (!statsLoaded || stats.totalScore == 0){
-        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.7f));
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.5f));
         DrawText("No games played yet  :(",
-                 GetScreenWidth()/2  - MeasureText("No games played yet  :(", 40)/2,
-                 GetScreenHeight()/2 - 20, 40, DARKGRAY);
+                    GetScreenWidth()/2  - MeasureText("No games played yet  :(", 40)/2,
+                    GetScreenHeight()/2 - 20, 40, DARKGRAY);
     }
 }
 

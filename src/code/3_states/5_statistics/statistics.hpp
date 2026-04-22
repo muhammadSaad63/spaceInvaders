@@ -17,7 +17,7 @@ class Statistics : public State{
         const int posX     { 23  };
         const int initPosY { 23  };
         const int textSize { 30  };
-        const int offset   { 280 };   // gap between label and value 
+        const int offset   { 450 };   // gap between label and value 
 
         void loadStats();
 
