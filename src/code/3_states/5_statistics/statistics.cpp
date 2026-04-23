@@ -105,7 +105,7 @@ void Statistics::draw(){
     }
 
     // exit hint matches settings style
-    DrawText("   > Press ENTER to go back", GetScreenWidth() - MeasureText("   > Press ENTER to go back", textSize) - 23, GetScreenHeight() - 40, textSize, GOLD);
+    DrawText("Press ENTER to go back", GetScreenWidth() - MeasureText("Press ENTER to go back", textSize) - 23, GetScreenHeight() - 40, textSize, GOLD);
 
     // making a dark black rectangular overlay over screen if no stats there
     if (!statsLoaded || stats.totalScore == 0){
