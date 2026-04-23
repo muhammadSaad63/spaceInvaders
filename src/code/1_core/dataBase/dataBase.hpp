@@ -2,25 +2,22 @@
 
 
 #include <vector>
-#include <string>
-#include "dataBase.hpp"
-#include <SQLiteCpp/SQLiteCpp.h>
-using std::string, std::vector;
+using std::vector;
 
 
 struct GameData{
-    int    gameID;
+    int   gameID;
 
     // int    playerID;
     // string playerName;
 
-    int    score;
-    int    enemiesDefeated;
-    int    waveReached;
+    int   score;
+    int   enemiesDefeated;
+    int   waveReached;
 
     // string timeStarted;
     // string timeEnded;
-    int    timePlayed;
+    double timePlayed;
 };
 struct StatData{
     // Score Statistics
@@ -39,9 +36,9 @@ struct StatData{
     int avgWavesClearedPerGame;
 
     // Time Statistics
-    int totalTimePlayed;
-    int maxTimePlayedPerGame;
-    int avgTimePlayedPerGame;
+    double totalTimePlayed;
+    double maxTimePlayedPerGame;
+    double avgTimePlayedPerGame;
 };
 
 class DataBase{

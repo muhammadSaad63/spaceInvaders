@@ -1,5 +1,6 @@
 #include <cctype>
 #include "dataBase.hpp"
+#include <SQLiteCpp/SQLiteCpp.h>
 
 
 // helper functions
@@ -23,7 +24,7 @@ void DataBase::createTable_games(){
             "enemiesDefeated INTEGER NOT NULL DEFAULT 0,"           // min poss value = 0
             "waveReached INTEGER NOT NULL DEFAULT 1,"               // min poss value = 1
 
-            "timePlayed INTEGER NOT NULL"
+            "timePlayed REAL NOT NULL"
 
             // "FOREIGN KEY (playerID) REFERENCES players(playerID)"
         ")"
@@ -118,15 +119,15 @@ vector<GameData> DataBase::getHistory(int numEntries){
         {
             history.push_back(
                 GameData{ 
-                    query.getColumn(0).getInt(),            // gameID
-                    // query.getColumn(1).getInt(),            // playerID
-                    // query.getColumn(2).getString(),         // playerName
-                    query.getColumn(1).getInt(),            // score
-                    query.getColumn(2).getInt(),            // enemiesDefeated
-                    query.getColumn(3).getInt(),            // waveReached
-                    // query.getColumn(4).getString(),         // timeStarted
-                    // query.getColumn(5).getString(),         // timeEnded
-                    query.getColumn(4).getInt(),            // timePlayed
+                    query.getColumn(0).getInt(),                // gameID
+                    // query.getColumn(1).getInt(),             // playerID
+                    // query.getColumn(2).getString(),          // playerName
+                    query.getColumn(1).getInt(),                // score
+                    query.getColumn(2).getInt(),                // enemiesDefeated
+                    query.getColumn(3).getInt(),                // waveReached
+                    // query.getColumn(4).getString(),          // timeStarted
+                    // query.getColumn(5).getString(),          // timeEnded
+                    query.getColumn(4).getDouble(),             // timePlayed
                 }
             );
         }
@@ -204,9 +205,9 @@ StatData DataBase::getStatistics(){
         stats.avgWavesClearedPerGame    = query.getColumn(8).getInt();
 
         // Time Statistics
-        stats.totalTimePlayed           = query.getColumn(9).getInt();
-        stats.maxTimePlayedPerGame      = query.getColumn(10).getInt();
-        stats.avgTimePlayedPerGame      = query.getColumn(11).getInt();
+        stats.totalTimePlayed           = query.getColumn(9).getDouble();
+        stats.maxTimePlayedPerGame      = query.getColumn(10).getDouble();
+        stats.avgTimePlayedPerGame      = query.getColumn(11).getDouble();
     }
 
     return stats;
