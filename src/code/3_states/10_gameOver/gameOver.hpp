@@ -12,6 +12,7 @@ class GameOver : public State{
         DataBase& dataBase;
         Playing&  playing;
         float     timer;
+        bool      gameSaved;
 
         Sound     stateChangedSFX;
 

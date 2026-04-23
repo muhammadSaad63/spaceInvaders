@@ -7,6 +7,7 @@ GameOver::GameOver(GameState& gameState, DataBase& dataBase, Playing& playing)
         , dataBase(dataBase)
         , playing(playing)
         , timer(0)
+        , gameSaved(false)
         {
             stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
         }
@@ -17,9 +18,6 @@ GameOver::~GameOver(){
 void GameOver::draw(){
     int cx = GetScreenWidth()  / 2;
     int cy = GetScreenHeight() / 2;
-
-    GameData g = GameData{1, playing.getScore(), playing.getEnemiesDefeated(), playing.getWaveNum(), playing.getTimePlayed()};
-    dataBase.addGame(g);
 
     string title = "GAME  OVER";
     DrawText(title.c_str(), cx - MeasureText(title.c_str(), 80)/2, cy - 120, 80, RED);
@@ -35,12 +33,20 @@ void GameOver::draw(){
 }
 
 void GameOver::update(){
+    if (!gameSaved){
+        GameData gameData = GameData{-1, playing.getScore(), playing.getEnemiesDefeated(), playing.getWaveNum(), playing.getTimePlayed()};
+        dataBase.addGame(gameData);
+
+        gameSaved = true;
+    }
+
     timer += GetFrameTime();
     if (timer < 1.5f) return;
 
     if (IsKeyPressed(KEY_R)){ 
         timer = 0; 
         playing.reset(); 
+        gameSaved = false;
 
         gameState = PLAYING; 
     }
@@ -49,6 +55,7 @@ void GameOver::update(){
         timer = 0; 
         playing.reset(); 
         PlaySound(stateChangedSFX);
+        gameSaved = false;
 
         gameState = MENU;    
     }
