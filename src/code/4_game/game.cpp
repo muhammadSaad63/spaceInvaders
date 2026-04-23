@@ -70,7 +70,7 @@ void Game::draw(){                                                    // draws b
     switch(gameState)
     {
         case MENU:         { menu.draw();         break; }
-        case PLAY:         { play.draw();         break; }
+        // case PLAY:         { play.draw();         break; }
         case SHOP:         { shop.draw();         break; }
         case HISTORY:      { history.draw();      break; }
         case STATISTICS:   { statistics.draw();   break; }
@@ -78,7 +78,7 @@ void Game::draw(){                                                    // draws b
         case PLAYING:      { playing.draw();      break; }
         case PAUSED:       { paused.draw();       break; }
         case GAMEOVER:     { gameOver.draw();     break; }
-        case CLOSEGAME:    { closeGame.draw();    break; }  
+        // case CLOSEGAME:    { closeGame.draw();    break; }  
     }
 }
 void Game::update(){     
@@ -88,7 +88,7 @@ void Game::update(){
     switch(gameState)
     {
         case MENU:         { menu.update();         break; }
-        case PLAY:         { play.update();         break; }
+        // case PLAY:         { play.update();         break; }
         case SHOP:         { shop.update();         break; }
         case HISTORY:      { history.update();      break; }
         case STATISTICS:   { statistics.update();   break; }
@@ -96,7 +96,7 @@ void Game::update(){
         case PLAYING:      { playing.update();      break; }
         case PAUSED:       { paused.update();       break; }
         case GAMEOVER:     { gameOver.update();     break; }
-        case CLOSEGAME:    { closeGame.update();    break; }  
+        // case CLOSEGAME:    { closeGame.update();    break; }  
     }
 }
 
