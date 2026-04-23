@@ -2,6 +2,7 @@
 
 
 #include <vector>
+#include <SQLiteCpp/SQLiteCpp.h>
 using std::vector;
 
 

@@ -34,7 +34,7 @@ class Playing : public State{
         int            currWave;
         int            gameScore            {0};            // score reached in the game session
         int            enemiesDefeated      {0};            // total number of enemies defeated
-        int            timePlayed           {0};
+        double         timePlayed           {0.0};
         
         const int      maxPlayerLives       {3};
         int            playerLivesRemaining {maxPlayerLives};            // the number of player/spaceShip lives remaining
@@ -78,8 +78,8 @@ class Playing : public State{
 
         void reset();
         
-        int  getScore(); 
-        int  getEnemiesDefeated();
-        int  getWaveNum();
-        int  getTimePlayed()      ;
+        int    getScore(); 
+        int    getEnemiesDefeated();
+        int    getWaveNum();
+        double getTimePlayed()      ;
 };

@@ -1,6 +1,5 @@
 #include <cctype>
 #include "dataBase.hpp"
-#include <SQLiteCpp/SQLiteCpp.h>
 
 
 // helper functions
