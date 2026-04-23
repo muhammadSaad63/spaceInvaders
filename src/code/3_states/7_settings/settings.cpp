@@ -141,9 +141,11 @@ void Settings::updateInputMode(const int& index){
 }
 
 Settings::Settings(GameState& gameState) : State(gameState) {
+    stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
     settingModifiedSFX = LoadSound("src/assets/sounds/sfx/settingModified.mp3");
 }
 Settings::~Settings(){
+    UnloadSound(stateChangedSFX);
     UnloadSound(settingModifiedSFX);
 }
 
@@ -176,6 +178,8 @@ void Settings::draw(){
 void Settings::update(){
     if (IsKeyPressed(KEY_ENTER)){
         gameState = MENU;
+
+        PlaySound(stateChangedSFX);
     }
 
     // enableFullScreen

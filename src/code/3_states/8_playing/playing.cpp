@@ -182,14 +182,14 @@ void Playing::update(){
     aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
-    timePlayed += GetTime();
+    timePlayed += GetFrameTime();
 }
 
 void Playing::reset(){
     gameScore               = { 0 };
     enemiesDefeated         = { 0 };
     playerLivesRemaining    = { 3 };
-    timePlayed              = { 0 };
+    timePlayed              = { 0.0 };
 
     playingCountdown        = { true };
     elapsedCountdownTime    = { 0.0f };
@@ -203,7 +203,7 @@ void Playing::reset(){
     motherShip.reset();
     aliens.reset();
 }
-int Playing::getScore()           { return gameScore;       }
-int Playing::getEnemiesDefeated() { return enemiesDefeated; }
-int Playing::getWaveNum()         { return waveNum;         }
-int Playing::getTimePlayed()      { return timePlayed;      }
+int    Playing::getScore()           { return gameScore;       }
+int    Playing::getEnemiesDefeated() { return enemiesDefeated; }
+int    Playing::getWaveNum()         { return waveNum;         }
+double Playing::getTimePlayed()      { return timePlayed;      }

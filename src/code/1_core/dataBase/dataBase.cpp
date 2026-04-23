@@ -18,14 +18,12 @@ void DataBase::createTable_games(){
         "("
             "gameID INTEGER PRIMARY KEY AUTOINCREMENT,"
             // "playerID INTEGER NOT NULL,"
-            
+
             "score INTEGER NOT NULL DEFAULT 0,"                     // min poss value = 0
             "enemiesDefeated INTEGER NOT NULL DEFAULT 0,"           // min poss value = 0
             "waveReached INTEGER NOT NULL DEFAULT 1,"               // min poss value = 1
-            
-            "timeStarted DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,"          // Current_timestamp is a func which returns the timestamp when the row was written
-            "timeEnded DATETIME NOT NULL,"
-            "timePlayed INTEGER NOT NULL"
+
+            "timePlayed REAL NOT NULL"
 
             // "FOREIGN KEY (playerID) REFERENCES players(playerID)"
         ")"
@@ -83,15 +81,15 @@ DataBase::DataBase()
 //     query.exec();                          // executing the query
 // }
 void DataBase::addGame(GameData& gameData){
-    SQLite::Statement query(db, "INSERT INTO games (score, enemiesDefeated, waveReached, timeStarted, timeEnded, timePlayed) VALUES (?, ?, ?, ?, ?, ?)");         
+    SQLite::Statement query(db, "INSERT INTO games (score, enemiesDefeated, waveReached, timePlayed) VALUES (?, ?, ?, ?)");         
 
     // binding data from gameData to their respective ?
     query.bind(1, gameData.score);
     query.bind(2, gameData.enemiesDefeated);
     query.bind(3, gameData.waveReached);
-    query.bind(4, gameData.timeStarted);   
-    query.bind(5, gameData.timeEnded);   
-    query.bind(6, gameData.timePlayed);             
+    // query.bind(4, gameData.timeStarted);   
+    // query.bind(5, gameData.timeEnded);   
+    query.bind(4, gameData.timePlayed);             
 
     query.exec();                               // executing the query
 }
@@ -110,7 +108,7 @@ vector<GameData> DataBase::getHistory(int numEntries){
     {
         SQLite::Statement query(db, 
                                     "SELECT gameID, score, enemiesDefeated, "
-                                    "waveReached, timeStarted, timeEnded, timePlayed "
+                                    "waveReached, timePlayed "
                                     "FROM games " 
                                     "ORDER BY gameID DESC LIMIT (?)"
                                 );
@@ -120,15 +118,15 @@ vector<GameData> DataBase::getHistory(int numEntries){
         {
             history.push_back(
                 GameData{ 
-                    query.getColumn(0).getInt(),            // gameID
-                    // query.getColumn(1).getInt(),            // playerID
-                    // query.getColumn(2).getString(),         // playerName
-                    query.getColumn(1).getInt(),            // score
-                    query.getColumn(2).getInt(),            // enemiesDefeated
-                    query.getColumn(3).getInt(),            // waveReached
-                    query.getColumn(4).getString(),         // timeStarted
-                    query.getColumn(5).getString(),         // timeEnded
-                    query.getColumn(6).getInt(),            // timePlayed
+                    query.getColumn(0).getInt(),                // gameID
+                    // query.getColumn(1).getInt(),             // playerID
+                    // query.getColumn(2).getString(),          // playerName
+                    query.getColumn(1).getInt(),                // score
+                    query.getColumn(2).getInt(),                // enemiesDefeated
+                    query.getColumn(3).getInt(),                // waveReached
+                    // query.getColumn(4).getString(),          // timeStarted
+                    // query.getColumn(5).getString(),          // timeEnded
+                    query.getColumn(4).getDouble(),             // timePlayed
                 }
             );
         }
@@ -206,9 +204,9 @@ StatData DataBase::getStatistics(){
         stats.avgWavesClearedPerGame    = query.getColumn(8).getInt();
 
         // Time Statistics
-        stats.totalTimePlayed           = query.getColumn(9).getInt();
-        stats.maxTimePlayedPerGame      = query.getColumn(10).getInt();
-        stats.avgTimePlayedPerGame      = query.getColumn(11).getInt();
+        stats.totalTimePlayed           = query.getColumn(9).getDouble();
+        stats.maxTimePlayedPerGame      = query.getColumn(10).getDouble();
+        stats.avgTimePlayedPerGame      = query.getColumn(11).getDouble();
     }
 
     return stats;

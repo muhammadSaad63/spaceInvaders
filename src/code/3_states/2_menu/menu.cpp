@@ -58,7 +58,9 @@ GameState MenuIcons::update(SpaceShip& spaceShip){
         if (GetTime() >= (selectedTime + selectedDelay)){
             spaceShip.reset();
             selected = false;
-            PlaySound(stateChangedSFX);
+            
+            if (selectedState != PLAYING)
+                PlaySound(stateChangedSFX);
 
             return selectedState;
         }
