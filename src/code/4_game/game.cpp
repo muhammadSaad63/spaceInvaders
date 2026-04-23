@@ -38,27 +38,30 @@ void Game::playEndCredits(){
 }
 
 // constructor
-Game::Game()                        // overRiding default constructor 
-: gameState(MENU)                   // initializing gameState with MENU
-, settings(gameState)               // constructed first & before menu since the later requires it
-, menu(gameState, settings)
-, play(gameState)
-, shop(gameState) 
-, history(gameState, dataBase)
-, statistics(gameState, dataBase)
-, playing(gameState, settings)
-, paused(gameState, playing)
-, gameOver(gameState, dataBase, playing)
-, closeGame(gameState) 
-{}
+Game::Game()                            // overRiding default constructor 
+    : gameState(MENU)                   // initializing gameState with MENU
+    , settings(gameState)               // constructed first & before menu since the later requires it
+    , menu(gameState, settings)
+    , play(gameState)
+    , shop(gameState) 
+    , history(gameState, dataBase)
+    , statistics(gameState, dataBase)
+    , playing(gameState, settings)
+    , paused(gameState, playing)
+    , gameOver(gameState, dataBase, playing)
+    , closeGame(gameState) 
+    {}
 
 void Game::init(){
     SetWindowOpacity(0.9);
     SetExitKey(KEY_ESCAPE);
-    SetTargetFPS(60); // why would you set it to 63 what is wrong with you
-    // InitAudioDevice();
+    SetTargetFPS(60);                       // why would you set it to 63 what is wrong with you
 
     setFavicon("1.png");
+
+    Sound programOpenedSFX = LoadSound("src/assets/sounds/sfx/programStarted.mp3");
+    PlaySound(programOpenedSFX);
+    // UnloadSound(programOpenedSFX);
 }
 
 void Game::draw(){                                                    // draws based upon the current gameState
