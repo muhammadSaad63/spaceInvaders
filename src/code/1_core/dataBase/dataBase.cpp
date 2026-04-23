@@ -23,8 +23,7 @@ void DataBase::createTable_games(){
             "enemiesDefeated INTEGER NOT NULL DEFAULT 0,"           // min poss value = 0
             "waveReached INTEGER NOT NULL DEFAULT 1,"               // min poss value = 1
             
-            "timeStarted DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,"          // Current_timestamp is a func which returns the timestamp when the row was written
-            "timeEnded DATETIME NOT NULL,"
+
             "timePlayed INTEGER NOT NULL"
 
             // "FOREIGN KEY (playerID) REFERENCES players(playerID)"
@@ -110,7 +109,7 @@ vector<GameData> DataBase::getHistory(int numEntries){
     {
         SQLite::Statement query(db, 
                                     "SELECT gameID, score, enemiesDefeated, "
-                                    "waveReached, timeStarted, timeEnded, timePlayed "
+                                    "waveReached, timePlayed "
                                     "FROM games " 
                                     "ORDER BY gameID DESC LIMIT (?)"
                                 );
@@ -128,7 +127,7 @@ vector<GameData> DataBase::getHistory(int numEntries){
                     query.getColumn(3).getInt(),            // waveReached
                     // query.getColumn(4).getString(),         // timeStarted
                     // query.getColumn(5).getString(),         // timeEnded
-                    query.getColumn(6).getInt(),            // timePlayed
+                    query.getColumn(4).getInt(),            // timePlayed
                 }
             );
         }
