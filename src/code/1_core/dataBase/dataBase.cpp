@@ -18,11 +18,10 @@ void DataBase::createTable_games(){
         "("
             "gameID INTEGER PRIMARY KEY AUTOINCREMENT,"
             // "playerID INTEGER NOT NULL,"
-            
+
             "score INTEGER NOT NULL DEFAULT 0,"                     // min poss value = 0
             "enemiesDefeated INTEGER NOT NULL DEFAULT 0,"           // min poss value = 0
             "waveReached INTEGER NOT NULL DEFAULT 1,"               // min poss value = 1
-            
 
             "timePlayed INTEGER NOT NULL"
 
