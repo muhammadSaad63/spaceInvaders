@@ -297,7 +297,7 @@ Aliens::Aliens(){
     loadNextWave();
 
     alienDestroyedSFX = LoadSound("src/assets/sounds/sfx/alienDestroyed.mp3");
-    SetSoundVolume(alienDestroyedSFX, 0.35f);
+    SetSoundVolume(alienDestroyedSFX, 0.45f);
     waveClearedSFX = LoadSound("src/assets/sounds/sfx/waveCleared.mp3");
 }
 Aliens::~Aliens(){
