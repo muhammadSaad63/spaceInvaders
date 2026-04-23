@@ -27,7 +27,7 @@ void Statistics::draw(){
     DrawText("Statistics", posX, posY, textSize + 10, GOLD);
     posY += (textSize + 10) + 15;
     DrawLineEx({(float)posX, (float)posY}, {(float)GetScreenWidth() - posX, (float)posY}, 1, DARKGRAY);
-    posY += 20;
+    posY += 30;
 
     // score
     {
@@ -44,12 +44,12 @@ void Statistics::draw(){
 
         DrawText("Avg Score / Game",                      posX, posY, textSize, RAYWHITE);
         DrawText(TextFormat("%d", stats.avgScorePerGame), posX + offset, posY, textSize, YELLOW);
-        posY += textSize + 20;
+        posY += textSize + 23;
     }
 
     // enemies
     {
-        DrawText("Enemies",                                  posX, posY, textSize, GOLD);
+        DrawText("Enemies",                                    posX, posY, textSize, GOLD);
         posY += textSize + 5;
         
         DrawText("Total Defeated",                             posX, posY, textSize, RAYWHITE);
@@ -62,12 +62,12 @@ void Statistics::draw(){
         
         DrawText("Avg Defeated / Game",                        posX, posY, textSize, RAYWHITE);
         DrawText(TextFormat("%d", stats.avgEnemiesDefeatedPerGame), posX + offset, posY, textSize, RED);
-        posY += textSize + 20;
+        posY += textSize + 23;
     }
 
     // waves
     {
-        DrawText("Waves",                                    posX, posY, textSize, GOLD);
+        DrawText("Waves",                                      posX, posY, textSize, GOLD);
         posY += textSize + 5;
         
         DrawText("Total Waves Cleared",                        posX, posY, textSize, RAYWHITE);
@@ -80,24 +80,24 @@ void Statistics::draw(){
         
         DrawText("Avg Wave / Game",                            posX, posY, textSize, RAYWHITE);
         DrawText(TextFormat("%d", stats.avgWavesClearedPerGame), posX + offset, posY, textSize, SKYBLUE);
-        posY += textSize + 20;
+        posY += textSize + 23;
     }
 
     // time
     {
-        DrawText("Time",                                     posX, posY, textSize, GOLD);
+        DrawText("Time",                                       posX, posY, textSize, GOLD);
         posY += textSize + 5;
 
         DrawText("Total Time Played",                          posX, posY, textSize, RAYWHITE);
-        DrawText(TextFormat("%dm %ds", stats.totalTimePlayed / 60, stats.totalTimePlayed % 60), posX + offset, posY, textSize, LIME);
+        DrawText(TextFormat("%dm %ds", (stats.totalTimePlayed / 60.0),      ((int)stats.totalTimePlayed % 60)),      posX + offset, posY, textSize, LIME);
         posY += textSize + 5;
 
         DrawText("Longest Game",                               posX, posY, textSize, RAYWHITE);
-        DrawText(TextFormat("%dm %ds", stats.maxTimePlayedPerGame / 60, stats.maxTimePlayedPerGame % 60), posX + offset, posY, textSize, LIME);
+        DrawText(TextFormat("%dm %ds", (stats.maxTimePlayedPerGame / 60.0), ((int)stats.maxTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
         posY += textSize + 5;
 
         DrawText("Avg Time / Game",                            posX, posY, textSize, RAYWHITE);
-        DrawText(TextFormat("%dm %ds", stats.avgTimePlayedPerGame / 60, stats.avgTimePlayedPerGame % 60), posX + offset, posY, textSize, LIME);
+        DrawText(TextFormat("%dm %ds", (stats.avgTimePlayedPerGame / 60.0), ((int)stats.avgTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
         posY += textSize + 25;
 
         DrawLineEx({(float)posX, (float)posY}, {(float)GetScreenWidth() - posX, (float)posY}, 1, DARKGRAY);
@@ -105,7 +105,7 @@ void Statistics::draw(){
     }
 
     // exit hint matches settings style
-    DrawText("   > Press ENTER to go back", GetScreenWidth() - MeasureText("   > Press ENTER to go back", textSize/1.5) - 23, GetScreenHeight() - 40, textSize/1.5, GOLD);
+    DrawText("   > Press ENTER to go back", GetScreenWidth() - MeasureText("   > Press ENTER to go back", textSize) - 23, GetScreenHeight() - 40, textSize, GOLD);
 
     // making a dark black rectangular overlay over screen if no stats there
     if (!statsLoaded || stats.totalScore == 0){

@@ -16,7 +16,7 @@ class Statistics : public State{
         // drawing constants
         const int posX     { 23  };
         const int initPosY { 23  };
-        const int textSize { 30  };
+        const int textSize { 25  };
         const int offset   { 450 };   // gap between label and value 
 
         Sound     stateChangedSFX;
