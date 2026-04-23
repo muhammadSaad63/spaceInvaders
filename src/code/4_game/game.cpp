@@ -26,7 +26,7 @@ void Game::playEndCredits(){
         BeginDrawing();
             backGround.draw(settings.isFullScreenEnabled(), settings.isGridEnabled());
 
-            DrawTexture(cryingCat, GetScreenWidth()/2 - cryingCat.width/2, GetScreenHeight()/2 - cryingCat.height/2, ColorAlpha(SKYBLUE, 0.75f));
+            DrawTexture(cryingCat, GetScreenWidth()/2 - cryingCat.width/2, GetScreenHeight()/2 - cryingCat.height/2, ColorAlpha(RAYWHITE, 0.75f));
 
             // DrawText("Plz don't leave meeeee :(", GetScreenWidth()/2 - MeasureText("Plz don't leave meeeee :(", 63)/2, GetScreenHeight()/2 - 63/2, 63, GOLD);
             DrawText("Made by Ebbi, Saad, & Umair, bi-idhni-Allahi Taala :>", 23, GetScreenHeight() - 23 - 5, 23, GOLD);
