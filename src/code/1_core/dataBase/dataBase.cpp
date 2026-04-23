@@ -83,15 +83,15 @@ DataBase::DataBase()
 //     query.exec();                          // executing the query
 // }
 void DataBase::addGame(GameData& gameData){
-    SQLite::Statement query(db, "INSERT INTO games (score, enemiesDefeated, waveReached, timeStarted, timeEnded, timePlayed) VALUES (?, ?, ?, ?, ?, ?)");         
+    SQLite::Statement query(db, "INSERT INTO games (score, enemiesDefeated, waveReached, timePlayed) VALUES (?, ?, ?, ?)");         
 
     // binding data from gameData to their respective ?
     query.bind(1, gameData.score);
     query.bind(2, gameData.enemiesDefeated);
     query.bind(3, gameData.waveReached);
-    query.bind(4, gameData.timeStarted);   
-    query.bind(5, gameData.timeEnded);   
-    query.bind(6, gameData.timePlayed);             
+    // query.bind(4, gameData.timeStarted);   
+    // query.bind(5, gameData.timeEnded);   
+    query.bind(4, gameData.timePlayed);             
 
     query.exec();                               // executing the query
 }
@@ -126,8 +126,8 @@ vector<GameData> DataBase::getHistory(int numEntries){
                     query.getColumn(1).getInt(),            // score
                     query.getColumn(2).getInt(),            // enemiesDefeated
                     query.getColumn(3).getInt(),            // waveReached
-                    query.getColumn(4).getString(),         // timeStarted
-                    query.getColumn(5).getString(),         // timeEnded
+                    // query.getColumn(4).getString(),         // timeStarted
+                    // query.getColumn(5).getString(),         // timeEnded
                     query.getColumn(6).getInt(),            // timePlayed
                 }
             );

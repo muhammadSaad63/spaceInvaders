@@ -18,8 +18,8 @@ struct GameData{
     int    enemiesDefeated;
     int    waveReached;
 
-    string timeStarted;
-    string timeEnded;
+    // string timeStarted;
+    // string timeEnded;
     int    timePlayed;
 };
 struct StatData{
