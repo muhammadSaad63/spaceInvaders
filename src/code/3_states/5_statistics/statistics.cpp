@@ -2,7 +2,7 @@
 #include "statistics.hpp"
 
 
-void Statistics::drawHeader(int &posY){
+void Statistics::drawHeader(int& posY){
     DrawText("Statistics", posX, posY, textSize + 10, GOLD);
     posY += (textSize + 10) + 15;
 
@@ -107,24 +107,25 @@ void Statistics::draw(){
     int posY = initPosY;  
 
     // header
-
+    drawHeader(posY);
 
     // score
-
+    drawScore(posY);
 
     // enemies
-
+    drawEnemiesDefeated(posY);
 
     // waves
-    
+    drawWavesReached(posY);
 
     // time
+    drawTimePlayed(posY);
 
     // exit hint matches settings style
     DrawText("Press ENTER to go back", GetScreenWidth() - MeasureText("Press ENTER to go back", textSize) - 23, GetScreenHeight() - 40, textSize, GOLD);
 
     // making a dark black rectangular overlay over screen if no stats there
-
+    drawOverLay();
 }
 void Statistics::update(){
     loadStats();
