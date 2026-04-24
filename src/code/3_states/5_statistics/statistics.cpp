@@ -77,7 +77,7 @@ void Statistics::drawTimePlayed(int& posY){
     posY += 15;
 }
 void Statistics::drawOverLay(){
-    if (!statsLoaded || !stats.totalScore){
+    if (!statsLoaded || !stats.totalTimePlayed){
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.5f));
         DrawText("No games played yet  :(",
                     GetScreenWidth()/2  - MeasureText("No games played yet  :(", 40)/2,
@@ -104,7 +104,7 @@ Statistics::~Statistics(){
 }
 
 void Statistics::draw(){
-    int posY = initPosY;  
+    auto posY { initPosY };  
 
     // header
     drawHeader(posY);
