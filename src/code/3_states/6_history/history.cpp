@@ -39,7 +39,7 @@ void History::drawHistory(int& posY){
         DrawText(TextFormat("%d",      entry.enemiesDefeated),                                      posX + 340, posY, textSize, RED);
         DrawText(TextFormat("%dm %ds", ((int)entry.timePlayed / 60), ((int)entry.timePlayed % 60)), posX + 460, posY, textSize, LIME);
 
-        posY += textSize + 9;
+        posY += textSize + 15;
     }
 }
 void History::drawOverLay(){
