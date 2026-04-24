@@ -62,27 +62,25 @@ void Statistics::drawTimePlayed(int& posY){
     posY += textSize + 5;
 
     DrawText("Total Time Played",                          posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", (stats.totalTimePlayed / 60.0),      ((int)stats.totalTimePlayed % 60)),      posX + offset, posY, textSize, LIME);
+    DrawText(TextFormat("%dm %ds", (stats.totalTimePlayed / 60.0),           ((int)stats.totalTimePlayed % 60)),      posX + offset, posY, textSize, LIME);
     posY += textSize + 5;
 
     DrawText("Longest Game",                               posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", (stats.maxTimePlayedPerGame / 60.0), ((int)stats.maxTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
+    DrawText(TextFormat("%dm %ds", (stats.maxTimePlayedPerGame / 60.0),      ((int)stats.maxTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
     posY += textSize + 5;
 
     DrawText("Avg Time / Game",                            posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", (stats.avgTimePlayedPerGame / 60.0), ((int)stats.avgTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
+    DrawText(TextFormat("%dm %ds", ((int)stats.avgTimePlayedPerGame / 60.0), ((int)stats.avgTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
     posY += textSize + 25;
 
     DrawLineEx({(float)posX, (float)posY}, {(float)GetScreenWidth() - posX, (float)posY}, 1, DARKGRAY);
     posY += 15;
 }
 void Statistics::drawOverLay(){
-    if (!statsLoaded || !stats.totalScore){
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.5f));
         DrawText("No games played yet  :(",
                     GetScreenWidth()/2  - MeasureText("No games played yet  :(", 40)/2,
                     GetScreenHeight()/2 - 20, 40, DARKGRAY);
-    }
 }
 
 void Statistics::loadStats(){
@@ -104,7 +102,7 @@ Statistics::~Statistics(){
 }
 
 void Statistics::draw(){
-    int posY = initPosY;  
+    auto posY { initPosY };  
 
     // header
     drawHeader(posY);
@@ -125,7 +123,8 @@ void Statistics::draw(){
     DrawText("Press ENTER to go back", GetScreenWidth() - MeasureText("Press ENTER to go back", textSize) - 23, GetScreenHeight() - 40, textSize, GOLD);
 
     // making a dark black rectangular overlay over screen if no stats there
-    drawOverLay();
+    if (!statsLoaded || !stats.totalTimePlayed)
+        drawOverLay();
 }
 void Statistics::update(){
     loadStats();
