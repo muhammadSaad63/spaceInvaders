@@ -33,11 +33,11 @@ void History::drawHistory(int& posY){
                         : (entryNum == 2)? Color{205, 127, 50, 255}              // bronze
                         :                  RAYWHITE;
 
-        DrawText(TextFormat("%d",      entryNum + 1),                                            posX,       posY, textSize, rankColor);
-        DrawText(TextFormat("%05d",    entry.score),                                             posX + 60,  posY, textSize, YELLOW);
-        DrawText(TextFormat("%d",      entry.waveReached),                                       posX + 220, posY, textSize, SKYBLUE);
-        DrawText(TextFormat("%d",      entry.enemiesDefeated),                                   posX + 340, posY, textSize, RED);
-        DrawText(TextFormat("%dm %ds", (entry.timePlayed / 60.0), ((int)entry.timePlayed % 60)), posX + 460, posY, textSize, LIME);
+        DrawText(TextFormat("%d",      entryNum + 1),                                               posX,       posY, textSize, rankColor);
+        DrawText(TextFormat("%05d",    entry.score),                                                posX + 60,  posY, textSize, YELLOW);
+        DrawText(TextFormat("%d",      entry.waveReached),                                          posX + 220, posY, textSize, SKYBLUE);
+        DrawText(TextFormat("%d",      entry.enemiesDefeated),                                      posX + 340, posY, textSize, RED);
+        DrawText(TextFormat("%dm %ds", ((int)entry.timePlayed / 60), ((int)entry.timePlayed % 60)), posX + 460, posY, textSize, LIME);
 
         posY += textSize + 9;
     }
