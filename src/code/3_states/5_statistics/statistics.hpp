@@ -21,6 +21,15 @@ class Statistics : public State{
 
         Sound     stateChangedSFX;
 
+
+        // drawing helpers
+        void drawHeader(int& posY);
+        void drawScore(int& posY);
+        void drawEnemiesDefeated(int& posY);
+        void drawWavesReached(int& posY);
+        void drawTimePlayed(int& posY);
+        void drawOverLay();
+
         void loadStats();
 
     public:

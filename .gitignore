@@ -1,7 +1,7 @@
 # Local Files
-GEMINI.md
 TODO.md
 *.db
+src/assets/data/
 *.zip
 
 # CMake & Build Files

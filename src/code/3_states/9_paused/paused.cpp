@@ -29,19 +29,19 @@ void Paused::draw(){
     DrawLineEx({30, (float)(cy + 83)}, {(float)(GetScreenWidth() - 30), (float)(cy + 83)}, 1, DARKGRAY);
 
     DrawText("P  -  Resume",       cx - MeasureText("P  -  Resume",       26) / 2, cy + 133, 26, GREEN);
-    DrawText("X  -  Quit to Menu", cx - MeasureText("X  -  Quit to Menu", 26) / 2, cy + 163, 26, RED);
+    DrawText("M  -  Quit to Menu", cx - MeasureText("M  -  Quit to Menu", 26) / 2, cy + 163, 26, RED);
 }
-
-/// @brief 
 void Paused::update(){
     if (IsKeyPressed(KEY_P)){
         PlaySound(gameResumedSFX);
+
         gameState = PLAYING;
     }
 
-    if (IsKeyPressed(KEY_X)){
+    if (IsKeyPressed(KEY_M)){
         PlaySound(gameStoppedSFX);
         playing.reset();
+
         gameState = MENU;
     }
 }

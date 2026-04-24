@@ -38,27 +38,30 @@ void Game::playEndCredits(){
 }
 
 // constructor
-Game::Game()                        // overRiding default constructor 
-: gameState(MENU)                   // initializing gameState with MENU
-, settings(gameState)               // constructed first & before menu since the later requires it
-, menu(gameState, settings)
-, play(gameState)
-, shop(gameState) 
-, history(gameState, dataBase)
-, statistics(gameState, dataBase)
-, playing(gameState, settings)
-, paused(gameState, playing)
-, gameOver(gameState, dataBase, playing)
-, closeGame(gameState) 
-{}
+Game::Game()                            // overRiding default constructor 
+    : gameState(MENU)                   // initializing gameState with MENU
+    , settings(gameState)               // constructed first & before menu since the later requires it
+    , menu(gameState, settings)
+    , play(gameState)
+    , shop(gameState) 
+    , history(gameState, dataBase)
+    , statistics(gameState, dataBase)
+    , playing(gameState, settings)
+    , paused(gameState, playing)
+    , gameOver(gameState, dataBase, playing)
+    , closeGame(gameState) 
+    {}
 
 void Game::init(){
     SetWindowOpacity(0.9);
     SetExitKey(KEY_ESCAPE);
-    SetTargetFPS(60); // why would you set it to 63 what is wrong with you
-    // InitAudioDevice();
+    SetTargetFPS(60);                       // why would you set it to 63 what is wrong with you
 
     setFavicon("1.png");
+
+    Sound programOpenedSFX = LoadSound("src/assets/sounds/sfx/programStarted.mp3");
+    PlaySound(programOpenedSFX);
+    // UnloadSound(programOpenedSFX);
 }
 
 void Game::draw(){                                                    // draws based upon the current gameState
@@ -67,7 +70,7 @@ void Game::draw(){                                                    // draws b
     switch(gameState)
     {
         case MENU:         { menu.draw();         break; }
-        case PLAY:         { play.draw();         break; }
+        // case PLAY:         { play.draw();         break; }
         case SHOP:         { shop.draw();         break; }
         case HISTORY:      { history.draw();      break; }
         case STATISTICS:   { statistics.draw();   break; }
@@ -75,7 +78,7 @@ void Game::draw(){                                                    // draws b
         case PLAYING:      { playing.draw();      break; }
         case PAUSED:       { paused.draw();       break; }
         case GAMEOVER:     { gameOver.draw();     break; }
-        case CLOSEGAME:    { closeGame.draw();    break; }  
+        // case CLOSEGAME:    { closeGame.draw();    break; }  
     }
 }
 void Game::update(){     
@@ -85,7 +88,7 @@ void Game::update(){
     switch(gameState)
     {
         case MENU:         { menu.update();         break; }
-        case PLAY:         { play.update();         break; }
+        // case PLAY:         { play.update();         break; }
         case SHOP:         { shop.update();         break; }
         case HISTORY:      { history.update();      break; }
         case STATISTICS:   { statistics.update();   break; }
@@ -93,7 +96,7 @@ void Game::update(){
         case PLAYING:      { playing.update();      break; }
         case PAUSED:       { paused.update();       break; }
         case GAMEOVER:     { gameOver.update();     break; }
-        case CLOSEGAME:    { closeGame.update();    break; }  
+        // case CLOSEGAME:    { closeGame.update();    break; }  
     }
 }
 
