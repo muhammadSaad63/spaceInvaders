@@ -11,7 +11,36 @@ void History::drawHeader(int& posY){
     posY += 30;
 }
 void History::drawHistory(int& posY){
-    //
+    // column headers
+    DrawText("#",        posX,          posY, textSize, DARKGRAY);
+    DrawText("Score",    posX + 60,     posY, textSize, DARKGRAY);
+    DrawText("Wave",     posX + 220,    posY, textSize, DARKGRAY);
+    DrawText("Kills",    posX + 340,    posY, textSize, DARKGRAY);
+    DrawText("Time",     posX + 460,    posY, textSize, DARKGRAY);
+    posY += textSize + 5;
+
+    // seperator line
+    DrawLineEx({(float)posX, (float)posY}, {(float)GetScreenWidth() - posX, (float)posY}, 1, DARKGRAY);
+    posY += 10;
+
+    // printing history
+    for (auto entryNum {0}; entryNum < history.size(); ++entryNum){
+        auto& entry = history[entryNum];
+
+        // rank color — gold, silver, bronze, then plain white
+        Color rankColor = (entryNum == 0)? GOLD
+                        : (entryNum == 1)? LIGHTGRAY
+                        : (entryNum == 2)? Color{205, 127, 50, 255}              // bronze
+                        :                  RAYWHITE;
+
+        DrawText(TextFormat("%d",      entryNum + 1),                                            posX,       posY, textSize, rankColor);
+        DrawText(TextFormat("%05d",    entry.score),                                             posX + 60,  posY, textSize, YELLOW);
+        DrawText(TextFormat("%d",      entry.waveReached),                                       posX + 220, posY, textSize, SKYBLUE);
+        DrawText(TextFormat("%d",      entry.enemiesDefeated),                                   posX + 340, posY, textSize, RED);
+        DrawText(TextFormat("%dm %ds", (entry.timePlayed / 60.0), ((int)entry.timePlayed % 60)), posX + 460, posY, textSize, LIME);
+
+        posY += textSize + 9;
+    }
 }
 void History::drawOverLay(){
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.5f));
@@ -28,7 +57,10 @@ void History::loadHistory(){
 }
 
 History::History(GameState& gameState, DataBase& dataBase)
-        : State(gameState), dataBase(dataBase)
+        : State(gameState)
+        , dataBase(dataBase)
+        , historyLoaded(false)
+        , maxEntriesToFetch(10)
         {
             stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
         }
@@ -49,7 +81,7 @@ void History::draw(){
     DrawText("Press ENTER to go back", GetScreenWidth() - MeasureText("Press ENTER to go back", textSize) - 23, GetScreenHeight() - 40, textSize, GOLD);
 
     // making a dark black rectangular overlay over screen if no stats there
-    if (!historyLoaded || !history.empty())
+    if (!historyLoaded || history.empty())
         drawOverLay();
 }
 void History::update(){
