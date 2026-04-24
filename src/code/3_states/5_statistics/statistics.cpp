@@ -77,12 +77,10 @@ void Statistics::drawTimePlayed(int& posY){
     posY += 15;
 }
 void Statistics::drawOverLay(){
-    if (!statsLoaded || !stats.totalTimePlayed){
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.5f));
         DrawText("No games played yet  :(",
                     GetScreenWidth()/2  - MeasureText("No games played yet  :(", 40)/2,
                     GetScreenHeight()/2 - 20, 40, DARKGRAY);
-    }
 }
 
 void Statistics::loadStats(){
@@ -125,7 +123,8 @@ void Statistics::draw(){
     DrawText("Press ENTER to go back", GetScreenWidth() - MeasureText("Press ENTER to go back", textSize) - 23, GetScreenHeight() - 40, textSize, GOLD);
 
     // making a dark black rectangular overlay over screen if no stats there
-    drawOverLay();
+    if (!statsLoaded || !stats.totalTimePlayed)
+        drawOverLay();
 }
 void Statistics::update(){
     loadStats();
