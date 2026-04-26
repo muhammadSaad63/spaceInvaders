@@ -60,7 +60,7 @@ int DataBase::getTotalGames(){
 }
 
 DataBase::DataBase()
-: db((fs::create_directories("assets/data"), "assets/data/programData.db"), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+: db((fs::create_directories("src/assets/data"), "src/assets/data/programData.db"), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
     // creating table 'players' to store players' data
     // createTable_players();

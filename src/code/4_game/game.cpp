@@ -4,7 +4,7 @@
 
 // helper functions
 void Game::setFavicon(const string& fileName){
-    Image favicon = LoadImage(TextFormat("assets/graphics/ui/favicons/%s", fileName.c_str()));
+    Image favicon = LoadImage(TextFormat("src/assets/graphics/ui/favicons/%s", fileName.c_str()));
 
     if (favicon.data){
         SetWindowIcon(favicon);
@@ -15,10 +15,10 @@ void Game::playEndCredits(){
     double currTime     {GetTime()};
     double waitDuration {2.5};                  // in sec
     
-    Sound windowCloseSFX = LoadSound("assets/sounds/sfx/windowClosed.mp3");
+    Sound windowCloseSFX = LoadSound("src/assets/sounds/sfx/windowClosed.mp3");
     PlaySound(windowCloseSFX);          // :
 
-    Texture cryingCat = LoadTexture("assets/graphics/ui/misc/cryingCat.png");
+    Texture cryingCat = LoadTexture("src/assets/graphics/ui/misc/cryingCat.png");
     
     while ((currTime + waitDuration) >= GetTime()){
         backGround.update();
@@ -59,7 +59,7 @@ void Game::init(){
 
     setFavicon("1.png");
 
-    Sound programOpenedSFX = LoadSound("assets/sounds/sfx/programStarted.mp3");
+    Sound programOpenedSFX = LoadSound("src/assets/sounds/sfx/programStarted.mp3");
     PlaySound(programOpenedSFX);
     // UnloadSound(programOpenedSFX);
 }
