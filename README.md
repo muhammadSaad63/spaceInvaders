@@ -21,7 +21,7 @@
 - **Dynamic Starfield Engine:** A custom-built background system with procedural, twinkling stars and smooth vertical movement.
 - **Persistent Data:** Integration with **SQLite** (via SQLiteCpp) to maintain a local database for player game history and global leaderboards.
 - **Advanced OOP Architecture:** Modular design with dedicated classes for entities (SpaceShip, Aliens, Lasers) and a decoupled State Machine for menus and gameplay.
-- **Classic Gameplay, Modern Tech:** Original mechanics enhanced with high-fidelity rendering and immersive SFX.
+- **Classic Gameplay, Modern Tech:** Original mechanics enhanced with high-fidelity rendering and SFX.
 
 ---
 
