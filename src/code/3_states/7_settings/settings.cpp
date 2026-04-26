@@ -141,8 +141,8 @@ void Settings::updateInputMode(const int& index){
 }
 
 Settings::Settings(GameState& gameState) : State(gameState) {
-    stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
-    settingModifiedSFX = LoadSound("src/assets/sounds/sfx/settingModified.mp3");
+    stateChangedSFX = LoadSound("assets/sounds/sfx/stateChanged.mp3");
+    settingModifiedSFX = LoadSound("assets/sounds/sfx/settingModified.mp3");
 }
 Settings::~Settings(){
     UnloadSound(stateChangedSFX);

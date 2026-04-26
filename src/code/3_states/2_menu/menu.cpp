@@ -1,7 +1,7 @@
 #include <cmath>
 #include "menu.hpp"
 #include "../../2_entities/lasers/lasers.hpp"
-using std::fmodf;
+using std::fmod;
 
 
 MenuIcons::MenuIcons() : selected(false), selectedDelay(3) 
@@ -12,34 +12,24 @@ MenuIcons::MenuIcons() : selected(false), selectedDelay(3)
     icons[3] = MenuIcon{Rectangle{50,  280, 150, 60 }, "History",      20, HISTORY     };      // History
     icons[4] = MenuIcon{Rectangle{880, 280, 150, 60 }, "Settings",     20, SETTINGS    };      // Settings
 
-    iconSelectedSFX = LoadSound("src/assets/sounds/sfx/iconSelected.mp3");
-    stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
+    iconSelectedSFX = LoadSound("assets/sounds/sfx/iconSelected.mp3");
+    stateChangedSFX = LoadSound("assets/sounds/sfx/stateChanged.mp3");
 };
 MenuIcons::~MenuIcons(){
     UnloadSound(iconSelectedSFX);
     UnloadSound(stateChangedSFX);
 }
-void MenuIcons::draw(){
-    for (const auto& icon : icons){
-        if (selected){                                              // if an icon is/was already selected
-            auto timePassed = (GetTime() - selectedTime);
-            auto alpha      = fmodf(timePassed, 1.0f);              // 3.0f / 0.6f -> 5x pulses
-            auto inc        = 23;
+
+void MenuIcons::draw()
+{
+    for (auto& icon : icons){
+        if (selected && icon.gameState == selectedState){
+            auto timeElapsed = GetTime() - selectedTime;
+            auto alpha       = (float)fmod(timeElapsed, 1.0f);              // pulse effect
     
-            if (icon.gameState == selectedState){                   // if the curr icon is the selected one
-                // DrawRectangleGradientH(icon.rect.x - inc*alpha, icon.rect.y-inc*alpha, icon.rect.width+2*inc*alpha, icon.rect.height+2*inc*alpha, GOLD, RED);
-                // DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
-                // DrawRectangleGradientH(icon.rect.x - (inc * alpha), icon.rect.y - (inc * alpha), icon.rect.width + (2 * inc * alpha), icon.rect.height + (2 * inc * alpha), ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
-                DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
-            }
-            else{
-                // DrawRectangleGradientH(icon.rect.x + (inc * alpha), icon.rect.y + (inc * alpha), icon.rect.width - (2 * inc * alpha), icon.rect.height - (2 * inc * alpha), GOLD, RED);
-                // DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
-                // DrawRectangleGradientH(icon.rect.x + inc/2, icon.rect.y + inc/2, icon.rect.width - inc, icon.rect.height - inc, GOLD, RED);
-                DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, GOLD, RED);
-            }
+            DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, ColorAlpha(GOLD, alpha), ColorAlpha(RED, alpha));
         }
-        else{                                                   // no icon was previously selected
+        else{                                                   
             DrawRectangleGradientH(icon.rect.x, icon.rect.y, icon.rect.width, icon.rect.height, GOLD, RED);
         }
         

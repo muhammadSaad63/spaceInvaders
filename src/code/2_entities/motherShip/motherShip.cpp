@@ -77,7 +77,7 @@ MotherShip::MotherShip(int& waveNum)
 , hits(0)                                                       // number of hits currently sustained by the motherShip
 , maxPossibleHits(9)                                            // max number of hits to defeat/destruct the motherShip
 , baseScoreBoost(1000)                                          // 1000+ extra points on destruction
-, motherShip(LoadTexture("src/assets/graphics/enemies/motherShips/1.png"))
+, motherShip(LoadTexture("assets/graphics/enemies/motherShips/1.png"))
 , position({0, 85})
 , scale(0.13f)
 , randomSpawnPause(40)                                          // 40s
@@ -85,7 +85,7 @@ MotherShip::MotherShip(int& waveNum)
 , spawnFromLeft(true)
 , waveNum(waveNum)
 {
-    motherShipDestroyedSFX = LoadSound("src/assets/sounds/sfx/motherShipDestroyed.mp3");
+    motherShipDestroyedSFX = LoadSound("assets/sounds/sfx/motherShipDestroyed.mp3");
 }
 MotherShip::~MotherShip(){
     if (IsTextureValid(motherShip))                             // this check is redundant tho...

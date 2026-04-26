@@ -62,15 +62,15 @@ void Statistics::drawTimePlayed(int& posY){
     posY += textSize + 5;
 
     DrawText("Total Time Played",                          posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", (stats.totalTimePlayed / 60.0),           ((int)stats.totalTimePlayed % 60)),      posX + offset, posY, textSize, LIME);
+    DrawText(TextFormat("%dm %ds", ((int)stats.totalTimePlayed / 60),      ((int)stats.totalTimePlayed % 60)),      posX + offset, posY, textSize, LIME);
     posY += textSize + 5;
 
     DrawText("Longest Game",                               posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", (stats.maxTimePlayedPerGame / 60.0),      ((int)stats.maxTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
+    DrawText(TextFormat("%dm %ds", ((int)stats.maxTimePlayedPerGame / 60), ((int)stats.maxTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
     posY += textSize + 5;
 
     DrawText("Avg Time / Game",                            posX, posY, textSize, RAYWHITE);
-    DrawText(TextFormat("%dm %ds", ((int)stats.avgTimePlayedPerGame / 60.0), ((int)stats.avgTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
+    DrawText(TextFormat("%dm %ds", ((int)stats.avgTimePlayedPerGame / 60), ((int)stats.avgTimePlayedPerGame % 60)), posX + offset, posY, textSize, LIME);
     posY += textSize + 25;
 
     DrawLineEx({(float)posX, (float)posY}, {(float)GetScreenWidth() - posX, (float)posY}, 1, DARKGRAY);
@@ -95,7 +95,7 @@ Statistics::Statistics(GameState& gameState, DataBase& dataBase)
         , dataBase(dataBase)
         , statsLoaded(false)
         {
-            stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
+            stateChangedSFX = LoadSound("assets/sounds/sfx/stateChanged.mp3");
         }
 Statistics::~Statistics(){
     UnloadSound(stateChangedSFX);
