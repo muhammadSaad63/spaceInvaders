@@ -1,6 +1,6 @@
 # Space Invaders 👾
 
-**Space Invaders** is a high-performance C++ recreation of the classic arcade shooter, built from the ground up using the **Raylib** framework, this project emphasizes proper **OOP** principles and robust state management.
+**Space Invaders** is a high-performance C++ recreation of the classic arcade shooter, built from the ground up using the **Raylib** framework. This project emphasizes proper **OOP** principles, a decoupled state machine architecture, and persistent data storage via SQLite.
 
 <br>
 
@@ -10,18 +10,35 @@
 
 | Section | Description |
 | :--- | :--- |
-| [**🚀 Features**](#-features) | Overview of Starfield engine, SQLite, and OOP mechanics |
+| [**🚀 Features**](#-features) | Starfield engine, SQLite, and OOP mechanics |
+| [**🏗️ Major Classes**](#️-major-classes) | Core architecture and component breakdown |
 | [**📂 Project Structure**](#-project-structure) | Directory map and source code organization |
-| [**🛠️ Tech Stack**](#️-tech-stack) | Deep dive into C++, raylib, and SQLiteCpp integration |
-| [**📜 License**](#-license) | MIT License and open-source usage details |
+| [**🛠️ Tech Stack**](#️-tech-stack) | C++, raylib, and SQLiteCpp integration |
+| [**🔨 Building and Running**](#-building-and-running) | Compilation and execution guide |
+| [**📜 License**](#-license) | MIT License and usage details |
 
 ---
 
 ## 🚀 Features
 - **Dynamic Starfield Engine:** A custom-built background system with procedural, twinkling stars and smooth vertical movement.
 - **Persistent Data:** Integration with **SQLite** (via SQLiteCpp) to maintain a local database for player game history and global leaderboards.
-- **Advanced OOP Architecture:** Modular design with dedicated classes for entities (SpaceShip, Aliens, Lasers) and a decoupled State Machine for menus and gameplay.
-- **Classic Gameplay, Modern Tech:** Original mechanics enhanced with high-fidelity rendering and SFX.
+- **Advanced OOP Architecture:** Modular design with dedicated classes for entities and a decoupled State Machine for menus and gameplay.
+- **Classic Gameplay, Modern Tech:** Original mechanics enhanced with high-fidelity rendering and immersive SFX.
+
+---
+
+## 🏗️ Major Classes
+
+| Class | Location | Responsibility |
+| :--- | :--- | :--- |
+| **`Game`** | `src/code/4_game/` | The central orchestrator. Manages the main game loop, state transitions, and high-level resource lifecycle. |
+| **`State`** | `src/code/3_states/` | Abstract interface for all game screens. Subclasses include `Menu`, `Playing`, `Paused`, `GameOver`, etc. |
+| **`Aliens`** | `src/code/2_entities/` | Manages the enemy swarm formation, movement logic, and automatic firing mechanics. |
+| **`SpaceShip`** | `src/code/2_entities/` | Handles player input, movement, and laser projectile management. |
+| **`MotherShip`** | `src/code/2_entities/` | Periodic bonus enemy that traverses the top of the screen with unique reward logic. |
+| **`Laser`** | `src/code/2_entities/` | Generic projectile system shared by both players and enemies for consistent collision detection. |
+| **`BackGround`** | `src/code/1_core/` | Procedural starfield generator with independent layer movement and twinkling effects. |
+| **`DataBase`** | `src/code/1_core/` | Smart wrapper for SQLite3 providing persistent storage for match history and global stats. |
 
 ---
 
@@ -30,11 +47,13 @@
 ```
 spaceInvaders/
 ├── src/                    # Source code
-│   ├── core/               # Engine core, background, and database wrappers
-│   ├── entities/           # Ship, Alien, Laser, and MotherShip logic
-│   ├── states/             # Game states: Menu, Playing, Settings, History
-│   └── main.cpp            # Application entry point
-├── assets/                 # Graphics, Audio, and .db files
+│   ├── code/               # Logic implementation
+│   │   ├── 1_core/         # Engine core, background, and database
+│   │   ├── 2_entities/     # Ship, Alien, Laser, and MotherShip logic
+│   │   ├── 3_states/       # State Machine: Menu, Playing, Settings, etc.
+│   │   └── 4_game/         # Orchestration and main loop
+│   └── assets/             # Raw graphics, audio, and font files
+├── build/                  # Generated build artifacts (ignored by git)
 ├── LICENSE                 # MIT License
 └── README.md               # Project documentation
 ```
@@ -47,12 +66,35 @@ This project leverages modern C++ and lightweight libraries to ensure high perfo
 
 | Component | Technology | Role in Project |
 | :--- | :--- | :--- |
-| **Language** | **C++17** | Core logic, OOP architecture, and memory management. |
-| **Graphics** | [**raylib**](https://www.raylib.com/) | 2D rendering, textures, and the procedural starfield. |
-| **Audio** | **raylib-audio** | Low-latency sound effects and background music. |
-| **Database** | [**SQLite3**](https://www.sqlite.org/) | Persistent storage for high scores and player history. |
-| **DB Wrapper**| [**SQLiteCpp**](https://github.com/SRombauts/SQLiteCpp) | Smart C++ wrapper for safe and easy SQL queries. |
-| **Build System**| **CMake** | Managing dependencies and cross-platform compilation. |
+| **Language** | **C++17** | Core logic and OOP architecture. |
+| **Graphics** | [**raylib**](https://www.raylib.com/) | 2D rendering and texture management. |
+| **Audio** | **raylib-audio** | Low-latency sound effects. |
+| **Database** | [**SQLite3**](https://www.sqlite.org/) | Persistent data storage. |
+| **DB Wrapper**| [**SQLiteCpp**](https://github.com/SRombauts/SQLiteCpp) | Safe and idiomatic C++ wrapper for SQL. |
+| **Build System**| **CMake** | Dependency management and compilation. |
+
+---
+
+## 🔨 Building and Running
+
+### Prerequisites
+- **CMake** (3.11 or higher)
+- A **C++17 compatible compiler** (GCC, Clang, or MSVC)
+
+### Build Commands
+```bash
+# Configure the project
+cmake -B build
+
+# Build the project
+cmake --build build
+```
+
+### Execution
+- **Linux/macOS:** `./build/spaceInvaders`
+- **Windows:** `./build/Debug/spaceInvaders.exe`
+
+*Note: Assets are automatically deployed to the build directory during the post-build step.*
 
 ---
 
@@ -60,5 +102,3 @@ This project leverages modern C++ and lightweight libraries to ensure high perfo
 
 This project is licensed under the **MIT License**.  
 See the [LICENSE](LICENSE) file for the full text. 
-
-> "Space Invaders: A tribute to the golden age of arcades, rebuilt with the precision of modern C++."
