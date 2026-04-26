@@ -153,7 +153,6 @@ void Playing::update(){
     if (!playerLivesRemaining){
         gameState = GAMEOVER;
         PlaySound(gameOverSFX);
-        reset();
 
         return;
     }
@@ -187,7 +186,7 @@ void Playing::update(){
     if (aliens.aliensTouchingSpaceship()){
         gameState = GAMEOVER;
         PlaySound(gameOverSFX);
-        reset();                        // Optional: reset if you want it clean for next time
+
         return;
     }
 
@@ -205,8 +204,8 @@ void Playing::reset(){
     announcingWave          = { true };
     elapsedAnnouncementTime = { 0.0f };
 
-    played_countDown321SFX = { false };
-    played_newWaveSFX      = { false };
+    played_countDown321SFX  = { false };
+    played_newWaveSFX       = { false };
 
     spaceShip.reset();
     motherShip.reset();
