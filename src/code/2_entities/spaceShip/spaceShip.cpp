@@ -6,7 +6,7 @@ using std::cout;
 
 // internal, helper methods
 void SpaceShip::loadShip(const string& fileName){
-    texture = LoadTexture(TextFormat("assets/graphics/player/spaceShips/%s", fileName.c_str()));
+    texture = LoadTexture(TextFormat("src/assets/graphics/player/spaceShips/%s", fileName.c_str()));
     
     // returns true if the texture is loaded into memory; alternatively coudlve used "if (texture.id)"
     cout << "[Captain Saad] SpaceShip texture (" << fileName << (IsTextureValid(texture)? ") has" : ") has NOT") << " loaded properly.\n";
@@ -99,9 +99,9 @@ SpaceShip::SpaceShip(const string& fileName){
 
     horizontalSpeed = 5;
 
-    laserFiredSFX = LoadSound("assets/sounds/sfx/laserFired.mp3");
+    laserFiredSFX = LoadSound("src/assets/sounds/sfx/laserFired.mp3");
     SetSoundVolume(laserFiredSFX, 0.15f);
-    lifeLostSFX   = LoadSound("assets/sounds/sfx/spaceShipLifeLost.mp3");
+    lifeLostSFX   = LoadSound("src/assets/sounds/sfx/spaceShipLifeLost.mp3");
 }
 SpaceShip::~SpaceShip(){
     UnloadTexture(texture);

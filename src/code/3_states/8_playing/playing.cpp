@@ -4,10 +4,10 @@ using std::ceil, std::fmod;
 
 
 void Playing::loadSounds(){
-    countDown321SFX = LoadSound("assets/sounds/sfx/countDown321.mp3");
-    // newWaveSFX      = loadSound("assets/sounds/sfx/newWave.mp3");
-    gamePausedSFX   = LoadSound("assets/sounds/sfx/gamePaused.mp3");
-    gameOverSFX     = LoadSound("assets/sounds/sfx/gameOver.mp3");
+    countDown321SFX = LoadSound("src/assets/sounds/sfx/countDown321.mp3");
+    // newWaveSFX      = loadSound("src/assets/sounds/sfx/newWave.mp3");
+    gamePausedSFX   = LoadSound("src/assets/sounds/sfx/gamePaused.mp3");
+    gameOverSFX     = LoadSound("src/assets/sounds/sfx/gameOver.mp3");
 }
 void Playing::unloadSounds(){
     UnloadSound(countDown321SFX);
@@ -153,7 +153,6 @@ void Playing::update(){
     if (!playerLivesRemaining){
         gameState = GAMEOVER;
         PlaySound(gameOverSFX);
-        reset();
 
         return;
     }
@@ -187,7 +186,7 @@ void Playing::update(){
     if (aliens.aliensTouchingSpaceship()){
         gameState = GAMEOVER;
         PlaySound(gameOverSFX);
-        reset();                        // Optional: reset if you want it clean for next time
+
         return;
     }
 
@@ -205,8 +204,8 @@ void Playing::reset(){
     announcingWave          = { true };
     elapsedAnnouncementTime = { 0.0f };
 
-    played_countDown321SFX = { false };
-    played_newWaveSFX      = { false };
+    played_countDown321SFX  = { false };
+    played_newWaveSFX       = { false };
 
     spaceShip.reset();
     motherShip.reset();

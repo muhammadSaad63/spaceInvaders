@@ -9,7 +9,7 @@ GameOver::GameOver(GameState& gameState, DataBase& dataBase, Playing& playing)
         , timer(0)
         , gameSaved(false)
         {
-            stateChangedSFX = LoadSound("assets/sounds/sfx/stateChanged.mp3");
+            stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
         }
 GameOver::~GameOver(){
     UnloadSound(stateChangedSFX);
@@ -27,7 +27,7 @@ void GameOver::draw(){
     DrawText(TextFormat("Enemies Killed:    %04d", playing.getEnemiesDefeated()), cx - 180, cy + 70, 26, LIME);
 
     if (timer > 1.5f){
-        DrawText("R  -  Play Again", cx - MeasureText("R  -  Play Again", 26)/2, cy + 230, 26, GREEN);
+        DrawText("P  -  Play Again", cx - MeasureText("P  -  Play Again", 26)/2, cy + 230, 26, GREEN);
         DrawText("M  -  Main Menu",  cx - MeasureText("M  -  Main Menu",  26)/2, cy + 265, 26, RAYWHITE);
     }
 }
@@ -43,7 +43,7 @@ void GameOver::update(){
     timer += GetFrameTime();
     if (timer < 1.5f) return;
 
-    if (IsKeyPressed(KEY_R)){ 
+    if (IsKeyPressed(KEY_P)){ 
         timer = 0; 
         playing.reset(); 
         gameSaved = false;

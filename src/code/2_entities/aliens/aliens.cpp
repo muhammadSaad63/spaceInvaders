@@ -27,7 +27,7 @@ void  Alien::activate()         { active = true;  }
 void  Alien::deActivate()       { active = false; }
 
 void Alien::loadAlien(const string& fileName){
-    texture = LoadTexture(TextFormat("assets/graphics/enemies/aliens/%s", fileName.c_str()));
+    texture = LoadTexture(TextFormat("src/assets/graphics/enemies/aliens/%s", fileName.c_str()));
 }
 float Alien::getTextureWidth(){ 
     return static_cast<float>(texture.width);  
@@ -156,8 +156,9 @@ bool Aliens::aliensTouchingSpaceship(){
 void Aliens::loadNextWave(){
     waveNum++;
     
-    if (waveNum == 1){
+    if (waveNum == 1 && !aliensLoaded){
         loadAliens("1.png");
+        aliensLoaded = true;
     }
 
     activateSwarm();
@@ -298,9 +299,9 @@ int Aliens::checkSpaceShipLasersCollision(vector<Laser>& spaceShipLasers){
 Aliens::Aliens(){
     loadNextWave();
 
-    alienDestroyedSFX = LoadSound("assets/sounds/sfx/alienDestroyed.mp3");
+    alienDestroyedSFX = LoadSound("src/assets/sounds/sfx/alienDestroyed.mp3");
     SetSoundVolume(alienDestroyedSFX, 0.75f);
-    waveClearedSFX = LoadSound("assets/sounds/sfx/waveCleared.mp3");
+    waveClearedSFX = LoadSound("src/assets/sounds/sfx/waveCleared.mp3");
 }
 Aliens::~Aliens(){
     UnloadSound(alienDestroyedSFX);

@@ -5,8 +5,8 @@
 Paused::Paused(GameState& gameState, Playing& playing)
 : State(gameState), playing(playing)
 {
-    gameResumedSFX = LoadSound("assets/sounds/sfx/gameResumed.mp3");
-    gameStoppedSFX = LoadSound("assets/sounds/sfx/gameStopped.mp3");
+    gameResumedSFX = LoadSound("src/assets/sounds/sfx/gameResumed.mp3");
+    gameStoppedSFX = LoadSound("src/assets/sounds/sfx/gameStopped.mp3");
 }
 Paused::~Paused(){
     UnloadSound(gameResumedSFX);
