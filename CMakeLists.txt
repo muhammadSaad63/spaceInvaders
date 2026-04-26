@@ -210,12 +210,12 @@ endif()
 #  This runs every build, but cmake -E copy_directory is a no-op when nothing
 #  has changed, so it doesn't slow things down.
 # ─────────────────────────────────────────────────────────────────────────────
-add_custom_command(TARGET spaceInvaders POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/assets"
-        "$<TARGET_FILE_DIR:spaceInvaders>/assets"
-    COMMENT "Deploying assets for the space invaders to hide behind"
-)
+# add_custom_command(TARGET spaceInvaders POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory
+#         "${CMAKE_CURRENT_SOURCE_DIR}/src/assets"
+#         "$<TARGET_FILE_DIR:spaceInvaders>/assets"
+#     COMMENT "Deploying assets for the space invaders to hide behind"
+# )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
