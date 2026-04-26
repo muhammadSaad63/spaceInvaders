@@ -87,6 +87,12 @@ void Statistics::loadStats(){
     if (!statsLoaded){
         stats       = dataBase.getStatistics();
         statsLoaded = true;
+
+        // this is for playing the audio when opening stats
+        // should be a separate method ideally but it works so im not gonna touch it
+        statsOpened = LoadSound("assets/sounds/sfx/statsOpened.mp3");
+        PlaySound(statsOpened);
+        UnloadSound(statsOpened);
     }
 }
 

@@ -20,6 +20,7 @@ class Statistics : public State{
         const int offset   { 450 };   // gap between label and value 
 
         Sound     stateChangedSFX;
+        Sound     statsOpened;
 
 
         // drawing helpers

@@ -41,11 +41,12 @@ class Aliens{
         array<array<Alien, numCols>, numRows> aliens;                                                               // a 2d static array of Alien(s)
 
         // drawing constants
-        int                                   alienSpacing   { 81   };                                              // horizontal gap between each alien in a row
-        int                                   rowSpacing     { 51   };                                              // vertical gap between each row in the swarm
-        int                                   edgePadding    { 23   };                                              // the horizontal padding on each side of the screen
-        float                                 textureScale   { 0.1f };                                              // a float by which to scale each alien texture while drawing
-        
+        int                                   alienSpacing   { 81    };                                             // horizontal gap between each alien in a row
+        int                                   rowSpacing     { 51    };                                             // vertical gap between each row in the swarm
+        int                                   edgePadding    { 23    };                                             // the horizontal padding on each side of the screen
+        float                                 textureScale   { 0.1f  };                                             // a float by which to scale each alien texture while drawing
+        bool                                  aliensLoaded   { false };                                             // flag to ensure that textures are not reloaded on new round
+
         // swarm info
         Vector2                               swarmPosition  { 0, 0 };                                              // a tuple containing the (x, y) coor of the top-left point of the swarm
         int                                   swarmDirection { 1    };                                              // unit vector represeting direction of speed: 1 right, -1 left

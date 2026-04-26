@@ -156,8 +156,9 @@ bool Aliens::aliensTouchingSpaceship(){
 void Aliens::loadNextWave(){
     waveNum++;
     
-    if (waveNum == 1){
+    if (waveNum == 1 && !aliensLoaded){
         loadAliens("1.png");
+        aliensLoaded = true;
     }
 
     activateSwarm();
