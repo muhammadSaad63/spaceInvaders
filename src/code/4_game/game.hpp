@@ -4,8 +4,8 @@
 #include <string>
 
 // core
-#include "../1_core/backGround/backGround.hpp"
 #include "../1_core/dataBase/dataBase.hpp"
+#include "../1_core/backGround/backGround.hpp"
 
 // states
 #include "../1_core/enums/gameState.hpp"
@@ -23,34 +23,34 @@
 
 class Game{
     private:
-        GameState    gameState;
-        BackGround   backGround;
-        DataBase     dataBase;
+        GameState    gameState;                                // an enum which holds the current gameState 
 
-        Settings     settings;
-        Menu         menu;
-        Play         play;
-        Shop         shop;
-        History      history;
-        Statistics   statistics;
+        BackGround   backGround;                               // a class which manages the starry background
+        DataBase     dataBase;                                 // a class which manages the programData.db database
 
-        Playing      playing;
-        Paused       paused;
-        GameOver     gameOver;
+        Settings     settings;                                 // used to alter various game settings such as volume, opacity, and fullScreen
+        Menu         menu;                                     // the mainMenu
+        Play         play;                                     // a buffer state between menu & playing; not implemented;
+        Shop         shop;                                     // a place where players could use "coins" to get various stuff; not implemented;
+        History      history;                                  // displays gameHistory using dataBase
+        Statistics   statistics;                               // displays stats using dataBase
 
-        CloseGame    closeGame;
+        Playing      playing;                                  // the main gamePlay manager class
+        Paused       paused;                                   // when the player press P during playing
+        GameOver     gameOver;                                 // reached after the player spaceShip loses all 3 of its lives in playing
 
-        void setFavicon(const string& fileName);
-        void playEndCredits();
+        CloseGame    closeGame;                                // was to be used instead of playEndCredits() but couldnt be implemented
+
+        void setFavicon(const string& fileName);               // opens, sets, and then closes favicon image; used by init()
+        void playEndCredits();                                 // a helper method used by close()
 
     public:
-        Game();
+        Game();                                                // default constructor which constructs all the above attributes
 
-        void init();
+        void init();                                           // initializes game window; called before gameLoop in main.cpp
 
-        void draw();
-        void update();
+        void draw();                                           // draws based upon the current gameState
+        void update();                                         // updates based upon the current gameState
 
-        void close();                       // using this instead of ~Game()
+        void close();                                          // called when windowShouldClose is true after gameLoop; using this instead of ~Game()
 };
-

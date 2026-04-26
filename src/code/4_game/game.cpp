@@ -34,6 +34,7 @@ void Game::playEndCredits(){
         // WaitTime(2.5);
     }
 
+    UnloadTexture(cryingCat);
     UnloadSound(windowCloseSFX);
 }
 
