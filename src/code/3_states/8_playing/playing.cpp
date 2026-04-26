@@ -153,6 +153,7 @@ void Playing::update(){
     if (!playerLivesRemaining){
         gameState = GAMEOVER;
         PlaySound(gameOverSFX);
+        reset();
 
         return;
     }
@@ -182,6 +183,14 @@ void Playing::update(){
     aliens.update(spaceShipLasers, gameScore, enemiesDefeated);
     motherShip.update(spaceShipLasers, gameScore, enemiesDefeated);
     // obstacles.update();
+
+    if (aliens.aliensTouchingSpaceship()){
+        gameState = GAMEOVER;
+        PlaySound(gameOverSFX);
+        reset();                        // Optional: reset if you want it clean for next time
+        return;
+    }
+
     timePlayed += GetFrameTime();
 }
 
