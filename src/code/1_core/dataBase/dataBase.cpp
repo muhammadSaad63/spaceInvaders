@@ -1,8 +1,8 @@
 #include <cctype>
 #include <filesystem>
 #include "dataBase.hpp"
-
 namespace fs = std::filesystem;
+
 
 // helper functions
 // void DataBase::createTable_players(){
@@ -25,7 +25,7 @@ void DataBase::createTable_games(){
             "enemiesDefeated INTEGER NOT NULL DEFAULT 0,"           // min poss value = 0
             "waveReached INTEGER NOT NULL DEFAULT 1,"               // min poss value = 1
 
-            "timePlayed REAL NOT NULL"
+            "timePlayed REAL NOT NULL DEFAULT 0"
 
             // "FOREIGN KEY (playerID) REFERENCES players(playerID)"
         ")"
