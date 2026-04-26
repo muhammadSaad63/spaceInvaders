@@ -62,7 +62,7 @@ History::History(GameState& gameState, DataBase& dataBase)
         , historyLoaded(false)
         , maxEntriesToFetch(10)
         {
-            stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
+            stateChangedSFX = LoadSound("assets/sounds/sfx/stateChanged.mp3");
         }
 History::~History(){
     UnloadSound(stateChangedSFX);

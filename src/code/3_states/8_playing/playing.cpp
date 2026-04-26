@@ -1,13 +1,13 @@
 #include <cmath>
 #include "playing.hpp"
-using std::ceilf, std::fmodf;
+using std::ceil, std::fmod;
 
 
 void Playing::loadSounds(){
-    countDown321SFX = LoadSound("src/assets/sounds/sfx/countDown321.mp3");
-    // newWaveSFX      = loadSound("src/assets/sounds/sfx/newWave.mp3");
-    gamePausedSFX   = LoadSound("src/assets/sounds/sfx/gamePaused.mp3");
-    gameOverSFX     = LoadSound("src/assets/sounds/sfx/gameOver.mp3");
+    countDown321SFX = LoadSound("assets/sounds/sfx/countDown321.mp3");
+    // newWaveSFX      = loadSound("assets/sounds/sfx/newWave.mp3");
+    gamePausedSFX   = LoadSound("assets/sounds/sfx/gamePaused.mp3");
+    gameOverSFX     = LoadSound("assets/sounds/sfx/gameOver.mp3");
 }
 void Playing::unloadSounds(){
     UnloadSound(countDown321SFX);
@@ -17,8 +17,8 @@ void Playing::unloadSounds(){
 }
 
 void Playing::drawCountdown(){
-    auto  secondProgress = fmodf(elapsedCountdownTime, 1.0f);                        // how much of the corr second has passed
-    auto  displayNum     = static_cast<int>( ceilf(totalCountdownDuration - elapsedCountdownTime) );
+    auto  secondProgress = fmod(elapsedCountdownTime, 1.0f);                        // how much of the corr second has passed
+    auto  displayNum     = static_cast<int>( ceil(totalCountdownDuration - elapsedCountdownTime) );
     auto  fontSize       = static_cast<int>( 350 - (150.0f * secondProgress) );             // font size shrinks as each seconds passes and then maximizes
     auto  alpha          = static_cast<float>(  1.0f - (secondProgress * 0.35f) );         // 1.0 → 0.65
     Color baseColor      = ((displayNum  == 3)? RED : (displayNum == 2)? YELLOW : GREEN);

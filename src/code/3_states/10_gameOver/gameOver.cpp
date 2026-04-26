@@ -9,7 +9,7 @@ GameOver::GameOver(GameState& gameState, DataBase& dataBase, Playing& playing)
         , timer(0)
         , gameSaved(false)
         {
-            stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
+            stateChangedSFX = LoadSound("assets/sounds/sfx/stateChanged.mp3");
         }
 GameOver::~GameOver(){
     UnloadSound(stateChangedSFX);

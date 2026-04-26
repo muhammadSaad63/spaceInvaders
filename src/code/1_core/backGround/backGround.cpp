@@ -41,11 +41,11 @@ void Grid::draw(const bool fullScreen, const bool showGrid){
 Stars::Stars() 
     : screenWidth(GetScreenWidth())
     , screenHeight(GetScreenHeight())
-    , numStars(163)
+    , numStars(160)
     , baseAlpha(0.2f)
     , maxAlpha(1.0f)
     {
-        stars.reserve(numStars);             // reserving spaces for 163 stars beforehand
+        stars.reserve(numStars);             // reserving spaces for 160 stars beforehand
         generateStars();
     }
 

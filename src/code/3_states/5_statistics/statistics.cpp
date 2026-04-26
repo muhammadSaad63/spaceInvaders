@@ -95,7 +95,7 @@ Statistics::Statistics(GameState& gameState, DataBase& dataBase)
         , dataBase(dataBase)
         , statsLoaded(false)
         {
-            stateChangedSFX = LoadSound("src/assets/sounds/sfx/stateChanged.mp3");
+            stateChangedSFX = LoadSound("assets/sounds/sfx/stateChanged.mp3");
         }
 Statistics::~Statistics(){
     UnloadSound(stateChangedSFX);

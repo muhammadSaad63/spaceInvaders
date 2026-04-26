@@ -2,6 +2,10 @@
 *.db
 src/assets/data/
 *.zip
+.vscode/
+*.md
+!README.md
+!TODO.md
 
 # CMake & Build Files
 build/

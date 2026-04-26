@@ -1,6 +1,8 @@
 #include <cctype>
+#include <filesystem>
 #include "dataBase.hpp"
 
+namespace fs = std::filesystem;
 
 // helper functions
 // void DataBase::createTable_players(){
@@ -58,7 +60,7 @@ int DataBase::getTotalGames(){
 }
 
 DataBase::DataBase()
-: db("src/assets/data/programData.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
+: db((fs::create_directories("assets/data"), "assets/data/programData.db"), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
     // creating table 'players' to store players' data
     // createTable_players();
