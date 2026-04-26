@@ -94,10 +94,7 @@ cmake --build build
 - **Linux/macOS:** `./build/spaceInvaders`
 - **Windows:** `./build/Debug/spaceInvaders.exe`
 
-*Note: Assets are automatically deployed to the build directory during the post-build step.*
-
 ---
-
 ## 📜 License
 
 This project is licensed under the **MIT License**.  
