@@ -7,8 +7,9 @@
 
 class Shop : public State{
     private:
-        Texture wowSoEmpty;
-        bool    memePlayed;
+        Texture wowSoEmpty;                     // the (dog) meme image
+        Sound   shopWowSFX;                     // the waow sound
+        bool    memePlayed;                     // so that the sound plays only once when gameState entered
 
     public:
         Shop(GameState& gameState);
