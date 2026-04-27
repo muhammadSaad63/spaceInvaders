@@ -7,6 +7,7 @@ Shop::Shop(GameState& gameState)
     {
         shopWowSFX = LoadSound("src/assets/sounds/sfx/shopWow.mp3");
         wowSoEmpty = LoadTexture("src/assets/graphics/ui/misc/wowSoEmpty.jpg");
+        // wowSoEmpty = LoadTexture("src/assets/graphics/ui/misc/wowSoEmptyT.png");
     }
 Shop::~Shop(){
     UnloadSound(shopWowSFX);
